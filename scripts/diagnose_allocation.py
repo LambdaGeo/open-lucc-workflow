@@ -17,6 +17,8 @@ import sys
 import tempfile
 import time
 
+import numpy as np
+
 try:
     from _common import LAND_USES, MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
     from make_demand import demand_table, write_csv
@@ -55,6 +57,11 @@ def main() -> None:
             print(f"\n--- step {step}, evaluation {state['n']} "
                   f"({time.perf_counter() - state['t0']:.0f} s since start; sum of gaps {sum(areas) - sum(self.demand.get_current_lu_demand(i) for i in range(len(areas))):+.0f} km2) ---")
             print(f"{'class':24s}{'area km2':>14s}{'demand km2':>14s}{'gap km2':>12s}{'elasticity':>12s}{'dir':>5s}")
+            valid = self._valid()
+            tot = np.sum([np.where(self.backend.get(lu) > 0, self.backend.get(lu), 0.0) for lu in self.land_use_types], axis=0)[valid]
+            print(f"cell sums of the land uses: mean {tot.mean() - 1:+.5f}; > 1.005 in {(tot > 1.005).mean():.1%}; "
+                  f"within +-0.005 of 1 in {(abs(tot - 1) <= 0.005).mean():.1%}; < 0.995 in {(tot < 0.995).mean():.1%}; "
+                  f"in [1.004, 1.005] in {((tot >= 1.004) & (tot <= 1.005)).mean():.1%}")
             for i, lu in enumerate(self.land_use_types):
                 d = self.demand.get_current_lu_demand(i)
                 print(f"{lu:24s}{areas[i]:14.1f}{d:14.1f}{areas[i]-d:12.1f}{self.elasticity[i]:12.4f}"

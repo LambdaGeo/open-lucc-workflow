@@ -5,7 +5,7 @@
 
 [scenario]
 n_steps = 15                       # years simulated, 0 .. 14
-max_difference_km2 = 800.0         # convergence tolerance of the allocation, in km2 (same on every grid)
+max_difference_km2 = 1000.0         # convergence tolerance of the allocation, in km2 (S2 maxError; same on every grid)
 
 # Demand: forest loses `forest_loss_pct_per_year` % of its initial area every year; the loss is
 # shared among the other classes in the proportions below (they sum to 1). The total is conserved.
