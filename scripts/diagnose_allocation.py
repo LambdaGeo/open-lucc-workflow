@@ -27,13 +27,14 @@ except ImportError:  # pragma: no cover
     from scripts.make_demand import demand_table, write_csv
 
 STEP = 1  # first year traced; set by --step
-SHOW = {0, 1, 2, 5, 10, 20, 40, 80, 120, 160, 240, 320, 480, 640, 800, 1000}
+SHOW = {0, 1, 2, 5, 10, 20, 40, 80, 120, 160, 240, 320, 480, 640, 800, 1000, 1500, 2000, 3000, 4000, 5000}
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--cellspace", required=True, type=pathlib.Path)
     ap.add_argument("--iterations", type=int, default=40, help="iterations of the failing year to run (default 40)")
+    ap.add_argument("--max-iteration", type=int, default=None, help="override max_iteration of the model TOML for this run")
     ap.add_argument("--step", type=int, default=1, help="year to trace (default 1, the first year with a change)")
     a = ap.parse_args()
     global STEP
@@ -81,6 +82,8 @@ def main() -> None:
         "--param", f"max_difference={scenario['max_difference_km2']}",
         "--output", str(tmp / "lucc.tif"),
     ]
+    if a.max_iteration is not None:
+        sys.argv += ["--param", f"max_iteration={a.max_iteration}"]
     from disslucc.executors.saturation import LuccSaturationExecutor
     from dissmodel.executor.cli import run_cli
 
