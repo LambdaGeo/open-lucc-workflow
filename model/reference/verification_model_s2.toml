@@ -1,0 +1,172 @@
+# Verification model: the structure and the published parameters of LuccME-BR (continuous allocation with
+# saturation, spatial-lag potential), from the S2 Table of Bezerra et al. (2022), PLOS ONE 17(4): e0256052,
+# https://doi.org/10.1371/journal.pone.0256052. It exercises the pipeline at scale; it is NOT a replication of
+# LuccME-BR and its outputs are not land-use projections.
+#
+# What is taken from S2, and what is not:
+# - Potential: rho (W_<class>), constant and the coefficients of the drivers that this cell space has. The drivers
+#   S2 uses and the cell space does not carry (ag_slope_*, mcwda, e_connmkt, as_*) are left out, so the potentials are
+#   not the published ones and the model is not calibrated: it is a declared approximation.
+# - Pasture: the S2 sheet repeats the country-vegetation numbers shifted by one row (rho 0.950187, constant -0.0138203)
+#   and has no e_urban100; they are used as printed, for the drivers present, and the problem is recorded here.
+# - Allocation: static = 0, min_change = 0.125, max_change = 1 for every class, as in S2. min_value, max_value and the
+#   saturation threshold are S2's SSP2 values for Region 3 (the regions are not defined in S2, and this note has no regional
+#   division): natural classes 0 / 1 / 1.0 / 0.0; anthropic classes 0 / 1 / 0.95 / 0.5.
+# - Tolerance: max_difference = 1000 km2 (S2 maxError), in model/scenario.toml.
+# Each of the two parts (published potentials, published allocation) converged only together in the synthetic tests.
+#
+# Units of the cell space: land uses are shares (0-1); c_ucspas is a protected share; ag_apti_* are
+# suitability shares; c_nusett is a count; e_* are distances (m) or cost units.
+#
+# Run by:  python -m disslucc.executors.saturation run --toml model/verification_model.toml \
+#            --input <cellspace.tif> --param demand_csv=<demand.csv> --param cell_area=<km2> ...
+# (scripts/run_experiment.py does this and records time and memory.)
+
+[model]
+executor_module  = "disslucc.executors"
+name             = "lucc_continuous_saturation"
+class            = "lucc_continuous_saturation"
+description      = "Verification model on the Brazil cell space (declared coefficients)"
+package          = "disslucc==0.5.0"
+dissmodel        = ">=0.6.4,<0.7.0"
+
+land_use_types = ["forest_vegetation", "country_vegetation", "pasture_management",
+                  "agricultural", "mosaic_of_occupations", "forestry", "others"]
+land_use_no_data     = "others"
+complementar_lu      = "forest_vegetation"   # absorbs the remainder, as in the LuccME labs
+attr_protection      = "c_ucspas"            # protected share, left out of the saturation indicator
+saturation_indicator = "saturation"
+max_iteration        = 3000
+# cell_area, max_difference and n_steps come from the scenario and the grid (scripts/run_experiment.py)
+
+[[model.potential_data]]
+lu    = "forest_vegetation"
+const = -0.00102218
+ro    = 0.944859
+  [model.potential_data.betas]
+  e_railway = -2.08e-08
+  e_rivers = 6.428e-07
+  e_urban100 = 4.21e-08
+  c_ucspas = 0.0299215
+  e_connport = -1.47e-08
+
+[[model.potential_data]]
+lu    = "country_vegetation"
+const = -0.0138203
+ro    = 0.950187
+  [model.potential_data.betas]
+  ag_apti_B = 0.013417
+  e_uroads = -1.47433e-08
+  e_connport = 5.88527e-09
+  e_rivers = 1.5763e-07
+
+[[model.potential_data]]
+lu    = "pasture_management"
+const = -0.0138203
+ro    = 0.950187
+  [model.potential_data.betas]
+  ag_apti_MB = -1.47433e-08
+  c_ucspas = -4.95904e-09
+  e_connport = 1.5763e-07
+
+[[model.potential_data]]
+lu    = "agricultural"
+const = 0.00350253
+ro    = 0.924838
+  [model.potential_data.betas]
+  ag_apti_MB = 0.00577781
+  e_railway = -1.02646e-08
+  e_connport = 2.74896e-09
+
+[[model.potential_data]]
+lu    = "mosaic_of_occupations"
+const = 0.0196649
+ro    = 0.927441
+  [model.potential_data.betas]
+  ag_apti_MB = 0.00271103
+  e_urban10 = -8.54134e-08
+  c_nusett = 0.0245248
+  e_connport = 3.20682e-09
+
+[[model.potential_data]]
+lu    = "forestry"
+const = -0.00186816
+ro    = 0.865147
+  [model.potential_data.betas]
+  ag_apti_MB = 0.00117659
+  e_connport = 5.41219e-10
+
+[[model.potential_data]]
+lu    = "others"
+const = 0.0
+ro    = 0.0
+
+[[model.allocation_data]]
+lu = "forest_vegetation"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.125
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0
+
+[[model.allocation_data]]
+lu = "country_vegetation"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.125
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0
+
+[[model.allocation_data]]
+lu = "pasture_management"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.125
+max_change = 1.0
+change_limiar_value = 0.95
+max_change_above_limiar = 0.5
+
+[[model.allocation_data]]
+lu = "agricultural"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.125
+max_change = 1.0
+change_limiar_value = 0.95
+max_change_above_limiar = 0.5
+
+[[model.allocation_data]]
+lu = "mosaic_of_occupations"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.125
+max_change = 1.0
+change_limiar_value = 0.95
+max_change_above_limiar = 0.5
+
+[[model.allocation_data]]
+lu = "forestry"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.125
+max_change = 1.0
+change_limiar_value = 0.95
+max_change_above_limiar = 0.5
+
+[[model.allocation_data]]
+lu = "others"
+static = 1
+min_value = 0.0
+max_value = 1.0
+min_change = 0.0
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0

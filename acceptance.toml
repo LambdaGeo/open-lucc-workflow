@@ -14,9 +14,9 @@ frozen_commit = ""
 [demand]
 # Largest error between allocated and demanded area of any class in any year, in km2. It is the
 # convergence tolerance of the allocation itself (model/scenario.toml: max_difference_km2 = 1000, the
-# maxError of LuccME-BR in S2). The allocation doubles its tolerance after half of its iterations, so a
-# year may be accepted at up to twice that value; the criterion allows exactly that.
-max_abs_error_km2 = 2000.0
+# maxError of LuccME-BR in S2). With the declared parameters every year converged under this value without the allocation doubling its tolerance
+# (docs/PARAMETERIZATION.md, section 6); a year accepted only after the doubling (up to 2000 km2) fails the criterion.
+max_abs_error_km2 = 1000.0
 # The allocation must stop by convergence, not by reaching `max_iteration` (model TOML).
 max_iterations_per_step = 3000
 

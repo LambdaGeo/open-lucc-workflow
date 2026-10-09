@@ -1,0 +1,76 @@
+# Declared weights of the verification model. This file is the ONLY place where parameters are chosen by hand;
+# scripts/make_parameters.py turns it, together with the statistics of the 10.56 km cell space, into
+# model/verification_model.toml. The reasoning and the test log are in docs/PARAMETERIZATION.md.
+#
+# Rule (docs/PARAMETERIZATION.md, section 3):
+#   potential of class k  =  const_k + sum_d beta_kd * x_d + rho * (share of k in the neighbourhood)
+#   beta_kd  = w_kd / sigma_d            w_kd is the change of potential for +1 standard deviation of driver d
+#   const_k  = (1 - rho) * mean_k - sum_d w_kd * mu_d / sigma_d     (mean potential of the class = 0 at the start)
+# Signs follow the usual direction of the relation (distance to roads, ports, railways and urban areas, protected
+# share, agricultural suitability); magnitudes are of the same order for every driver (0.01 to 0.03 per sd) because
+# nothing in the cell space (a single date) allows estimating them. They are illustrative, not estimated.
+
+[rho]
+# Spatial-lag weight. LuccME-BR (S2) uses 0.865-0.95 depending on the class; one value for every class is the simplest choice.
+value = 0.90
+
+[weights.forest_vegetation]
+# stays forest far from roads and ports and inside protected areas
+e_connport = 0.02
+e_uroads   = 0.02
+c_ucspas   = 0.03
+
+[weights.country_vegetation]
+# same direction as forest, weaker (savanna and grassland are also converted far from roads)
+e_connport = 0.01
+e_uroads   = 0.01
+c_ucspas   = 0.02
+
+[weights.pasture_management]
+# expands near roads and ports, outside protected areas, on suitable land
+e_uroads   = -0.02
+e_connport = -0.015
+c_ucspas   = -0.03
+ag_apti_MB = 0.01
+
+[weights.agricultural]
+# expands on suitable land, near railways and ports, outside protected areas
+ag_apti_MB = 0.03
+e_railway  = -0.015
+e_connport = -0.015
+c_ucspas   = -0.03
+
+[weights.mosaic_of_occupations]
+# near urban areas, settlements and roads, outside protected areas
+e_urban10  = -0.02
+c_nusett   = 0.02
+e_proads   = -0.01
+c_ucspas   = -0.02
+
+[weights.forestry]
+# on suitable land, near ports, outside protected areas
+ag_apti_MB = 0.015
+e_connport = -0.01
+c_ucspas   = -0.02
+
+# `others` does not change (static = 1): no weights.
+
+# Allocation parameters: those of LuccME-BR (S2), except min_change (0.05 instead of 0.125; see section 5 of docs/PARAMETERIZATION.md). Changes are logged in docs/PARAMETERIZATION.md.
+[allocation]
+static = 0
+min_change = 0.05
+max_change = 1.0
+natural_limiar = 1.0
+natural_above = 0.0
+anthropic_limiar = 0.95
+anthropic_above = 0.5
+max_iteration = 3000
+
+# Per-class override of `static`. 1 = the class is fixed (its demand does not change in the scenario, so it must not
+# exchange area with the others); 0 = changes regardless of the direction of the demand; -1 = follows the demand direction.
+[static_by_class]
+country_vegetation = 1
+pasture_management = -1
+agricultural = -1
+mosaic_of_occupations = -1
+forestry = -1
