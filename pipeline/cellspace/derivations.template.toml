@@ -1,0 +1,184 @@
+# disslucc-br-data — Espaço Celular na Grade Oficial do Brazil Data Cube (BDC V2)
+# Projeção: Cônica de Albers de Área Equivalente (SIRGAS 2000 Albers)
+# Resolução: 10.560 m (10,56 km) — subdivisão exata 10x10 de cada tile BDC_SM (105.600 m)
+#
+#     disscube run pipeline/2_cellspace/cellspace_bdc.toml --workspace data/cube
+#
+
+schema = 1
+name = "disslucc-br — BDC 10.56 km Albers Equal-Area Grid"
+sources_from_catalog = true
+
+[grid]
+name = "bdc_10k"
+crs = "+proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs"
+resolution = 10560.0
+# Bbox alinhado aos limites de tiles BDC_SM cobrindo todo o Brasil:
+bbox = [2465600.0, 7360000.0, 7956800.0, 12112000.0]
+
+[[derive]]
+target = "forest_vegetation"
+source = "lc_forest_vegetation"
+operator = "mean"
+role = "land_use"
+
+[[derive]]
+target = "country_vegetation"
+source = "lc_country_vegetation"
+operator = "mean"
+role = "land_use"
+
+[[derive]]
+target = "pasture_management"
+source = "lc_pasture_management"
+operator = "mean"
+role = "land_use"
+
+[[derive]]
+target = "agricultural"
+source = "lc_agricultural"
+operator = "mean"
+role = "land_use"
+
+[[derive]]
+target = "mosaic_of_occupations"
+source = "lc_mosaic_of_occupations"
+operator = "mean"
+role = "land_use"
+
+[[derive]]
+target = "forestry"
+source = "lc_forestry"
+operator = "mean"
+role = "land_use"
+
+[[derive]]
+target = "others"
+source = "lc_others"
+operator = "mean"
+role = "land_use"
+
+# ── Variáveis de Declividade (Embrapa) ──────────────────────────────────────────
+# Descomente quando o arquivo 'decliv_sc_250' estiver disponível em data/raw/
+# [[derive]]
+# target = "ag_slope_2"
+# source = "slope_class"
+# operator = "percentage"
+# class_code = 2
+# fill = "nearest"
+#
+# [[derive]]
+# target = "ag_slope_3"
+# source = "slope_class"
+# operator = "percentage"
+# class_code = 3
+# fill = "nearest"
+#
+# [[derive]]
+# target = "ag_slope_4"
+# source = "slope_class"
+# operator = "percentage"
+# class_code = 4
+# fill = "nearest"
+#
+# [[derive]]
+# target = "ag_slope_5"
+# source = "slope_class"
+# operator = "percentage"
+# class_code = 5
+# fill = "nearest"
+
+[[derive]]
+target = "ag_apti_B"
+source = "fertility_class"
+operator = "percentage"
+class_code = 1
+params = { subcells = 20 }
+fill = "nearest"
+
+[[derive]]
+target = "ag_apti_MB"
+source = "fertility_class"
+operator = "percentage"
+class_code = 2
+params = { subcells = 20 }
+fill = "nearest"
+
+[[derive]]
+target = "c_ucspas"
+source = "protected_areas"
+operator = "area"
+
+[[derive]]
+target = "c_nusett"
+source = "settlements"
+operator = "area"
+
+[[derive]]
+target = "e_railway"
+source = "railways"
+operator = "distance"
+params = { crs = "EPSG:5880" }
+
+[[derive]]
+target = "e_rivers"
+source = "rivers"
+operator = "distance"
+params = { crs = "EPSG:5880" }
+
+[[derive]]
+target = "e_urban10"
+source = "urban10"
+operator = "distance"
+params = { crs = "EPSG:5880" }
+
+[[derive]]
+target = "e_urban100"
+source = "urban100"
+operator = "distance"
+params = { crs = "EPSG:5880" }
+
+[[derive]]
+target = "e_proads"
+source = "paved_roads"
+operator = "distance"
+params = { crs = "EPSG:5880" }
+
+[[derive]]
+target = "e_uroads"
+source = "unpaved_roads"
+operator = "distance"
+params = { crs = "EPSG:5880" }
+
+# ── Conectividade aos portos (e_connport) ──────────────────────────────────────
+# Custo mínimo de transporte pela malha viária (paved + unpaved) até os portos
+# ANTAQ (38 pontos). Mesma regra do caso de paridade
+# com o TerraME GPM (disscube-benchmark, `connectivity`): trechos fora da via custam
+# o dobro (`outside = 2.0`) e a célula entra na rede pelo vértice mais próximo
+# (`entrance = "vertex"`). Versão simples, a refinar:
+# - uma rede só, pavimentada e não pavimentada ao mesmo custo (as camadas SNV/BC250
+#   não têm `cost_column`);
+# - unidade em metros (`unit_scale` = 1): os betas de e_connport no S2 são ~1e-8, a
+#   escala das demais distâncias — inferido, o S2 não declara a unidade;
+# - `targets` é o .shp extraído da fonte `ports` (sources.toml), lido do cache.
+# Requer DisSCube com o operador `network_cost` (ainda não lançado no PyPI).
+[[derive]]
+target = "e_connport"
+source = "all_roads"
+operator = "network_cost"
+params = { targets = "shapefiles/portos_antaq_poly_sirgas2000.shp", outside = 2.0, entrance = "vertex", crs = "EPSG:5880" }
+
+# ── Déficit Hídrico Máximo Cumulativo (MCWD) ──────────────────────────────────
+# Descomente quando o arquivo 'mcwd/MCWD_ampli_2000.tif' estiver em data/raw/
+# [[derive]]
+# target = "mcwda"
+# source = "mcwd_2000"
+# operator = "mean"
+# fill = "nearest"
+
+# ── Máscara do Espaço Celular (Fração do Território Brasileiro) ──────────────
+[[derive]]
+target = "mask"
+source = "brazil_boundary"
+operator = "area"
+role = "mask"

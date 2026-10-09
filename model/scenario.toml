@@ -1,0 +1,18 @@
+# Declared scenario for the VERIFICATION model (manuscript, section 5.4).
+#
+# Everything here is chosen to exercise the pipeline, not estimated from data and not taken from
+# any published model. The maps it produces are NOT land-use projections.
+
+[scenario]
+n_steps = 15                       # years simulated, 0 .. 14
+max_difference_km2 = 800.0         # convergence tolerance of the allocation, in km2 (same on every grid)
+
+# Demand: forest loses `forest_loss_pct_per_year` % of its initial area every year; the loss is
+# shared among the other classes in the proportions below (they sum to 1). The total is conserved.
+forest_loss_pct_per_year = 0.20
+
+[scenario.gain_shares]
+pasture_management    = 0.50
+agricultural          = 0.30
+mosaic_of_occupations = 0.10
+forestry              = 0.10

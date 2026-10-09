@@ -1,0 +1,39 @@
+# open-lucc-workflow
+
+Companion repository of the Technical Note (Big Earth Data): an end-to-end, open and traceable
+land-use-change workflow in Python (TerraME/LuccME-style), from open data to the allocated maps.
+It replaces the earlier two-repository plan (disscube-recipes + luccmebr-reconstruction).
+
+**Purpose.** This repository does not aim to reproduce LuccME-BR. It demonstrates a *process*: how a
+land-use-change experiment goes from open data to allocated maps in a way that, once built, anyone
+can rerun and check (pinned versions, hashed sources, fixed acceptance criteria, experiment records).
+The reproducibility is of the workflow, not of a published model's results.
+The approach is open on all three sides: open data (public, hashed sources), open source (every
+component and script is public and versioned) and open science (criteria fixed in advance, records
+anyone can verify).
+
+> The model here is a **verification model** with declared, synthetic coefficients, used only to
+> exercise the workflow. Its maps are not land-use projections and not LuccME-BR outputs.
+
+## Stages
+1. **Cell space** — `disscube` catalogs open sources (SHA-256 checked) and derives the named bands
+   (`pipeline/cellspace/`), on the Brazil Data Cube grid (5.28 km and 10.56 km).
+2. **Check** — `scripts/check_cellspace.py` validates bands, CRS and mask.
+3. **Model** — `disslucc` saturation executor with `model/verification_model.toml` and
+   `model/scenario.toml`; demand is derived from the cell space (`scripts/make_demand.py`).
+4. **Verify** — `scripts/check_run.py` against `acceptance.toml` (demand met, identical repeat run,
+   class areas agree across resolutions); `scripts/verify_record.py` checks the experiment record
+   (hashes, pinned versions). `make report` writes `results/table4.md`.
+
+## Use
+```
+make env            # .venv with pinned packages
+make small          # offline, synthetic cell space (~1 min); what CI runs
+make full           # Brazil from open data: needs network and ~6 GB RAM at 5.28 km
+make test lint
+```
+`make full` refuses to report unless `acceptance.toml` is frozen. Open decisions and pinned
+versions/DOIs: `docs/VERSIONS.md`.
+
+## Status
+`make small` is tested. `make full` (real sources, IBGE downloads) has **not** been run yet.

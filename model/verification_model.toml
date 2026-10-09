@@ -1,0 +1,157 @@
+# Verification model: the structure of LuccME-BR (continuous allocation with saturation, spatial-lag
+# potential) with DECLARED, NOT ESTIMATED coefficients. It exercises the pipeline at scale; it does not
+# represent Brazilian land-use dynamics, and its outputs are not land-use projections.
+#
+# Units of the cell space: land uses are shares (0-1); c_ucspas is a protected share; ag_apti_* are
+# suitability shares; c_nusett is a count; e_* are distances (m) or cost units. The coefficients below
+# are scaled to those units only so that potentials stay inside [0, 1].
+#
+# Run by:  python -m disslucc.executors.saturation run --toml model/verification_model.toml \
+#            --input <cellspace.tif> --param demand_csv=<demand.csv> --param cell_area=<km2> ...
+# (scripts/run_experiment.py does this and records time and memory.)
+
+[model]
+executor_module  = "disslucc.executors"
+name             = "lucc_continuous_saturation"
+class            = "lucc_continuous_saturation"
+description      = "Verification model on the Brazil cell space (declared coefficients)"
+package          = "disslucc==0.5.0"
+dissmodel        = ">=0.6.4,<0.7.0"
+
+land_use_types = ["forest_vegetation", "country_vegetation", "pasture_management",
+                  "agricultural", "mosaic_of_occupations", "forestry", "others"]
+land_use_no_data     = "others"
+complementar_lu      = "forest_vegetation"   # absorbs the remainder, as in the LuccME labs
+attr_protection      = "c_ucspas"            # protected share, left out of the saturation indicator
+saturation_indicator = "saturation"
+max_iteration        = 1000
+# cell_area, max_difference and n_steps come from the scenario and the grid (scripts/run_experiment.py)
+
+[[model.potential_data]]
+lu    = "forest_vegetation"
+const = 0.0
+ro    = 0.9
+  [model.potential_data.betas]
+  c_ucspas = 0.3
+  e_proads = 2e-08
+  e_connport = 1e-08
+
+[[model.potential_data]]
+lu    = "country_vegetation"
+const = 0.01
+ro    = 0.9
+  [model.potential_data.betas]
+  c_ucspas = 0.1
+  e_uroads = 2e-08
+
+[[model.potential_data]]
+lu    = "pasture_management"
+const = 0.02
+ro    = 0.9
+  [model.potential_data.betas]
+  e_proads = -4e-07
+  e_connport = -3e-08
+  ag_apti_B = 0.05
+
+[[model.potential_data]]
+lu    = "agricultural"
+const = 0.0
+ro    = 0.9
+  [model.potential_data.betas]
+  ag_apti_B = 0.2
+  ag_apti_MB = -0.1
+  e_connport = -4e-08
+  c_ucspas = -0.3
+
+[[model.potential_data]]
+lu    = "mosaic_of_occupations"
+const = 0.01
+ro    = 0.9
+  [model.potential_data.betas]
+  e_urban10 = -1e-07
+  c_nusett = 0.02
+
+[[model.potential_data]]
+lu    = "forestry"
+const = 0.0
+ro    = 0.9
+  [model.potential_data.betas]
+  e_railway = -2e-08
+  ag_apti_B = 0.03
+
+[[model.potential_data]]
+lu    = "others"
+const = 0.0
+ro    = 0.0
+
+# ── Allocation (one region; static = 1 keeps `others` fixed) ─────────────────────────────────────
+
+[[model.allocation_data]]
+lu = "forest_vegetation"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.0
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0
+
+[[model.allocation_data]]
+lu = "country_vegetation"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.0
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0
+
+[[model.allocation_data]]
+lu = "pasture_management"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.0
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0
+
+[[model.allocation_data]]
+lu = "agricultural"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.0
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0
+
+[[model.allocation_data]]
+lu = "mosaic_of_occupations"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.0
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0
+
+[[model.allocation_data]]
+lu = "forestry"
+static = 0
+min_value = 0.0
+max_value = 1.0
+min_change = 0.0
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0
+
+[[model.allocation_data]]
+lu = "others"
+static = 1
+min_value = 0.0
+max_value = 1.0
+min_change = 0.0
+max_change = 1.0
+change_limiar_value = 1.0
+max_change_above_limiar = 0.0

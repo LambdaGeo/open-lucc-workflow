@@ -1,0 +1,32 @@
+# Acceptance criteria for the demonstration at scale (manuscript, section 5.4, Table 4).
+#
+# They must be FIXED BEFORE the runs that produce the reported numbers: set `frozen = true`, fill
+# `frozen_commit` with the commit that contains this file, tag that commit, and cite the tag in the
+# manuscript. `scripts/check_run.py --require-frozen` (used by `make full`) refuses to run otherwise.
+# Every value below is a proposal.
+
+[meta]
+status = "proposed"
+frozen = false
+frozen_commit = ""
+
+# (i) The allocation meets the demand.
+[demand]
+# Largest error between allocated and demanded area of any class in any year, in km2. It is the
+# convergence tolerance of the allocation itself (model/scenario.toml: max_difference_km2).
+max_abs_error_km2 = 800.0
+# The allocation must stop by convergence, not by reaching `max_iteration` (model TOML).
+max_iterations_per_step = 1000
+
+# (ii) A repeated run gives the same result.
+[determinism]
+# Largest absolute difference between two runs of the same cell space, over every cell and class.
+# 0.0 asks for identical values.
+max_abs_diff = 0.0
+
+# (iii) Class areas agree across resolutions (after aggregation to class totals).
+[resolution]
+# |area_fine - area_coarse| of any class in the final year, as a fraction of the mapped area.
+max_class_area_diff_fraction = 0.005
+
+# (iv) Time and peak memory are reported, not judged: no threshold.

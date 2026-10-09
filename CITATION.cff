@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "Open LUCC workflow: traceable land-use change modelling from open data"
+message: "If you use this repository, please cite it."
+type: software
+authors:
+  - family-names: Costa
+    given-names: Sérgio Souza
+    affiliation: Universidade Federal do Maranhão (UFMA)
+license: MIT
+repository-code: "https://github.com/profsergiocosta/open-lucc-workflow"
