@@ -165,3 +165,23 @@ python scripts/run_experiment.py --cellspace data/cellspace_bdc_10k.tif --label 
 * It cannot claim: that the model reproduces LuccME-BR, that it is calibrated or validated against observed land use, or that
   its maps are projections. The published parameters were tried first, were not usable as published (corrupted pasture
   sheet, drivers absent from the cell space, no convergence under the published tolerance), and are kept as a reference.
+
+## 8. Known limitation: the `ag_apti_*` bands are not an aptitude measure
+
+Found while drawing the driver maps (`scripts/make_figures.py`). In the 10.56 km input raster `ag_apti_B` takes only the
+values 0 and 1 (mean 0.968) and `ag_apti_MB` only 0 and 2 (mean 1.935); `ag_apti_MB` is exactly twice `ag_apti_B`.
+Cause: the aptitude source is a polygon shapefile and, in DisSCube 0.5.0, the class operators (`percentage`, `majority`,
+`minority`) applied to a vector source do not filter by attribute: they rasterize every polygon with the value of
+`class_code` (`disscube/operators/zonal.py`). The bands therefore mark where the aptitude map has polygons
+(about 97% of the cells; the rest are water or outside the map), multiplied by `class_code`. They do not distinguish
+fertility classes.
+
+Consequences:
+
+* the three weights on `ag_apti_MB` (pasture +0.01, agricultural +0.03, forestry +0.015) act as a land/no-land indicator,
+  not as agricultural suitability. The run is valid as a verification run (declared, generated, repeatable), but the band must
+  not be described as suitability in the paper, and the weights table above ("on suitable land") reads as "on mapped land";
+* this is a pipeline limitation, not a model result. Remedies, to be chosen before the frozen runs: (a) declare the
+  band as what it is (extent of the aptitude map) and rename it; (b) filter the polygons by the `FERTILID2` attribute
+  before the operator (needs support in DisSCube or a derived source in `sources.toml`); (c) drop the three weights.
+  Any of them changes the generated parameters and the results, so it must be settled before `acceptance.toml` is frozen.
