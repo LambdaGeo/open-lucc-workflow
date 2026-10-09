@@ -29,7 +29,11 @@ max_iteration        = 1000
 
 [[model.potential_data]]
 lu    = "forest_vegetation"
-const = 0.0
+# Declared offset: with const = 0 the six moving potentials added up to +0.030 per cell on the 10.56 km
+# cell space (53% of the cells above +0.005), so every cell drifted to the top of the +-0.005 band the
+# allocation tolerates and the total area stayed ~0.55% above the demand. scripts/potential_balance.py
+# gives the constant that brings the mean summed potential to zero (-0.0668 after accounting for the clip test of the regression); rounded here.
+const = -0.0668
 ro    = 0.9
   [model.potential_data.betas]
   c_ucspas = 0.3
