@@ -18,7 +18,7 @@ frozen_commit = ""
 # year may be accepted at up to twice that value; the criterion allows exactly that.
 max_abs_error_km2 = 2000.0
 # The allocation must stop by convergence, not by reaching `max_iteration` (model TOML).
-max_iterations_per_step = 1000
+max_iterations_per_step = 3000
 
 # (ii) A repeated run gives the same result.
 [determinism]

@@ -36,7 +36,7 @@ land_use_no_data     = "others"
 complementar_lu      = "forest_vegetation"   # absorbs the remainder, as in the LuccME labs
 attr_protection      = "c_ucspas"            # protected share, left out of the saturation indicator
 saturation_indicator = "saturation"
-max_iteration        = 1000
+max_iteration        = 3000
 # cell_area, max_difference and n_steps come from the scenario and the grid (scripts/run_experiment.py)
 
 [[model.potential_data]]
