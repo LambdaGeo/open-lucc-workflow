@@ -69,8 +69,9 @@ def main() -> None:
     rows = demand_table(class_areas_km2(bands, transform), {"scenario": scenario})
     write_csv(rows, out_dir / "demand.csv")
 
+    # PROVISIONAL: _run_with_progress.py only adds a progress line per year; to be replaced by a log in disslucc before submission
     cmd = [
-        sys.executable, "-m", "disslucc.executors.saturation", "run",
+        sys.executable, str(pathlib.Path(__file__).resolve().parent / "_run_with_progress.py"), "run",
         "--toml", str(MODEL_TOML),
         "--input", str(a.cellspace),
         "--param", f"demand_csv={out_dir / 'demand.csv'}",
@@ -80,11 +81,18 @@ def main() -> None:
         "--output", str(out_dir / "lucc.tif"),
     ]
     t0 = time.perf_counter()
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    # the executor's output is kept in executor.log; the progress line of each year is also shown while it runs
+    log_path = out_dir / "executor.log"
+    lines: list[str] = []
+    with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1) as proc:
+        for line in proc.stdout:
+            lines.append(line)
+            log_path.write_text("".join(lines), encoding="utf-8")
+            if line.startswith("[progress]"):
+                print(line, end="", flush=True)
     wall = time.perf_counter() - t0
-    (out_dir / "executor.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
     if proc.returncode != 0:
-        sys.exit(f"executor failed (see {out_dir / 'executor.log'}):\n{(proc.stdout + proc.stderr)[-1500:]}")
+        sys.exit(f"executor failed (see {log_path}):\n{''.join(lines)[-1500:]}")
 
     records = sorted(glob.glob(str(out_dir / "*.record.json")))
     if len(records) != 1:

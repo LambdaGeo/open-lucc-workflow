@@ -20,3 +20,7 @@ Wheel SHA-256: run `make lock` on the machine that produces the reported results
 3. Freeze `acceptance.toml` (`frozen = true`, tag the commit, cite the tag) before the reported runs.
 4. Confirm DOIs marked above.
 4. `e_connport` uses the TerraME GPM road network (`br_roads_5880`) and 14 ports (`br_ports_5880`), cost column `custo_ajus`, the same data as the disscube-benchmark connectivity case. Licence of these files to be confirmed for Table 4a.
+
+## Before submission
+- Remove `scripts/_run_with_progress.py` (provisional wrapper that prints one progress line per year). Add the equivalent `logging` record per year to disslucc (iterations, maximum error, time), release it, pin the new version here and in `requirements.txt`, and make `scripts/run_experiment.py` call `python -m disslucc.executors.saturation` again. Re-run the reported runs with the pinned version (results do not change; the record does).
+
