@@ -51,6 +51,9 @@ def main() -> None:
     ap.add_argument("--cellspace", required=True, type=pathlib.Path)
     ap.add_argument("--label", required=True)
     ap.add_argument("--runs-dir", type=pathlib.Path, default=ROOT / "runs")
+    ap.add_argument("--steps", type=int, default=None,
+                    help="run only this many years (2 = one allocation after the initial state); default: n_steps of the scenario. "
+                         "For trying the model on a new cell space; reported runs use the scenario's n_steps.")
     a = ap.parse_args()
 
     out_dir = a.runs_dir / a.label
@@ -60,6 +63,8 @@ def main() -> None:
 
     bands, transform, _ = read_bands(a.cellspace)
     scenario = load_toml(SCENARIO_TOML)["scenario"]
+    if a.steps is not None:
+        scenario["n_steps"] = a.steps
     area_km2 = cell_area_km2(transform)
     rows = demand_table(class_areas_km2(bands, transform), {"scenario": scenario})
     write_csv(rows, out_dir / "demand.csv")

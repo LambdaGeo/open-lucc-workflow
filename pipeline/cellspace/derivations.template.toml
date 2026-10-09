@@ -151,22 +151,18 @@ operator = "distance"
 params = { crs = "EPSG:5880" }
 
 # ── Conectividade aos portos (e_connport) ──────────────────────────────────────
-# Custo mínimo de transporte pela malha viária (paved + unpaved) até os portos
-# ANTAQ (38 pontos). Mesma regra do caso de paridade
-# com o TerraME GPM (disscube-benchmark, `connectivity`): trechos fora da via custam
-# o dobro (`outside = 2.0`) e a célula entra na rede pelo vértice mais próximo
-# (`entrance = "vertex"`). Versão simples, a refinar:
-# - uma rede só, pavimentada e não pavimentada ao mesmo custo (as camadas SNV/BC250
-#   não têm `cost_column`);
-# - unidade em metros (`unit_scale` = 1): os betas de e_connport no S2 são ~1e-8, a
-#   escala das demais distâncias — inferido, o S2 não declara a unidade;
-# - `targets` é o .shp extraído da fonte `ports` (sources.toml), lido do cache.
-# Requer DisSCube com o operador `network_cost` (ainda não lançado no PyPI).
+# Custo mínimo de transporte pela malha viária até os portos, com os dados do pacote GPM do
+# TerraME (a mesma rede e os mesmos 14 portos do caso de paridade `connectivity` do
+# disscube-benchmark): o custo de cada trecho vem da coluna `custo_ajus`; trechos fora da via custam
+# o dobro (`outside = 2.0`) e a célula entra na rede pelo vértice mais próximo (`entrance = "vertex"`).
+# - unidade em metros (`unit_scale` omitido = 1): os betas de e_connport no modelo de verificação são
+#   ~1e-8, a escala das demais distâncias;
+# - `targets` é o .shp dos portos, lido do cache (fonte `ports`, sources.toml).
 [[derive]]
 target = "e_connport"
-source = "all_roads"
+source = "roads"
 operator = "network_cost"
-params = { targets = "shapefiles/portos_antaq_poly_sirgas2000.shp", outside = 2.0, entrance = "vertex", crs = "EPSG:5880" }
+params = { targets = "terrame_fill/br_ports_5880.shp", cost_column = "custo_ajus", outside = 2.0, entrance = "vertex", crs = "EPSG:5880" }
 
 # ── Déficit Hídrico Máximo Cumulativo (MCWD) ──────────────────────────────────
 # Descomente quando o arquivo 'mcwd/MCWD_ampli_2000.tif' estiver em data/raw/

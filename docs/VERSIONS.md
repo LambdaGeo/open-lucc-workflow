@@ -19,3 +19,4 @@ Wheel SHA-256: run `make lock` on the machine that produces the reported results
 2. Grids of the reported runs: 5.28 km (20×20 cells per BDC_SM tile) and 10.56 km (10×10, an exact 2×2 aggregation); memory test at 5.28 km. 25 km is not tile-aligned and is kept only for the transport-cost case of E2.
 3. Freeze `acceptance.toml` (`frozen = true`, tag the commit, cite the tag) before the reported runs.
 4. Confirm DOIs marked above.
+4. `e_connport` uses the TerraME GPM road network (`br_roads_5880`) and 14 ports (`br_ports_5880`), cost column `custo_ajus`, the same data as the disscube-benchmark connectivity case. Licence of these files to be confirmed for Table 4a.

@@ -53,9 +53,16 @@ data/cube_%/.cataloged: pipeline/cellspace/sources.toml
 	$(DISSCUBE) run pipeline/cellspace/sources.toml --workspace data/cube_$*
 	touch $@
 
-data/cellspace_%.tif: build/pipelines/%.toml data/cube_%/.cataloged
+# keep the exported cell space even when the next step refuses it, so it can be inspected
+.PRECIOUS: data/raw_cellspace_%.tif
+
+data/raw_cellspace_%.tif: build/pipelines/%.toml data/cube_%/.cataloged
 	$(DISSCUBE) run build/pipelines/$*.toml --workspace data/cube_$*
 	mkdir -p data && $(DISSCUBE) export build/pipelines/$*.toml --workspace data/cube_$* --output $@
+
+# cells without a complete set of bands (coast, borders, islands) leave the mask; see the .report.json
+data/cellspace_%.tif: data/raw_cellspace_%.tif
+	$(PY) scripts/complete_cellspace.py $< $@
 	$(PY) scripts/check_cellspace.py $@
 
 full: data/cellspace_$(FINE).tif data/cellspace_$(COARSE).tif

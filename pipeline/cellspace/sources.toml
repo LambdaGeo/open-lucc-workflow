@@ -128,14 +128,83 @@ path = "zip://shapefiles/rios_pnlt_poly_sirgas2000.zip"
 url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/rios_pnlt_poly_sirgas2000.zip"
 sha256 = "f41440a1d8bd811a150a960ca19ca992e65554da0050a322465df246bb1394a0"
 
-# Extracted to a real .shp (not `zip://`): the `network_cost` operator opens its
+# ── Connectivity to ports (e_connport): the TerraME GPM package data ─────────
+# The road network and the ports are the data of the TerraME GPM package (the same ones as the
+# `connectivity` parity case of disscube-benchmark): one road network, already topologically
+# consistent, with a cost factor per segment (`custo_ajus`), and 14 ports. Joining other road layers
+# (state SNV + federal BC250) gave a graph in pieces and no path to a port for 61% of the cells.
+# The files are fetched from github.com/TerraME/gpm (master) and checked by SHA-256. The .shx, .dbf and
+# .prj are listed as sources only so that they are downloaded next to the .shp; `network_cost` opens its
 # `targets` as a plain file, found in the download cache (~/.cache/disscube/raw).
+[[source]]
+id = "roads"
+type = "file"
+path = "terrame_fill/br_roads_5880.shp"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_roads_5880.shp"
+sha256 = "3eb5bd04e2ee2f979f53baeffc692b52b37dd22f29b34a433c3a1d529fa2168c"
+
+[[source]]
+id = "roads_shx"
+type = "file"
+path = "terrame_fill/br_roads_5880.shx"
+crs = "EPSG:5880"
+format = "vector"
+url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_roads_5880.shx"
+sha256 = "d5262c90cb08887f8cedc3a452e58e270ec666355e04b883f49a4ed9c4ab5cdc"
+
+[[source]]
+id = "roads_dbf"
+type = "file"
+path = "terrame_fill/br_roads_5880.dbf"
+crs = "EPSG:5880"
+format = "vector"
+url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_roads_5880.dbf"
+sha256 = "88c6ab692f8f2d383e4ba46732fb57bebd2006f93dc6fd6fa8fa9ddbda314e7f"
+
+[[source]]
+id = "roads_prj"
+type = "file"
+path = "terrame_fill/br_roads_5880.prj"
+crs = "EPSG:5880"
+format = "vector"
+url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_roads_5880.prj"
+sha256 = "55d89034603a7c6f432d2d505f132e9ee55bd84ed239d42a34ca4707bb2b13a6"
+
 [[source]]
 id = "ports"
 type = "file"
-path = "shapefiles/portos_antaq_poly_sirgas2000.shp"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/portos_antaq_poly_sirgas2000.zip"
-sha256 = "c414eb7348f472755899d44504c1c35b07f1c9863e95ecb30a0e4bd0a5703296"
+path = "terrame_fill/br_ports_5880.shp"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_ports_5880.shp"
+sha256 = "82355d997ce18ee546ba67037190345ed3c725133d958044ce9064f621a44af0"
+
+[[source]]
+id = "ports_shx"
+type = "file"
+path = "terrame_fill/br_ports_5880.shx"
+crs = "EPSG:5880"
+format = "vector"
+url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_ports_5880.shx"
+sha256 = "a99f3a89a84d5872bcb98f902485d4a6844428307738f948c0c0cbca044b2cc7"
+
+[[source]]
+id = "ports_dbf"
+type = "file"
+path = "terrame_fill/br_ports_5880.dbf"
+crs = "EPSG:5880"
+format = "vector"
+url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_ports_5880.dbf"
+sha256 = "bdfede1b5098a4599e7679a03b4ca5e33c8173bdf4bdf70efbab4a122acc49ad"
+
+[[source]]
+id = "ports_prj"
+type = "file"
+path = "terrame_fill/br_ports_5880.prj"
+crs = "EPSG:5880"
+format = "vector"
+url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_ports_5880.prj"
+sha256 = "55d89034603a7c6f432d2d505f132e9ee55bd84ed239d42a34ca4707bb2b13a6"
 
 [[source]]
 id = "waterways"
@@ -274,12 +343,6 @@ of = ["state_paved", "federal_paved"]
 id = "unpaved_roads"
 type = "union"
 of = ["state_unpaved", "federal_unpaved"]
-
-# The whole road network (paved + unpaved), the graph of `network_cost` (e_connport).
-[[source]]
-id = "all_roads"
-type = "union"
-of = ["state_paved", "state_unpaved", "federal_paved", "federal_unpaved"]
 
 # ── Limite Territorial Oficial do Brasil (IBGE 2025) ──────────────────────────
 # ── Limite Territorial Oficial do Brasil (IBGE 2025) ──────────────────────────
