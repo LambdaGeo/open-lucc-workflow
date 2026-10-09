@@ -7,8 +7,11 @@
 #   beta_kd  = w_kd / sigma_d            w_kd is the change of potential for +1 standard deviation of driver d
 #   const_k  = (1 - rho) * mean_k - sum_d w_kd * mu_d / sigma_d     (mean potential of the class = 0 at the start)
 # Signs follow the usual direction of the relation (distance to roads, ports, railways and urban areas, protected
-# share, agricultural suitability); magnitudes are of the same order for every driver (0.01 to 0.03 per sd) because
+# share, rural settlements); magnitudes are of the same order for every driver (0.01 to 0.03 per sd) because
 # nothing in the cell space (a single date) allows estimating them. They are illustrative, not estimated.
+
+# The agricultural-aptitude bands (ag_apti_*) are NOT used: in DisSCube 0.5.0 they do not hold fertility classes
+# (docs/PARAMETERIZATION.md, section 8).
 
 [rho]
 # Spatial-lag weight. LuccME-BR (S2) uses 0.865-0.95 depending on the class; one value for every class is the simplest choice.
@@ -27,29 +30,26 @@ e_uroads   = 0.01
 c_ucspas   = 0.02
 
 [weights.pasture_management]
-# expands near roads and ports, outside protected areas, on suitable land
+# expands near roads and ports, outside protected areas
 e_uroads   = -0.02
 e_connport = -0.015
 c_ucspas   = -0.03
-ag_apti_MB = 0.01
 
 [weights.agricultural]
-# expands on suitable land, near railways and ports, outside protected areas
-ag_apti_MB = 0.03
+# expands near railways and ports, outside protected areas
 e_railway  = -0.015
 e_connport = -0.015
 c_ucspas   = -0.03
 
 [weights.mosaic_of_occupations]
-# near urban areas, settlements and roads, outside protected areas
+# near urban areas, rural settlements (c_nusett) and roads, outside protected areas
 e_urban10  = -0.02
 c_nusett   = 0.02
 e_proads   = -0.01
 c_ucspas   = -0.02
 
 [weights.forestry]
-# on suitable land, near ports, outside protected areas
-ag_apti_MB = 0.015
+# near ports, outside protected areas
 e_connport = -0.01
 c_ucspas   = -0.02
 

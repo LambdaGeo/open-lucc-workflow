@@ -76,16 +76,13 @@ statistics of the 10.56 km cell space (`model/parameters_derivation.json`):
 | pasture | e_uroads | −0.02 | expands near roads |
 | pasture | e_connport | −0.015 | expands near ports |
 | pasture | c_ucspas | −0.03 | not in protected areas |
-| pasture | ag_apti_MB | +0.01 | on suitable land |
-| agricultural | ag_apti_MB | +0.03 | on suitable land |
 | agricultural | e_railway | −0.015 | near railways |
 | agricultural | e_connport | −0.015 | near ports |
 | agricultural | c_ucspas | −0.03 | not in protected areas |
 | mosaic | e_urban10 | −0.02 | near urban areas |
-| mosaic | c_nusett | +0.02 | near settlements |
+| mosaic | c_nusett | +0.02 | near rural settlements (assentamentos rurais) |
 | mosaic | e_proads | −0.01 | near roads |
 | mosaic | c_ucspas | −0.02 | not in protected areas |
-| forestry | ag_apti_MB | +0.015 | on suitable land |
 | forestry | e_connport | −0.01 | near ports |
 | forestry | c_ucspas | −0.02 | not in protected areas |
 
@@ -166,22 +163,20 @@ python scripts/run_experiment.py --cellspace data/cellspace_bdc_10k.tif --label 
   its maps are projections. The published parameters were tried first, were not usable as published (corrupted pasture
   sheet, drivers absent from the cell space, no convergence under the published tolerance), and are kept as a reference.
 
-## 8. Known limitation: the `ag_apti_*` bands are not an aptitude measure
+## 8. The `ag_apti_*` bands are not used (decision of 9 Oct 2026)
 
 Found while drawing the driver maps (`scripts/make_figures.py`). In the 10.56 km input raster `ag_apti_B` takes only the
 values 0 and 1 (mean 0.968) and `ag_apti_MB` only 0 and 2 (mean 1.935); `ag_apti_MB` is exactly twice `ag_apti_B`.
 Cause: the aptitude source is a polygon shapefile and, in DisSCube 0.5.0, the class operators (`percentage`, `majority`,
 `minority`) applied to a vector source do not filter by attribute: they rasterize every polygon with the value of
-`class_code` (`disscube/operators/zonal.py`). The bands therefore mark where the aptitude map has polygons
-(about 97% of the cells; the rest are water or outside the map), multiplied by `class_code`. They do not distinguish
-fertility classes.
+`class_code` (`disscube/operators/zonal.py`). The bands therefore mark where the aptitude map has polygons (about 97% of
+the cells), multiplied by `class_code`, and do not distinguish fertility classes. (In LuccME-BR, S2 of Bezerra et al., 2022,
+the two bands are the percentage of the cell with low and with medium-low agricultural suitability.)
 
-Consequences:
-
-* the three weights on `ag_apti_MB` (pasture +0.01, agricultural +0.03, forestry +0.015) act as a land/no-land indicator,
-  not as agricultural suitability. The run is valid as a verification run (declared, generated, repeatable), but the band must
-  not be described as suitability in the paper, and the weights table above ("on suitable land") reads as "on mapped land";
-* this is a pipeline limitation, not a model result. Remedies, to be chosen before the frozen runs: (a) declare the
-  band as what it is (extent of the aptitude map) and rename it; (b) filter the polygons by the `FERTILID2` attribute
-  before the operator (needs support in DisSCube or a derived source in `sources.toml`); (c) drop the three weights.
-  Any of them changes the generated parameters and the results, so it must be settled before `acceptance.toml` is frozen.
+Decision: the three weights that used `ag_apti_MB` (pasture +0.01, agricultural +0.03, forestry +0.015) were removed from
+`model/parameter_weights.toml` and the parameters regenerated; the bands stay in the input raster but no potential uses them.
+Constants that changed: pasture −0.00145 → +0.05327, agricultural −0.11611 → +0.04805, forestry −0.06067 → +0.02142
+(forest, country vegetation and mosaic are unchanged). Check at 10.56 km, first allocations: 485 and 558 iterations, errors
+998.5 and 999.9 km² (with the aptitude weights: 473 and 639). The full 15-year result is in section 6 once rerun.
+Consequence for the paper: the model has no agricultural-suitability driver, which LuccME-BR does; this is another point
+where it is not a replica. Fixing the operator (filtering the polygons by the `FERTILID2` attribute) belongs to DisSCube.

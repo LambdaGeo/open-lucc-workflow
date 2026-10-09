@@ -47,20 +47,18 @@ ro    = 0.9
 
 [[model.potential_data]]
 lu    = "pasture_management"
-const = -0.0014520173
+const = 0.053269744
 ro    = 0.9
   [model.potential_data.betas]
   e_uroads = -2.4166262e-07
   e_connport = -3.449531e-08
   c_ucspas = -0.081676432
-  ag_apti_MB = 0.028274594
 
 [[model.potential_data]]
 lu    = "agricultural"
-const = -0.11611492
+const = 0.048050359
 ro    = 0.9
   [model.potential_data.betas]
-  ag_apti_MB = 0.084823782
   e_railway = -9.0717136e-08
   e_connport = -3.449531e-08
   c_ucspas = -0.081676432
@@ -77,10 +75,9 @@ ro    = 0.9
 
 [[model.potential_data]]
 lu    = "forestry"
-const = -0.060665158
+const = 0.021417484
 ro    = 0.9
   [model.potential_data.betas]
-  ag_apti_MB = 0.042411891
   e_connport = -2.2996873e-08
   c_ucspas = -0.054450955
 
