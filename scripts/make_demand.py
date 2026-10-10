@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-"""Yearly demand (km2 per class) for the verification scenario, from the cell space itself.
+"""Yearly demand (km2 per class) for the verification scenario, from the input raster itself.
 
-The demand starts at the areas of the input cell space and changes by the declared scenario
-(model/scenario.toml). Because it is derived from the cell space in km2, the same scenario applies
+The demand starts at the areas of the input raster and changes by the declared scenario
+(model/scenario.toml). Because it is derived from the input raster in km2, the same scenario applies
 to any grid of the same area.
 
-    python scripts/make_demand.py --cellspace data/cellspace_5k.tif --out runs/x/demand.csv
+    python scripts/make_demand.py --input data/br_5km.tif --out runs/x/demand.csv
 """
 from __future__ import annotations
 
@@ -42,10 +42,10 @@ def write_csv(rows: list[dict[str, float]], path: pathlib.Path) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cellspace", required=True, type=pathlib.Path)
+    ap.add_argument("--input", required=True, type=pathlib.Path)
     ap.add_argument("--out", required=True, type=pathlib.Path)
     a = ap.parse_args()
-    bands, transform, _ = read_bands(a.cellspace)
+    bands, transform, _ = read_bands(a.input)
     rows = demand_table(class_areas_km2(bands, transform), load_toml(SCENARIO_TOML))
     write_csv(rows, a.out)
     print(f"{a.out}: {len(rows)} years, total {sum(rows[0].values()):.1f} km2")

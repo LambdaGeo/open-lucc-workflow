@@ -1,4 +1,4 @@
-"""Shared helpers: reading the model TOML, cell-space bands, areas."""
+"""Shared helpers: reading the model TOML, input-raster bands, areas."""
 from __future__ import annotations
 
 import hashlib

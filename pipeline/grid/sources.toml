@@ -10,8 +10,8 @@
 #   - TerraME GPM data (road network and ports): tag v0.4.2 of profsergiocosta/terrame-docker
 #     (DOI 10.5281/zenodo.23160784), which carries a pinned copy of the GPM package (GPL-3.0).
 #
-#     disscube fetch pipeline/cellspace/sources.toml
-#     disscube run pipeline/cellspace/sources.toml --workspace data/cube_<grid>
+#     disscube fetch pipeline/grid/sources.toml
+#     disscube run pipeline/grid/sources.toml --workspace data/cube_<grid>
 #
 schema = 1
 name = "Brazil: input layers of the verification model"

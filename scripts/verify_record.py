@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Verify an experiment record from a clean clone: hashes, versions and status.
 
-    python scripts/verify_record.py runs/bdc_5k
+    python scripts/verify_record.py runs/br_5km
 This is the 'done' criterion of the demonstration: another person can confirm that the files they
 hold are the ones the record describes, and that the installed packages are the pinned ones.
 Exit status 1 on any mismatch.
@@ -35,10 +35,10 @@ def verify(run: pathlib.Path) -> list[str]:
     problems = []
     if record.get("status") != "completed":
         problems.append(f"status is {record.get('status')!r}, not 'completed'")
-    cellspace = pathlib.Path(metrics["cellspace"])
-    if not cellspace.exists():
-        problems.append(f"input cell space not found: {cellspace}")
-    elif sha256_file(cellspace) != record["source"]["checksum"]:
+    input_raster = pathlib.Path(metrics["input_raster"])
+    if not input_raster.exists():
+        problems.append(f"input raster not found: {input_raster}")
+    elif sha256_file(input_raster) != record["source"]["checksum"]:
         problems.append("input checksum differs from the record")
     output = pathlib.Path(record["output_path"])
     if not output.exists():

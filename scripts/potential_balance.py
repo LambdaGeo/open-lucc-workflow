@@ -6,7 +6,7 @@ its land uses sum to 1 +- 0.005. If the potentials of the moving classes add up 
 most cells, every cell drifts to the upper edge of that band, the total area ends above the demand,
 and the allocation cannot meet the demand class by class (a persistent positive 'sum of gaps').
 
-    python scripts/potential_balance.py --cellspace data/cellspace_bdc_10k.tif
+    python scripts/potential_balance.py --input data/br_10km.tif
 
 Prints, at the initial state: the mean potential of each class and of their sum, the share of cells
 whose summed potential is above +0.005 or below -0.005, and the constant of the complementary class
@@ -50,12 +50,12 @@ def potentials(bands, specs, valid, shift=0.0):
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cellspace", required=True, type=pathlib.Path)
+    ap.add_argument("--input", required=True, type=pathlib.Path)
     a = ap.parse_args()
 
     from disslucc.executors.saturation import _by_region, _potential_spec
 
-    bands, _, _ = read_bands(a.cellspace)
+    bands, _, _ = read_bands(a.input)
     valid = np.nan_to_num(bands["mask"]) > 0
     model = load_toml(MODEL_TOML)["model"]
     specs = dict(zip(LAND_USES, _by_region(model["potential_data"], LAND_USES, _potential_spec)[0]))

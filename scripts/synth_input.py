@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-"""Synthetic cell space with the same bands as the Brazil cell space (no download).
+"""Synthetic input raster with the same bands as the Brazil input raster (no download).
 
 Used by `make small` and by CI. One landscape (seeded) is generated at the finest resolution and
 block-averaged for the coarser grids, so a fine run and a coarse run describe the same area and
 their class totals can be compared (acceptance.toml, [resolution]).
 
-    python scripts/synth_cellspace.py --out data/synthetic_fine.tif
-    python scripts/synth_cellspace.py --out data/synthetic_coarse.tif --block 2
+    python scripts/synth_input.py --out data/synthetic_fine.tif
+    python scripts/synth_input.py --out data/synthetic_coarse.tif --block 2
 """
 from __future__ import annotations
 

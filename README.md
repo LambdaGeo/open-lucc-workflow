@@ -16,11 +16,11 @@ anyone can verify).
 > exercise the workflow. Its maps are not land-use projections and not LuccME-BR outputs.
 
 ## Stages
-1. **Cell space** — `disscube` catalogs open sources (SHA-256 checked) and derives the named bands
-   (`pipeline/cellspace/`), on the Brazil Data Cube grid (5.28 km and 10.56 km).
-2. **Check** — `scripts/check_cellspace.py` validates bands, CRS and mask.
+1. **Input raster** — `disscube` catalogs open sources (SHA-256 checked) and derives the named bands
+   (`pipeline/grid/`), on the Brazil Data Cube grid (5.28 km and 10.56 km).
+2. **Check** — `scripts/check_input.py` validates bands, CRS and mask.
 3. **Model** — `disslucc` saturation executor with `model/verification_model.toml` and
-   `model/scenario.toml`; demand is derived from the cell space (`scripts/make_demand.py`).
+   `model/scenario.toml`; demand is derived from the input raster (`scripts/make_demand.py`).
 4. **Verify** — `scripts/check_run.py` against `acceptance.toml` (demand met, identical repeat run,
    class areas agree across resolutions); `scripts/verify_record.py` checks the experiment record
    (hashes, pinned versions). `make report` writes `results/table4.md`.
@@ -28,12 +28,12 @@ anyone can verify).
 ## Use
 ```
 make env            # .venv with pinned packages
-make small          # offline, synthetic cell space (~1 min); what CI runs
+make small          # offline, synthetic input raster (~1 min); what CI runs
 make grids          # only the two grids (10.56 and 5.28 km) from open data; no model run
-make grid-10k       # or one at a time: data/cellspace_bdc_10k.tif (~1 min)
-make grid-5k        # data/cellspace_bdc_5k.tif (~3 min, peak ~1 GB RAM)
-make run-10k        # grid + model at 10.56 km only (runs/bdc_10k)
-make run-5k         # grid + model at 5.28 km only (runs/bdc_5k)
+make grid-10k       # or one at a time: data/br_10km.tif (~1 min)
+make grid-5k        # data/br_5km.tif (~3 min, peak ~1 GB RAM)
+make run-10k        # grid + model at 10.56 km only (runs/br_10km)
+make run-5k         # grid + model at 5.28 km only (runs/br_5km)
 make full           # grids + model runs + checks + report (network; the 5.28 km model run is the heavy step)
 make test lint
 ```

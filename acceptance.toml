@@ -22,7 +22,7 @@ max_iterations_per_step = 3000
 
 # (ii) A repeated run gives the same result.
 [determinism]
-# Largest absolute difference between two runs of the same cell space, over every cell and class.
+# Largest absolute difference between two runs of the same input raster, over every cell and class.
 # 0.0 asks for identical values.
 max_abs_diff = 0.0
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-"""Run the verification model on one cell space and record time and peak memory.
+"""Run the verification model on one input raster and record time and peak memory.
 
-    python scripts/run_experiment.py --cellspace data/cellspace_5k.tif --label bdc_5k
+    python scripts/run_experiment.py --input data/br_5km.tif --label br_5km
 
 Writes runs/<label>/: demand.csv, the model output and its experiment record (written by the
 dissmodel executor), and metrics.json (what scripts/check_run.py and scripts/report.py read).
@@ -48,12 +48,12 @@ def peak_rss_mb() -> float:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cellspace", required=True, type=pathlib.Path)
+    ap.add_argument("--input", required=True, type=pathlib.Path)
     ap.add_argument("--label", required=True)
     ap.add_argument("--runs-dir", type=pathlib.Path, default=ROOT / "runs")
     ap.add_argument("--steps", type=int, default=None,
                     help="run only this many years (2 = one allocation after the initial state); default: n_steps of the scenario. "
-                         "For trying the model on a new cell space; reported runs use the scenario's n_steps.")
+                         "For trying the model on a new input raster; reported runs use the scenario's n_steps.")
     a = ap.parse_args()
 
     out_dir = a.runs_dir / a.label
@@ -61,7 +61,7 @@ def main() -> None:
         shutil.rmtree(out_dir)
     out_dir.mkdir(parents=True)
 
-    bands, transform, _ = read_bands(a.cellspace)
+    bands, transform, _ = read_bands(a.input)
     scenario = load_toml(SCENARIO_TOML)["scenario"]
     if a.steps is not None:
         scenario["n_steps"] = a.steps
@@ -73,7 +73,7 @@ def main() -> None:
     cmd = [
         sys.executable, str(pathlib.Path(__file__).resolve().parent / "_run_with_progress.py"), "run",
         "--toml", str(MODEL_TOML),
-        "--input", str(a.cellspace),
+        "--input", str(a.input),
         "--param", f"demand_csv={out_dir / 'demand.csv'}",
         "--param", f"cell_area={area_km2}",
         "--param", f"n_steps={int(scenario['n_steps'])}",
@@ -103,8 +103,8 @@ def main() -> None:
 
     metrics = {
         "label": a.label,
-        "cellspace": str(a.cellspace),
-        "cellspace_sha256": sha256_file(a.cellspace),
+        "input_raster": str(a.input),
+        "input_raster_sha256": sha256_file(a.input),
         "shape": list(mask.shape),
         "cells_in_mask": int(mask.sum()),
         "cell_area_km2": area_km2,

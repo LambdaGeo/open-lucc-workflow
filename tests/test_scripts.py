@@ -9,7 +9,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
 from _common import LAND_USES, sha256_file  # noqa: E402
 from make_demand import demand_table  # noqa: E402
 from render_pipeline import bbox_for, render  # noqa: E402
-from synth_cellspace import block_mean, landscape  # noqa: E402
+from synth_input import block_mean, landscape  # noqa: E402
 
 SCENARIO = {"scenario": {"n_steps": 5, "forest_loss_pct_per_year": 0.5,
                          "gain_shares": {"pasture_management": 0.5, "agricultural": 0.5}}}
@@ -52,13 +52,13 @@ def test_bbox_on_tile_grid():
 
 
 def test_render_sets_grid():
-    assert "bdc_5k" in render("bdc_5k")
+    assert "br_5km" in render("br_5km")
 
 
-def test_complete_cellspace_removes_incomplete_cells(tmp_path):
+def test_complete_input_removes_incomplete_cells(tmp_path):
     import rasterio
-    from complete_cellspace import complete
-    from synth_cellspace import build
+    from complete_input import complete
+    from synth_input import build
 
     src = tmp_path / "s.tif"
     build(src, n=12)
@@ -77,11 +77,11 @@ def test_complete_cellspace_removes_incomplete_cells(tmp_path):
     assert rep["cells_with_no_land_use_at_all"] == 12
 
 
-def test_complete_cellspace_refuses_a_large_removal(tmp_path):
+def test_complete_input_refuses_a_large_removal(tmp_path):
     import subprocess
 
     import rasterio
-    from synth_cellspace import build
+    from synth_input import build
 
     src = tmp_path / "s.tif"
     build(src, n=12)
@@ -95,16 +95,16 @@ def test_complete_cellspace_refuses_a_large_removal(tmp_path):
         for i, n in enumerate(names, 1):
             o.write(data[i - 1], i)
             o.update_tags(i, name=n)
-    script = str(pathlib.Path(__file__).resolve().parents[1] / "scripts" / "complete_cellspace.py")
+    script = str(pathlib.Path(__file__).resolve().parents[1] / "scripts" / "complete_input.py")
     r = subprocess.run([sys.executable, script, str(tmp_path / "raw.tif"), str(tmp_path / "out.tif")], capture_output=True, text=True)
     assert r.returncode != 0 and "would be removed" in r.stderr
     assert not (tmp_path / "out.tif").exists()
 
 
-def test_complete_cellspace_removes_zero_sum_cells(tmp_path):
+def test_complete_input_removes_zero_sum_cells(tmp_path):
     import rasterio
-    from complete_cellspace import complete
-    from synth_cellspace import build
+    from complete_input import complete
+    from synth_input import build
 
     src = tmp_path / "s.tif"
     build(src, n=12)
@@ -122,12 +122,12 @@ def test_complete_cellspace_removes_zero_sum_cells(tmp_path):
     assert rep["cells_with_all_land_uses_zero"] == 3 and rep["cells_removed"] == 3
 
 
-def test_complete_cellspace_partial_coverage(tmp_path):
+def test_complete_input_partial_coverage(tmp_path):
     import numpy as np
     import rasterio
-    from complete_cellspace import complete
+    from complete_input import complete
     from _common import LAND_USES, read_bands
-    from synth_cellspace import build
+    from synth_input import build
 
     src = tmp_path / "s.tif"
     build(src, n=12)

@@ -15,7 +15,7 @@ Wheel SHA-256: run `make lock` on the machine that produces the reported results
 `pip hash`/`requirements.lock` output here. (Not filled in: the hashes belong to the run that is reported.)
 
 ## Open decisions
-1. Land-use product and how it is obtained (STAC vs direct download) for `pipeline/cellspace/sources.toml`.
+1. Land-use product and how it is obtained (STAC vs direct download) for `pipeline/grid/sources.toml`.
 2. Grids of the reported runs: 5.28 km (20×20 cells per BDC_SM tile) and 10.56 km (10×10, an exact 2×2 aggregation); memory test at 5.28 km. 25 km is not tile-aligned and is kept only for the transport-cost case of E2.
 3. Freeze `acceptance.toml` (`frozen = true`, tag the commit, cite the tag) before the reported runs.
 4. Confirm DOIs marked above.

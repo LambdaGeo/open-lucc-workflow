@@ -2,7 +2,7 @@
 # Projeção: Cônica de Albers de Área Equivalente (SIRGAS 2000 Albers)
 # Resolução: 10.560 m (10,56 km) — subdivisão exata 10x10 de cada tile BDC_SM (105.600 m)
 #
-#     disscube run pipeline/2_cellspace/cellspace_bdc.toml --workspace data/cube
+#     disscube run pipeline/grid/derivations.template.toml --workspace data/cube
 #
 
 schema = 1
@@ -10,7 +10,7 @@ name = "disslucc-br — BDC 10.56 km Albers Equal-Area Grid"
 sources_from_catalog = true
 
 [grid]
-name = "bdc_10k"
+name = "br_10km"
 crs = "+proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs"
 resolution = 10560.0
 # Bbox alinhado aos limites de tiles BDC_SM cobrindo todo o Brasil:

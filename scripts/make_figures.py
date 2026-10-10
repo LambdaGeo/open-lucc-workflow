@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Figures for the note: driver maps and the verification-run result.
 
-    python scripts/make_figures.py --cellspace data/cellspace_bdc_10k.tif \
+    python scripts/make_figures.py --input data/br_10km.tif \
         --lucc runs/<label>/lucc_<id>.tif --outdir results/figures --tag 10k
 
 Reads only the input raster and the model output; nothing is fitted or edited.
@@ -142,13 +142,13 @@ def results(cs, names, lucc, ext, mask, out):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--cellspace", required=True)
+    ap.add_argument("--input", required=True)
     ap.add_argument("--lucc", required=True)
     ap.add_argument("--outdir", default="results/figures")
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
     out = Path(a.outdir); out.mkdir(parents=True, exist_ok=True)
-    cs, names, ext = read(a.cellspace)
+    cs, names, ext = read(a.input)
     lucc, _, _ = read(a.lucc)
     mask = cs[names.index("mask")] == 1
     sfx = f"_{a.tag}" if a.tag else ""

@@ -2,14 +2,14 @@
 """Render the DisSCube derivation pipeline for a grid of the Brazil Data Cube.
 
 The derivations are those of the disscube-recipes case `luccme_br`
-(commit f21523f, copied unchanged into pipeline/cellspace/); only the [grid] block changes.
+(commit f21523f, copied unchanged into pipeline/grid/); only the [grid] block changes.
 
-    python scripts/render_pipeline.py --name bdc_5k  --out build/pipelines/bdc_5k.toml
-    python scripts/render_pipeline.py --name bdc_10k --out build/pipelines/bdc_10k.toml
+    python scripts/render_pipeline.py --name br_5km  --out build/pipelines/br_5km.toml
+    python scripts/render_pipeline.py --name br_10km --out build/pipelines/br_10km.toml
 
 Grids (configs below):
-  bdc_5k   5,280 m: 20 x 20 cells per BDC_SM tile (105.6 km), nested exactly.
-  bdc_10k  10,560 m: 10 x 10 cells per tile, an exact 2 x 2 aggregation of bdc_5k.
+  br_5km   5,280 m: 20 x 20 cells per BDC_SM tile (105.6 km), nested exactly.
+  br_10km  10,560 m: 10 x 10 cells per tile, an exact 2 x 2 aggregation of br_5km.
 """
 from __future__ import annotations
 
@@ -19,11 +19,11 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-TEMPLATE = ROOT / "pipeline" / "cellspace" / "derivations.template.toml"
+TEMPLATE = ROOT / "pipeline" / "grid" / "derivations.template.toml"
 
 # Brazil bbox on the BDC_SM tile grid (as in disscube-recipes/cases/luccme_br), lower-left origin
 BBOX = (2465600.0, 7360000.0, 7956800.0, 12112000.0)
-GRIDS = {"bdc_5k": 5280.0, "bdc_10k": 10560.0}
+GRIDS = {"br_5km": 5280.0, "br_10km": 10560.0}
 
 
 def bbox_for(res: float) -> tuple[float, float, float, float]:
@@ -39,7 +39,7 @@ def render(name: str) -> str:
     res = GRIDS[name]
     text = TEMPLATE.read_text(encoding="utf-8")
     bbox = bbox_for(res)
-    text, n1 = re.subn(r'(?m)^name\s*=\s*"bdc_10k"', f'name = "{name}"', text, count=1)
+    text, n1 = re.subn(r'(?m)^name\s*=\s*"br_10km"', f'name = "{name}"', text, count=1)
     text, n2 = re.subn(r"(?m)^resolution\s*=\s*10560\.0", f"resolution = {res}", text, count=1)
     text, n3 = re.subn(r"(?m)^bbox\s*=\s*\[[^\]]*\]", "bbox = [" + ", ".join(f"{v}" for v in bbox) + "]", text, count=1)
     if (n1, n2, n3) != (1, 1, 1):
