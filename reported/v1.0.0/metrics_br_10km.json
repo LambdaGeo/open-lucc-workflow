@@ -1,0 +1,79 @@
+{
+  "cell_area_km2": 111.5136,
+  "cells_in_mask": 77238,
+  "demand_last_year_km2": {
+    "agricultural": 430920.7259556239,
+    "country_vegetation": 2086318.3481957454,
+    "forest_vegetation": 3615364.582261168,
+    "forestry": 66170.30677632023,
+    "mosaic_of_occupations": 1397366.439712215,
+    "others": 342614.3763033974,
+    "pasture_management": 674332.3439205228
+  },
+  "experiment_id": "f7171f6a13fc48e8a7f3f3467460fb03",
+  "final_areas_km2": {
+    "agricultural": 430946.77997523465,
+    "country_vegetation": 2085769.8129109533,
+    "forest_vegetation": 3616346.1380755715,
+    "forestry": 66173.96320752014,
+    "mosaic_of_occupations": 1396866.096982822,
+    "others": 342614.3763033974,
+    "pasture_management": 674370.2693445012
+  },
+  "host": "Linux x86_64",
+  "input_raster": "data/br_10km.tif",
+  "input_raster_sha256": "79664844f34bf14495654b93e6dc57c565f01bf72f70b32bcde049e87a05165b",
+  "iterations_per_step": [
+    0,
+    485,
+    558,
+    663,
+    712,
+    743,
+    749,
+    779,
+    808,
+    880,
+    910,
+    955,
+    987,
+    1011,
+    1041
+  ],
+  "label": "br_10km",
+  "max_difference_km2": 1000.0,
+  "max_error_per_step": [
+    0.04860399989411235,
+    998.4605451757088,
+    999.9429968143813,
+    996.6895414693281,
+    996.2229890748858,
+    995.2495891544968,
+    979.2195022907108,
+    958.6869017030112,
+    998.7209941740148,
+    995.6878620847128,
+    998.4078507986851,
+    997.994923629798,
+    997.596347481478,
+    999.8822334883735,
+    988.3401336139068
+  ],
+  "n_steps": 15,
+  "output": "/home/sergio/develop/github/lambdageo/novo/open-lucc-workflow/runs/br_10km/lucc_f7171f6a.tif",
+  "output_sha256": "95be540c8bd75a015594d973dc84bd9847dd9a8b862c4b06512186645ee63ac2",
+  "peak_rss_mb": 420.8,
+  "python": "3.12.3",
+  "record": "/home/sergio/develop/github/lambdageo/novo/open-lucc-workflow/runs/br_10km/lucc_f7171f6a.record.json",
+  "run_seconds": 2194.9888627320033,
+  "shape": [
+    450,
+    520
+  ],
+  "versions": {
+    "disscube": "0.5.0",
+    "disslucc": "0.5.0",
+    "dissmodel": "0.6.6"
+  },
+  "wall_seconds": 2197.631
+}

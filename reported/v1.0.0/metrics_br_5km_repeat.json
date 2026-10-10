@@ -1,0 +1,79 @@
+{
+  "cell_area_km2": 27.8784,
+  "cells_in_mask": 307419,
+  "demand_last_year_km2": {
+    "agricultural": 429525.15003309277,
+    "country_vegetation": 2081175.9266872248,
+    "forest_vegetation": 3597421.148856424,
+    "forestry": 65962.70586791607,
+    "mosaic_of_occupations": 1393223.493750145,
+    "others": 330320.8186310054,
+    "pasture_management": 672720.5534151944
+  },
+  "experiment_id": "6d3da2f8a2ca40d69debde69e7659b99",
+  "final_areas_km2": {
+    "agricultural": 429538.51908851234,
+    "country_vegetation": 2080774.5513403919,
+    "forest_vegetation": 3598417.1094357856,
+    "forestry": 65964.09506936492,
+    "mosaic_of_occupations": 1392584.427452741,
+    "others": 330320.8186310054,
+    "pasture_management": 672750.328582199
+  },
+  "host": "Linux x86_64",
+  "input_raster": "data/br_5km.tif",
+  "input_raster_sha256": "327d4cf3301aec8f6e9b867e9f2ffbd490e5d5d482b6c02bb5a73986f6f2482d",
+  "iterations_per_step": [
+    0,
+    598,
+    704,
+    759,
+    831,
+    871,
+    936,
+    956,
+    983,
+    1027,
+    1060,
+    1086,
+    1110,
+    1128,
+    1144
+  ],
+  "label": "br_5km_repeat",
+  "max_difference_km2": 1000.0,
+  "max_error_per_step": [
+    0.44173299986869097,
+    995.1909017483704,
+    997.2943506781012,
+    998.063105002977,
+    997.8718997593969,
+    998.851081920322,
+    996.1175006958656,
+    998.1825859844685,
+    994.9759985692799,
+    996.7720160312019,
+    997.4490168029442,
+    999.7799175037071,
+    997.5731816897169,
+    999.8517656316981,
+    999.8277382985689
+  ],
+  "n_steps": 15,
+  "output": "/home/sergio/develop/github/lambdageo/novo/open-lucc-workflow/runs/br_5km_repeat/lucc_6d3da2f8.tif",
+  "output_sha256": "b4212984080ab0faa26a068d62a09721dbd50c2b3fbc64a42aa85664837da34b",
+  "peak_rss_mb": 829.4,
+  "python": "3.12.3",
+  "record": "/home/sergio/develop/github/lambdageo/novo/open-lucc-workflow/runs/br_5km_repeat/lucc_6d3da2f8.record.json",
+  "run_seconds": 9327.183768745002,
+  "shape": [
+    900,
+    1040
+  ],
+  "versions": {
+    "disscube": "0.5.0",
+    "disslucc": "0.5.0",
+    "dissmodel": "0.6.6"
+  },
+  "wall_seconds": 9331.669
+}
