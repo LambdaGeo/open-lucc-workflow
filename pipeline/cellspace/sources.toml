@@ -1,20 +1,28 @@
-# disscube-recipes / luccme_br — Raw data of Brazil registered in the DisSCube catalog
-# Automatically fetched and verified via Pooch from GitHub Releases (tag data-v1.0).
+# Input layers of the workflow: the 18 files that feed the verification model's input raster.
 #
-#     disscube fetch pipeline/1_sources/sources.toml
-#     disscube run pipeline/1_sources/sources.toml --workspace data/cube
+# Only what the derivations use is declared (derivations.template.toml). Layers of the earlier
+# catalogue that no derivation reads (airports, waterways, industries, states and municipalities,
+# the agricultural-aptitude map, ...) were removed.
+#
+# Where the files come from:
+#   - data release of this repository (tag data-v1.0): copies of the original layers, same SHA-256;
+#   - IBGE: original address, not copied (see docs/DATA.md);
+#   - TerraME GPM data (road network and ports): tag v0.4.2 of profsergiocosta/terrame-docker
+#     (DOI 10.5281/zenodo.23160784), which carries a pinned copy of the GPM package (GPL-3.0).
+#
+#     disscube fetch pipeline/cellspace/sources.toml
+#     disscube run pipeline/cellspace/sources.toml --workspace data/cube_<grid>
 #
 schema = 1
-name = "Brazil — raw layers (GitHub Release data-v1.0)"
+name = "Brazil: input layers of the verification model"
 
-
-# ── Land cover, 2000 (IBGE / NetCDF) ───────────────────────────────────────
+# ── Land cover, 2000: seven classes from one netCDF (LuccME-BR database, about 100 km2 pixels)
 [[source]]
 id = "lc_forest_vegetation"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "veg"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
 sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
 
 [[source]]
@@ -22,7 +30,7 @@ id = "lc_country_vegetation"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "gveg"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
 sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
 
 [[source]]
@@ -30,7 +38,7 @@ id = "lc_pasture_management"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "pastp"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
 sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
 
 [[source]]
@@ -38,7 +46,7 @@ id = "lc_agricultural"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "agric"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
 sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
 
 [[source]]
@@ -46,7 +54,7 @@ id = "lc_mosaic_of_occupations"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "mosc"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
 sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
 
 [[source]]
@@ -54,7 +62,7 @@ id = "lc_forestry"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "fores"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
 sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
 
 [[source]]
@@ -62,164 +70,62 @@ id = "lc_others"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "others"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
 sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
 
-# ── Aeroportos (PNLT) ───────────────────────────────────────────────────────
-[[source]]
-id = "airports"
-type = "file"
-path = "zip://shapefiles/aeroportos_pnlt_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/aeroportos_pnlt_poly_sirgas2000.zip"
-sha256 = "cf0a0fddf6e5b6e807110fe3e0e10076b3b4271a80e87fcebf03656f8a25441c"
-
-# ── Aptidão Agrícola ────────────────────────────────────────────────────────
-[[source]]
-id = "fertility_class"
-type = "file"
-path = "zip://shapefiles/apt_agricola_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/apt_agricola_poly_sirgas2000.zip"
-sha256 = "b5962a1b0e50e98aa3721f934c8122639f3a1c16a43c19f394fcd1ce86aceb09"
-
-# ── Áreas Protegidas (UCs integrais, Terras Indígenas, Militares) ───────────
+# ── Protected areas and settlements
 [[source]]
 id = "protected_areas"
 type = "file"
 path = "zip://shapefiles/areas_protegidas_ucpi_ti_ma_2016_limpo_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/areas_protegidas_ucpi_ti_ma_2016_limpo_poly_sirgas2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/areas_protegidas_ucpi_ti_ma_2016_limpo_poly_sirgas2000.zip"
 sha256 = "758a289a6ede4125ba017ddb363979d8f4671284d2463038a5ff90a71d3cbcf8"
 
-# ── Assentamentos ───────────────────────────────────────────────────────────
 [[source]]
 id = "settlements"
 type = "file"
 path = "zip://shapefiles/assentamentos_todos_limpo_poly_sirgas2000.zip"
 read = { where = "MODALID2 IS NULL OR MODALID2 NOT IN ('RESEX', 'RDS', 'FLONA', 'FLOE', 'PAE', 'PDS', 'PAF')" }
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/assentamentos_todos_limpo_poly_sirgas2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/assentamentos_todos_limpo_poly_sirgas2000.zip"
 sha256 = "89d7b5c9017883271e8c6e4dce8162ef8611f2f83c21d0159a9cbd8afdc8276d"
 
-# ── Centros Urbanos (PNLT) ──────────────────────────────────────────────────
+# ── Urban centres
 [[source]]
 id = "urban10"
 type = "file"
 path = "zip://shapefiles/centros_urbanos_m_10_pnlt_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/centros_urbanos_m_10_pnlt_poly_sirgas2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/centros_urbanos_m_10_pnlt_poly_sirgas2000.zip"
 sha256 = "22f8e8fa7830367d784f141a6f83628949081b9d14b43a68587fb3f412d7ec92"
 
 [[source]]
 id = "urban100"
 type = "file"
 path = "zip://shapefiles/centros_urbanos_m_100_pnlt_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/centros_urbanos_m_100_pnlt_poly_sirgas2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/centros_urbanos_m_100_pnlt_poly_sirgas2000.zip"
 sha256 = "22927bbf742c73811905c7fefaf1a03f4ab7baacd9f1a14a80a2bcfa82b7a2c4"
 
-# ── Infraestrutura de Transporte ────────────────────────────────────────────
+# ── Railways and rivers
 [[source]]
 id = "railways"
 type = "file"
 path = "zip://shapefiles/ferrovias_pnv_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/ferrovias_pnv_poly_sirgas2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/ferrovias_pnv_poly_sirgas2000.zip"
 sha256 = "f2f3674dd7a9e03cc423d30063d45daf578005746d9c990f0cddacfd26835154"
 
 [[source]]
 id = "rivers"
 type = "file"
 path = "zip://shapefiles/rios_pnlt_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/rios_pnlt_poly_sirgas2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/rios_pnlt_poly_sirgas2000.zip"
 sha256 = "f41440a1d8bd811a150a960ca19ca992e65554da0050a322465df246bb1394a0"
 
-# ── Connectivity to ports (e_connport): the TerraME GPM package data ─────────
-# The road network and the ports are the data of the TerraME GPM package (the same ones as the
-# `connectivity` parity case of disscube-benchmark): one road network, already topologically
-# consistent, with a cost factor per segment (`custo_ajus`), and 14 ports. Joining other road layers
-# (state SNV + federal BC250) gave a graph in pieces and no path to a port for 61% of the cells.
-# The files are fetched from github.com/TerraME/gpm (master) and checked by SHA-256. The .shx, .dbf and
-# .prj are listed as sources only so that they are downloaded next to the .shp; `network_cost` opens its
-# `targets` as a plain file, found in the download cache (~/.cache/disscube/raw).
-[[source]]
-id = "roads"
-type = "file"
-path = "terrame_fill/br_roads_5880.shp"
-crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_roads_5880.shp"
-sha256 = "3eb5bd04e2ee2f979f53baeffc692b52b37dd22f29b34a433c3a1d529fa2168c"
-
-[[source]]
-id = "roads_shx"
-type = "file"
-path = "terrame_fill/br_roads_5880.shx"
-crs = "EPSG:5880"
-format = "vector"
-url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_roads_5880.shx"
-sha256 = "d5262c90cb08887f8cedc3a452e58e270ec666355e04b883f49a4ed9c4ab5cdc"
-
-[[source]]
-id = "roads_dbf"
-type = "file"
-path = "terrame_fill/br_roads_5880.dbf"
-crs = "EPSG:5880"
-format = "vector"
-url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_roads_5880.dbf"
-sha256 = "88c6ab692f8f2d383e4ba46732fb57bebd2006f93dc6fd6fa8fa9ddbda314e7f"
-
-[[source]]
-id = "roads_prj"
-type = "file"
-path = "terrame_fill/br_roads_5880.prj"
-crs = "EPSG:5880"
-format = "vector"
-url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_roads_5880.prj"
-sha256 = "55d89034603a7c6f432d2d505f132e9ee55bd84ed239d42a34ca4707bb2b13a6"
-
-[[source]]
-id = "ports"
-type = "file"
-path = "terrame_fill/br_ports_5880.shp"
-crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_ports_5880.shp"
-sha256 = "82355d997ce18ee546ba67037190345ed3c725133d958044ce9064f621a44af0"
-
-[[source]]
-id = "ports_shx"
-type = "file"
-path = "terrame_fill/br_ports_5880.shx"
-crs = "EPSG:5880"
-format = "vector"
-url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_ports_5880.shx"
-sha256 = "a99f3a89a84d5872bcb98f902485d4a6844428307738f948c0c0cbca044b2cc7"
-
-[[source]]
-id = "ports_dbf"
-type = "file"
-path = "terrame_fill/br_ports_5880.dbf"
-crs = "EPSG:5880"
-format = "vector"
-url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_ports_5880.dbf"
-sha256 = "bdfede1b5098a4599e7679a03b4ca5e33c8173bdf4bdf70efbab4a122acc49ad"
-
-[[source]]
-id = "ports_prj"
-type = "file"
-path = "terrame_fill/br_ports_5880.prj"
-crs = "EPSG:5880"
-format = "vector"
-url = "https://raw.githubusercontent.com/TerraME/gpm/master/data/br_ports_5880.prj"
-sha256 = "55d89034603a7c6f432d2d505f132e9ee55bd84ed239d42a34ca4707bb2b13a6"
-
-[[source]]
-id = "waterways"
-type = "file"
-path = "zip://shapefiles/hidrovias_antaq_rios_nav_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/hidrovias_antaq_rios_nav_poly_sirgas2000.zip"
-sha256 = "524b8dbd9a536fde12ca4d6d21ad05777cb8eef4bbaf87e399495fd132f28b74"
-
-# ── Rodovias Estaduais ──────────────────────────────────────────────────────
+# ── Roads (state, from the SNV; federal, from IBGE BC250 2015) and their unions
 [[source]]
 id = "state_paved"
 type = "file"
 path = "zip://shapefiles/rodovias_estaduais_snv_poly_sirgas2000.zip"
 read = { encoding = "utf-8", where = "SNV_ROD_SU IN ('Pavimentada', 'Duplicada', 'Em Obra de Duplicação', 'Travessa')" }
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/rodovias_estaduais_snv_poly_sirgas2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/rodovias_estaduais_snv_poly_sirgas2000.zip"
 sha256 = "5a42f8c19f4b4d7334213be0d57608516a714878766d79ef8323d56f01a4b287"
 
 [[source]]
@@ -227,104 +133,16 @@ id = "state_unpaved"
 type = "file"
 path = "zip://shapefiles/rodovias_estaduais_snv_poly_sirgas2000.zip"
 read = { encoding = "utf-8", where = "SNV_ROD_SU IN ('Implantada', 'Leito Natural', 'Em Obra de Pavimentação')" }
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/rodovias_estaduais_snv_poly_sirgas2000.zip"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/rodovias_estaduais_snv_poly_sirgas2000.zip"
 sha256 = "5a42f8c19f4b4d7334213be0d57608516a714878766d79ef8323d56f01a4b287"
 
-# ── Terras Indígenas ────────────────────────────────────────────────────────
-[[source]]
-id = "indigenous_lands"
-type = "file"
-path = "zip://shapefiles/terras_indigenas_funai_2010_limpo_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/terras_indigenas_funai_2010_limpo_poly_sirgas2000.zip"
-sha256 = "50108a9909c0acb4469c5b14965c0d586c03eb9a82fe6933375e6e7661cde390"
-
-# ── Limites Administrativos ─────────────────────────────────────────────────
-[[source]]
-id = "brazil_limit"
-type = "file"
-path = "zip://shapefiles/limite_br_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/limite_br_poly_sirgas2000.zip"
-sha256 = "07b5dc3bf00cb6c995df3f760b80e9800e9fd6223146032af28262183811c4a7"
-
-[[source]]
-id = "states_limit"
-type = "file"
-path = "zip://shapefiles/limite_estados_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/limite_estados_poly_sirgas2000.zip"
-sha256 = "a4af9cd95cfc409c5a51e45df819ef4acddca2405d6a0f9164776890b8185d3d"
-
-[[source]]
-id = "municipalities_limit"
-type = "file"
-path = "zip://shapefiles/limite_municipios_2021_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/limite_municipios_2021_poly_sirgas2000.zip"
-sha256 = "843e8447d452ae1e044f05a4495c4c0fcb912c6d379634ac8c0449c2bb601fd6"
-
-# ── Indústrias e Polos Econômicos ───────────────────────────────────────────
-[[source]]
-id = "pulp_paper_plants"
-type = "file"
-path = "zip://shapefiles/fabrica_papelcelulose_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/fabrica_papelcelulose_poly_sirgas2000.zip"
-sha256 = "ef4a17d6e8b208189df5e029ea949ac63e971b5fc68282c173e5684c8bdbd48d"
-
-[[source]]
-id = "slaughterhouses"
-type = "file"
-path = "zip://shapefiles/frigorificos_matadouros_lapig_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/frigorificos_matadouros_lapig_poly_sirgas2000.zip"
-sha256 = "1c66ee7652f8894be49331d738c9ae4b49ba45fd73569089d34d4c841e132106"
-
-[[source]]
-id = "soy_crushing_plants"
-type = "file"
-path = "zip://shapefiles/industrias_esmagadoras_soja_pnlt_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/industrias_esmagadoras_soja_pnlt_poly_sirgas2000.zip"
-sha256 = "4f071cd5dbd8b8b1c27f14c48f6e5701d29b93451607f12ca3a35bedc527d2d9"
-
-[[source]]
-id = "mineral_deposits"
-type = "file"
-path = "zip://shapefiles/jazidas_minerais_explo_pnlt_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/jazidas_minerais_explo_pnlt_poly_sirgas2000.zip"
-sha256 = "f061bf27256a5e8344ee1016354bca403062be9213f60beba980e46a766e6e19"
-
-[[source]]
-id = "timber_hubs"
-type = "file"
-path = "zip://shapefiles/polos_madeireiros_mma_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/polos_madeireiros_mma_poly_sirgas2000.zip"
-sha256 = "06b67c7d887b2c2f0e1d8be3080bddb2cde908a82e85963b7766ef185f56c530"
-
-[[source]]
-id = "sugar_ethanol_plants"
-type = "file"
-path = "zip://shapefiles/usinas_acucar_etanol_ctbe_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/usinas_acucar_etanol_ctbe_poly_sirgas2000.zip"
-sha256 = "816d90bf316330a7a1b733fb748d5349af66559ca61b159086af7e0e9cf52159"
-
-# ── Usinas de Energia ───────────────────────────────────────────────────────
-[[source]]
-id = "hydroelectric_operating"
-type = "file"
-path = "zip://shapefiles/usinas_hidreletricas_oper_aneel_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/usinas_hidreletricas_oper_aneel_poly_sirgas2000.zip"
-sha256 = "20eb3b6ee388f99d87f295ed2bfd3f8f2176ec1cce7931a1b9fcf7bd390e8411"
-
-[[source]]
-id = "thermoelectric_operating"
-type = "file"
-path = "zip://shapefiles/usinas_termeletricas_oper_aneel_poly_sirgas2000.zip"
-url = "https://github.com/lambdageo/disscube-recipes/releases/download/data-v1.0/usinas_termeletricas_oper_aneel_poly_sirgas2000.zip"
-sha256 = "0259793548e7234d487394518ddc0912ad916ab193a4f8eec465919f69495aaf"
-
-# ── Rodovias Federais (IBGE BC250 v2015) ───────────────────────────────────
 [[source]]
 id = "federal_paved"
 type = "file"
 path = "zip://ibge/Transporte_v2015.zip!TRA_Trecho_Rodoviario_L.shp"
 read = { on_invalid = "ignore", where = "(JURISDICAO = 'Federal' OR ADMINISTRA = 'Federal') AND REVESTIMEN IN ('Pavimentado', 'Calçado')" }
 url = "https://geoftp.ibge.gov.br/cartas_e_mapas/bases_cartograficas_continuas/bc250/versao2015/Shapefile/Transporte_v2015.zip"
+# sha256 = "..."   # TO COMPLETE: sha256sum of the downloaded zip (see docs/DATA.md)
 
 [[source]]
 id = "federal_unpaved"
@@ -332,8 +150,8 @@ type = "file"
 path = "zip://ibge/Transporte_v2015.zip!TRA_Trecho_Rodoviario_L.shp"
 read = { on_invalid = "ignore", where = "(JURISDICAO = 'Federal' OR ADMINISTRA = 'Federal') AND REVESTIMEN IN ('Leito natural', 'Revestimento primário(solto)')" }
 url = "https://geoftp.ibge.gov.br/cartas_e_mapas/bases_cartograficas_continuas/bc250/versao2015/Shapefile/Transporte_v2015.zip"
+# sha256 = "..."   # TO COMPLETE: sha256sum of the downloaded zip (see docs/DATA.md)
 
-# ── União das Rodovias (Estaduais + Federais) ──────────────────────────────
 [[source]]
 id = "paved_roads"
 type = "union"
@@ -344,8 +162,80 @@ id = "unpaved_roads"
 type = "union"
 of = ["state_unpaved", "federal_unpaved"]
 
-# ── Limite Territorial Oficial do Brasil (IBGE 2025) ──────────────────────────
-# ── Limite Territorial Oficial do Brasil (IBGE 2025) ──────────────────────────
+# ── Connectivity to ports (e_connport): TerraME GPM road network (cost per segment in `custo_ajus`) and 14 ports.
+# One topologically consistent network; joining the SNV and BC250 layers gave a graph in pieces and
+# no path to a port for 61% of the cells.
+[[source]]
+id = "roads"
+type = "file"
+path = "gpm/br_roads_5880.shp"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_roads_5880.shp"
+sha256 = "3eb5bd04e2ee2f979f53baeffc692b52b37dd22f29b34a433c3a1d529fa2168c"
+
+[[source]]
+id = "roads_shx"
+type = "file"
+format = "vector"
+path = "gpm/br_roads_5880.shx"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_roads_5880.shx"
+sha256 = "d5262c90cb08887f8cedc3a452e58e270ec666355e04b883f49a4ed9c4ab5cdc"
+
+[[source]]
+id = "roads_dbf"
+type = "file"
+format = "vector"
+path = "gpm/br_roads_5880.dbf"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_roads_5880.dbf"
+sha256 = "88c6ab692f8f2d383e4ba46732fb57bebd2006f93dc6fd6fa8fa9ddbda314e7f"
+
+[[source]]
+id = "roads_prj"
+type = "file"
+format = "vector"
+path = "gpm/br_roads_5880.prj"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_roads_5880.prj"
+sha256 = "55d89034603a7c6f432d2d505f132e9ee55bd84ed239d42a34ca4707bb2b13a6"
+
+[[source]]
+id = "ports"
+type = "file"
+path = "gpm/br_ports_5880.shp"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_ports_5880.shp"
+sha256 = "82355d997ce18ee546ba67037190345ed3c725133d958044ce9064f621a44af0"
+
+[[source]]
+id = "ports_shx"
+type = "file"
+format = "vector"
+path = "gpm/br_ports_5880.shx"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_ports_5880.shx"
+sha256 = "a99f3a89a84d5872bcb98f902485d4a6844428307738f948c0c0cbca044b2cc7"
+
+[[source]]
+id = "ports_dbf"
+type = "file"
+format = "vector"
+path = "gpm/br_ports_5880.dbf"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_ports_5880.dbf"
+sha256 = "bdfede1b5098a4599e7679a03b4ca5e33c8173bdf4bdf70efbab4a122acc49ad"
+
+[[source]]
+id = "ports_prj"
+type = "file"
+format = "vector"
+path = "gpm/br_ports_5880.prj"
+crs = "EPSG:5880"
+url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_ports_5880.prj"
+sha256 = "55d89034603a7c6f432d2d505f132e9ee55bd84ed239d42a34ca4707bb2b13a6"
+
+# ── Country boundary (IBGE 2025), the mask
 [[source]]
 id = "brazil_boundary"
 type = "file"

@@ -47,7 +47,9 @@ def main() -> None:
             "| Time | Peak memory |\n|---|---:|---|---|---|---|---:|---:|")
     out = ROOT / "results" / "table4.md"
     out.parent.mkdir(exist_ok=True)
-    frozen = _load(runs / next(iter(sorted(p.name for p in runs.glob('*/'))), "x") / "checks.json").get("acceptance_frozen") if runs.exists() else None
+    # the checks file is written next to the fine-grid run only; look for it in every run folder
+    flags = [_load(c).get("acceptance_frozen") for c in sorted(runs.glob("*/checks.json"))] if runs.exists() else []
+    frozen = bool(flags) and all(flags)
     note = "" if frozen else "\n\n> Provisional: `acceptance.toml` is not frozen.\n"
     out.write_text(head + "\n" + "\n".join(rows) + "\n" + note, encoding="utf-8")
     print(out.read_text(encoding="utf-8"))

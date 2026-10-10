@@ -44,8 +44,6 @@ def landscape(n: int, seed: int) -> dict[str, np.ndarray]:
     frac = np.exp(logits)
     frac /= frac.sum(0)
     out = {lu: frac[i] for i, lu in enumerate(LAND_USES)}
-    out["ag_apti_B"] = _smooth(rng, n)
-    out["ag_apti_MB"] = np.clip(1.0 - out["ag_apti_B"] - 0.2, 0.0, 1.0)
     out["c_ucspas"] = np.clip(_smooth(rng, n) * 1.4 - 0.3, 0.0, 1.0)   # protected share
     out["c_nusett"] = np.floor(_smooth(rng, n) * 4)                     # settlements per cell
     for name, scale in (("e_railway", 1.5e6), ("e_rivers", 4e5), ("e_urban10", 8e5),
