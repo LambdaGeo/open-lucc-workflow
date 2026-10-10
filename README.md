@@ -32,6 +32,8 @@ make small          # offline, synthetic cell space (~1 min); what CI runs
 make grids          # only the two grids (10.56 and 5.28 km) from open data; no model run
 make grid-10k       # or one at a time: data/cellspace_bdc_10k.tif (~1 min)
 make grid-5k        # data/cellspace_bdc_5k.tif (~3 min, peak ~1 GB RAM)
+make run-10k        # grid + model at 10.56 km only (runs/bdc_10k)
+make run-5k         # grid + model at 5.28 km only (runs/bdc_5k)
 make full           # grids + model runs + checks + report (network; the 5.28 km model run is the heavy step)
 make test lint
 ```

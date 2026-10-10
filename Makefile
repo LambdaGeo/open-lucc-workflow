@@ -5,6 +5,8 @@
 #   make grids          build both cell-space grids from open data (no model run)
 #   make grid-10k       build only the 10.56 km grid (~77 k cells; ~1 min)
 #   make grid-5k        build only the 5.28 km grid (~307 k cells; ~3 min, peak ~1 GB RAM)
+#   make run-10k        grid + model on the 10.56 km grid only (~30 min); writes runs/bdc_10k
+#   make run-5k         grid + model on the 5.28 km grid only (~2.5 h); writes runs/bdc_5k
 #   make full           Brazil, from open data (needs network; the model run at 5.28 km is the heavy step, memory not yet measured)
 #   make verify         verify the experiment records of every run (hashes, versions)
 #   make report         write results/table4.md from runs/*/metrics.json
@@ -17,10 +19,10 @@ DISSCUBE  ?= $(if $(wildcard .venv/bin/disscube),.venv/bin/disscube,disscube)
 SYN_SIZE  ?= 60
 SYN_BLOCK ?= 2
 
-.PHONY: env small grids grid-10k grid-5k full verify report test lint lock clean help
+.PHONY: env small grids grid-10k grid-5k run-10k run-5k full verify report test lint lock clean help
 
 help:
-	@sed -n '2,15p' Makefile
+	@sed -n '2,17p' Makefile
 
 env:
 	python3 -m venv .venv && .venv/bin/pip install -U pip && .venv/bin/pip install -r requirements-dev.txt
@@ -72,6 +74,12 @@ data/cellspace_%.tif: data/raw_cellspace_%.tif
 grids: grid-10k grid-5k
 grid-10k: data/cellspace_bdc_10k.tif
 grid-5k: data/cellspace_bdc_5k.tif
+
+# one resolution at a time (no acceptance check: that needs the three runs of `make full`)
+run-10k: data/cellspace_bdc_10k.tif
+	$(PY) scripts/run_experiment.py --cellspace $< --label bdc_10k
+run-5k: data/cellspace_bdc_5k.tif
+	$(PY) scripts/run_experiment.py --cellspace $< --label bdc_5k
 
 full: data/cellspace_$(FINE).tif data/cellspace_$(COARSE).tif
 	$(PY) scripts/run_experiment.py --cellspace data/cellspace_$(FINE).tif   --label $(FINE)
