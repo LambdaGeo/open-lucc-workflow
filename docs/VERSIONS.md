@@ -14,12 +14,24 @@
 Wheel SHA-256: run `make lock` on the machine that produces the reported results and paste
 `pip hash`/`requirements.lock` output here. (Not filled in: the hashes belong to the run that is reported.)
 
+## Reported results (v1.0.0)
+Run of `make full` on one Linux desktop (Python 3.12.3, 5 h 49 min in total), from the commit `55c41cd`
+(the later commits change only lint, documentation and how the memory is measured).
+
+| Grid | Cells | Input raster SHA-256 | Output SHA-256 | Time | Peak memory |
+|---|---:|---|---|---:|---:|
+| 10.56 km | 77,238 | `79664844f34bf14495654b93e6dc57c565f01bf72f70b32bcde049e87a05165b` | `95be540c8bd75a015594d973dc84bd9847dd9a8b862c4b06512186645ee63ac2` | 2,197.6 s | 421 MB |
+| 5.28 km | 307,419 | `327d4cf3301aec8f6e9b867e9f2ffbd490e5d5d482b6c02bb5a73986f6f2482d` | `b4212984080ab0faa26a068d62a09721dbd50c2b3fbc64a42aa85664837da34b` | 9,419.5 s | 828 MB |
+
+The repeat run at 5.28 km (9,331.7 s, 829 MB) gave the same output hash. [TO UPDATE: repeat `make full` from a clean
+clone of the tag `v1.0.0` and confirm that the hashes are the same.]
+
 ## Open decisions
 1. Land-use product and how it is obtained (STAC vs direct download) for `pipeline/grid/sources.toml`.
 2. Grids of the reported runs: 5.28 km (20×20 cells per BDC_SM tile) and 10.56 km (10×10, an exact 2×2 aggregation); memory test at 5.28 km. 25 km is not tile-aligned and is kept only for the transport-cost case of E2.
-3. Freeze `acceptance.toml` (`frozen = true`, tag the commit, cite the tag) before the reported runs.
+3. ~~Freeze `acceptance.toml`~~ Done: frozen on 2026-10-09 (`frozen_commit`), release tag `v1.0.0`.
 4. Confirm DOIs marked above.
-4. `e_connport` uses the TerraME GPM road network (`br_roads_5880`) and 14 ports (`br_ports_5880`), cost column `custo_ajus`, the same data as the disscube-benchmark connectivity case. Licence of these files to be confirmed for Table 4a.
+5. `e_connport` uses the TerraME GPM road network (`br_roads_5880`) and 14 ports (`br_ports_5880`), cost column `custo_ajus`, the same data as the disscube-benchmark connectivity case. Licence of these files to be confirmed for Table 4a.
 
 ## Before submission
 - Remove `scripts/_run_with_progress.py` (provisional wrapper that prints one progress line per year). Add the equivalent `logging` record per year to disslucc (iterations, maximum error, time), release it, pin the new version here and in `requirements.txt`, and make `scripts/run_experiment.py` call `python -m disslucc.executors.saturation` again. Re-run the reported runs with the pinned version (results do not change; the record does).

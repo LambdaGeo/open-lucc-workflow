@@ -6,5 +6,8 @@ authors:
   - family-names: Costa
     given-names: Sérgio Souza
     affiliation: Universidade Federal do Maranhão (UFMA)
+    orcid: "https://orcid.org/0000-0002-0232-4549"
 license: MIT
-repository-code: "https://github.com/profsergiocosta/open-lucc-workflow"
+version: "1.0.0"
+# doi: add the Zenodo version DOI after the release
+repository-code: "https://github.com/LambdaGeo/open-lucc-workflow"

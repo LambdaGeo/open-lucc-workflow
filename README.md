@@ -2,7 +2,7 @@
 
 Companion repository of the Technical Note (Big Earth Data): an end-to-end, open and traceable
 land-use-change workflow in Python (TerraME/LuccME-style), from open data to the allocated maps.
-It replaces the earlier two-repository plan (disscube-recipes + luccmebr-reconstruction).
+The results cited by the note are those of the tag `v1.0.0`.
 
 **Purpose.** This repository does not aim to reproduce LuccME-BR. It demonstrates a *process*: how a
 land-use-change experiment goes from open data to allocated maps in a way that, once built, anyone
@@ -60,4 +60,5 @@ Outputs were compared byte for byte only between Linux machines; on another oper
 within the numerical tolerance of `acceptance.toml`.
 
 ## Status
-`make small` is tested. `make full` (real sources, IBGE downloads) has **not** been run yet.
+`make small` and `make full` have been run (Linux, Python 3.12.3). The results of `v1.0.0`, with the hashes of the input
+rasters and of the outputs, are in `docs/VERSIONS.md`.
