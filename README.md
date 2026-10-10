@@ -40,5 +40,24 @@ make test lint
 `make full` refuses to report unless `acceptance.toml` is frozen. Open decisions and pinned
 versions/DOIs: `docs/VERSIONS.md`.
 
+## Windows
+The workflow is developed and tested on Linux. On Windows, use **WSL2** (Ubuntu), which gives the same
+environment, and keep the repository inside the Linux file system (`~/`), not under `/mnt/c`:
+```
+wsl --install -d Ubuntu     # PowerShell as administrator; restart when asked
+# then, in the Ubuntu terminal:
+sudo apt update && sudo apt install -y make git python3-venv
+git clone https://github.com/LambdaGeo/open-lucc-workflow && cd open-lucc-workflow
+make env && make small
+```
+For `make full` give WSL2 enough memory (the 5.28 km model run is the heavy step): create
+`%UserProfile%\.wslconfig` with `[wsl2]` and `memory=8GB`, then run `wsl --shutdown`.
+
+Native Windows (PowerShell or cmd) is **not supported**: the `Makefile` calls POSIX shell commands and the
+virtual environment is looked up in `.venv/bin`. The repository sets `eol=lf` in `.gitattributes`, so a
+checkout on Windows does not change the line endings, and with them the SHA-256, of the declared files.
+Outputs were compared byte for byte only between Linux machines; on another operating system, compare
+within the numerical tolerance of `acceptance.toml`.
+
 ## Status
 `make small` is tested. `make full` (real sources, IBGE downloads) has **not** been run yet.

@@ -1,0 +1,6 @@
+# One line ending for every platform: the SHA-256 of the declared files must not change with the checkout.
+* text=auto eol=lf
+*.tif binary
+*.zip binary
+*.png binary
+*.jpg binary
