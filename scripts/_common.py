@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
+import platform
 
 import numpy as np
 import rasterio
@@ -23,6 +24,21 @@ DRIVERS = [
     "e_urban10", "e_urban100", "e_proads", "e_uroads", "e_connport",
 ]
 REQUIRED_BANDS = LAND_USES + DRIVERS + ["mask"]
+
+
+def peak_rss_mb(children: bool = False) -> float | None:
+    """Peak resident memory in MB of this process or, with children=True, of its child processes.
+
+    Returns None where the platform has no `resource` module (Windows), so that callers record
+    "not measured" instead of failing.
+    """
+    try:
+        import resource
+    except ImportError:  # pragma: no cover - Windows
+        return None
+    who = resource.RUSAGE_CHILDREN if children else resource.RUSAGE_SELF
+    peak = resource.getrusage(who).ru_maxrss  # Linux: KiB, macOS: bytes
+    return peak / (1024 * 1024) if platform.system() == "Darwin" else peak / 1024
 
 
 def load_toml(path: pathlib.Path) -> dict:

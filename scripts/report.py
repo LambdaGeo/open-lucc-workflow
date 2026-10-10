@@ -40,7 +40,7 @@ def main() -> None:
                 it=fmt_iter(m["iterations_per_step"]),
                 rp=("yes" if rep["ok"] else "NO") + (", bytes" if rep["bytes_identical"] else f", max Δ {rep['max_abs_diff']:.2g}") if rep else "n/a",
                 rs=f"{res['max_class_area_diff_fraction']:.4f} of area" if res else "n/a",
-                t=f"{m['wall_seconds']:.1f} s", mem=f"{m['peak_rss_mb']:.0f} MB",
+                t=f"{m['wall_seconds']:.1f} s", mem="n/a" if m["peak_rss_mb"] is None else f"{m['peak_rss_mb']:.0f} MB",
             )
         )
     head = ("| Grid | Cells | Demand met | Iterations per year | Repeat run identical | Area per class vs coarser grid "

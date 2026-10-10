@@ -13,7 +13,6 @@ import glob
 import json
 import pathlib
 import platform
-import resource
 import shutil
 import subprocess
 import sys
@@ -21,7 +20,18 @@ import time
 from importlib.metadata import version
 
 try:
-    from _common import MODEL_TOML, ROOT, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands, sha256_file, write_json
+    from _common import (
+        MODEL_TOML,
+        ROOT,
+        SCENARIO_TOML,
+        cell_area_km2,
+        class_areas_km2,
+        load_toml,
+        peak_rss_mb,
+        read_bands,
+        sha256_file,
+        write_json,
+    )
     from make_demand import demand_table, write_csv
 except ImportError:  # pragma: no cover
     from scripts._common import (
@@ -31,6 +41,7 @@ except ImportError:  # pragma: no cover
         cell_area_km2,
         class_areas_km2,
         load_toml,
+        peak_rss_mb,
         read_bands,
         sha256_file,
         write_json,
@@ -38,12 +49,6 @@ except ImportError:  # pragma: no cover
     from scripts.make_demand import demand_table, write_csv
 
 import numpy as np
-
-
-def peak_rss_mb() -> float:
-    """Peak resident memory of the child processes so far (Linux: KiB, macOS: bytes)."""
-    peak = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
-    return peak / (1024 * 1024) if platform.system() == "Darwin" else peak / 1024
 
 
 def main() -> None:
@@ -91,6 +96,7 @@ def main() -> None:
             if line.startswith("[progress]"):
                 print(line, end="", flush=True)
     wall = time.perf_counter() - t0
+    peak = peak_rss_mb(children=True)
     if proc.returncode != 0:
         sys.exit(f"executor failed (see {log_path}):\n{''.join(lines)[-1500:]}")
 
@@ -112,7 +118,7 @@ def main() -> None:
         "max_difference_km2": float(scenario["max_difference_km2"]),
         "wall_seconds": round(wall, 3),
         "run_seconds": m.get("seconds"),
-        "peak_rss_mb": round(peak_rss_mb(), 1),
+        "peak_rss_mb": None if peak is None else round(peak, 1),
         "iterations_per_step": m["iterations_per_step"],
         "max_error_per_step": m["max_error_per_step"],
         "final_areas_km2": {k.removeprefix("final_").removesuffix("_area"): v for k, v in m.items()
@@ -127,7 +133,7 @@ def main() -> None:
         "host": f"{platform.system()} {platform.machine()}",
     }
     write_json(out_dir / "metrics.json", metrics)
-    print(f"{a.label}: {metrics['cells_in_mask']:,} cells, {wall:.1f} s, peak {metrics['peak_rss_mb']} MB, "
+    print(f"{a.label}: {metrics['cells_in_mask']:,} cells, {wall:.1f} s, peak {'n/a' if peak is None else str(metrics['peak_rss_mb']) + ' MB'}, "
           f"max iterations {max(metrics['iterations_per_step'])}")
 
 
