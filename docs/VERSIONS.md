@@ -2,6 +2,7 @@
 
 | Component | Version | DOI |
 |---|---|---|
+| open-lucc-workflow | 1.0.0 | 10.5281/zenodo.23287890 |
 | dissmodel | 0.6.6 | 10.5281/zenodo.23246106 (confirm version vs concept DOI) |
 | disscube | 0.5.0 | 10.5281/zenodo.23172450 |
 | disslucc | 0.5.0 | 10.5281/zenodo.23219338 |
