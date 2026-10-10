@@ -2,6 +2,9 @@
 #
 #   make env            create .venv and install the pinned packages
 #   make small          offline smoke test on a synthetic cell space (minutes; what CI runs)
+#   make grids          build both cell-space grids from open data (no model run)
+#   make grid-10k       build only the 10.56 km grid (~77 k cells; light on memory)
+#   make grid-5k        build only the 5.28 km grid (~307 k cells; needs ~6 GB RAM)
 #   make full           Brazil, from open data (needs network, ~6 GB RAM for the 5.28 km grid)
 #   make verify         verify the experiment records of every run (hashes, versions)
 #   make report         write results/table4.md from runs/*/metrics.json
@@ -14,10 +17,10 @@ DISSCUBE  ?= $(if $(wildcard .venv/bin/disscube),.venv/bin/disscube,disscube)
 SYN_SIZE  ?= 60
 SYN_BLOCK ?= 2
 
-.PHONY: env small full verify report test lint lock clean help
+.PHONY: env small grids grid-10k grid-5k full verify report test lint lock clean help
 
 help:
-	@sed -n '2,12p' Makefile
+	@sed -n '2,15p' Makefile
 
 env:
 	python3 -m venv .venv && .venv/bin/pip install -U pip && .venv/bin/pip install -r requirements-dev.txt
@@ -64,6 +67,11 @@ data/raw_cellspace_%.tif: build/pipelines/%.toml data/cube_%/.cataloged
 data/cellspace_%.tif: data/raw_cellspace_%.tif
 	$(PY) scripts/complete_cellspace.py $< $@
 	$(PY) scripts/check_cellspace.py $@
+
+# build the grids only (stages 1-2 and the check), without running the model
+grids: grid-10k grid-5k
+grid-10k: data/cellspace_bdc_10k.tif
+grid-5k: data/cellspace_bdc_5k.tif
 
 full: data/cellspace_$(FINE).tif data/cellspace_$(COARSE).tif
 	$(PY) scripts/run_experiment.py --cellspace data/cellspace_$(FINE).tif   --label $(FINE)
