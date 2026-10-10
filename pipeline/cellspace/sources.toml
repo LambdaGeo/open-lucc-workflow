@@ -142,7 +142,7 @@ type = "file"
 path = "zip://ibge/Transporte_v2015.zip!TRA_Trecho_Rodoviario_L.shp"
 read = { on_invalid = "ignore", where = "(JURISDICAO = 'Federal' OR ADMINISTRA = 'Federal') AND REVESTIMEN IN ('Pavimentado', 'Calçado')" }
 url = "https://geoftp.ibge.gov.br/cartas_e_mapas/bases_cartograficas_continuas/bc250/versao2015/Shapefile/Transporte_v2015.zip"
-# sha256 = "..."   # TO COMPLETE: sha256sum of the downloaded zip (see docs/DATA.md)
+sha256 = "45b33a7d1a4a170b683933397ea8a587b50a3b788c5e84e11bc8f5bd955f6438"
 
 [[source]]
 id = "federal_unpaved"
@@ -150,7 +150,7 @@ type = "file"
 path = "zip://ibge/Transporte_v2015.zip!TRA_Trecho_Rodoviario_L.shp"
 read = { on_invalid = "ignore", where = "(JURISDICAO = 'Federal' OR ADMINISTRA = 'Federal') AND REVESTIMEN IN ('Leito natural', 'Revestimento primário(solto)')" }
 url = "https://geoftp.ibge.gov.br/cartas_e_mapas/bases_cartograficas_continuas/bc250/versao2015/Shapefile/Transporte_v2015.zip"
-# sha256 = "..."   # TO COMPLETE: sha256sum of the downloaded zip (see docs/DATA.md)
+sha256 = "45b33a7d1a4a170b683933397ea8a587b50a3b788c5e84e11bc8f5bd955f6438"
 
 [[source]]
 id = "paved_roads"
