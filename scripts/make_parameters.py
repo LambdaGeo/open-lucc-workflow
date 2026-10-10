@@ -32,8 +32,9 @@ HEADER = """\
 # It is not LuccME-BR and its outputs are not land-use projections. How the values were reached, and what was tried
 # before (the published S2 parameters, kept in model/reference/), is in docs/PARAMETERIZATION.md.
 #
-# Units of the cell space: land uses are shares (0-1); c_ucspas is a protected share; ag_apti_* are suitability
-# shares; c_nusett is a count; e_* are distances (m) or cost units.
+# Units of the cell space: land uses are shares (0-1); c_ucspas is a protected share; ag_apti_* mark the extent of
+# the aptitude map, not graded suitability (docs/PARAMETERIZATION.md, section 8); c_nusett is a count; e_* are
+# distances (m) or cost units.
 #
 # Run by:  python scripts/run_experiment.py --cellspace <cellspace.tif> --label <label>
 

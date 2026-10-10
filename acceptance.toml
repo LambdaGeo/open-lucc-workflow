@@ -6,9 +6,9 @@
 # Every value below is a proposal.
 
 [meta]
-status = "proposed"
-frozen = false
-frozen_commit = ""
+status = "frozen"
+frozen = true
+frozen_commit = "<preencher depois>"
 
 # (i) The allocation meets the demand.
 [demand]
