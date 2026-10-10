@@ -1,0 +1,55 @@
+2 tiles with cells in the mask (of 2340)
+[1/2] tile 25,10: 29.1 s, peak 414 MB
+[2/2] tile 26,10: 31.8 s, peak 414 MB
+{
+  "base": "data/raw_cellspace_bdc_5k.tif",
+  "out": "data/raw_cellspace_bdc_5k_mapbiomas_try.tif",
+  "year": 2000,
+  "collection": 11,
+  "crosswalk": "/home/sergio/develop/github/lambdageo/open-lucc-workflow/model/mapbiomas_crosswalk.toml",
+  "tiles": 2,
+  "wall_seconds": 61.6,
+  "peak_rss_mb": 414.0,
+  "class_area_km2_base": {
+    "forest_vegetation": 3698976.1762558036,
+    "country_vegetation": 2080665.3713653404,
+    "pasture_management": 620828.7136491406,
+    "agricultural": 398294.00857736525,
+    "mosaic_of_occupations": 1382299.9736253296,
+    "forestry": 55568.407319883976,
+    "others": 329378.59708558273
+  },
+  "class_area_km2_mapbiomas": {
+    "forest_vegetation": 16875.580078125,
+    "country_vegetation": 57.562198638916016,
+    "pasture_management": 4296.169921875,
+    "agricultural": 0.24210000038146973,
+    "mosaic_of_occupations": 165.33184814453125,
+    "forestry": 0.0,
+    "others": 907.8345336914062
+  },
+  "cells_without_mapbiomas_in_mask": 307229
+}
+	Command being timed: "python scripts/build_mapbiomas_cellspace.py --base data/raw_cellspace_bdc_5k.tif --out data/raw_cellspace_bdc_5k_mapbiomas_try.tif --workdir data/mapbiomas_try --tiles 25,10;26,10"
+	User time (seconds): 32.07
+	System time (seconds): 2.02
+	Percent of CPU this job got: 54%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:02.19
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 520820
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 446582
+	Voluntary context switches: 47024
+	Involuntary context switches: 1330
+	Swaps: 0
+	File system inputs: 472
+	File system outputs: 40448
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

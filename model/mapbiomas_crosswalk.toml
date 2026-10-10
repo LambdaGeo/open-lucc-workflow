@@ -1,0 +1,20 @@
+# Declared correspondence between MapBiomas classes and the seven classes of the verification model.
+#
+# This is OUR choice, made to exercise the chain with another land-use source (manuscript, section 5.4.3).
+# It is not the correspondence used by LuccME-BR, and the result is not a LuccME-BR initial state.
+# [TO CONFIRM] every code against the legend of the collection in use (see LEGEND_URL in
+# disscube.sources.mapbiomas); codes that are not listed here go to `others`, and code 0 (not observed) is nodata.
+
+[source]
+collection = 11
+resolution = 30
+year = 2000                        # the year of the land-cover layer used by the main runs
+
+[classes]
+forest_vegetation     = [3, 5, 6]                                   # forest formation, mangrove, floodable forest
+country_vegetation    = [4, 11, 12, 13]                             # savanna, wetland, grassland, other non-forest formation
+pasture_management    = [15]                                        # pasture
+agricultural          = [18, 19, 20, 35, 36, 39, 40, 41, 46, 47, 48, 62]  # agriculture and its crops
+mosaic_of_occupations = [21]                                        # mosaic of uses
+forestry              = [9]                                         # forest plantation
+others                = [22, 23, 24, 25, 26, 29, 30, 31, 32, 33]    # non-vegetated, urban, water, ... (plus any unlisted code)
