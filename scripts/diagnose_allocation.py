@@ -20,10 +20,10 @@ import time
 import numpy as np
 
 try:
-    from _common import LAND_USES, MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
+    from _common import MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
     from make_demand import demand_table, write_csv
 except ImportError:  # pragma: no cover
-    from scripts._common import LAND_USES, MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
+    from scripts._common import MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
     from scripts.make_demand import demand_table, write_csv
 
 STEP = 1  # first year traced; set by --step
@@ -55,8 +55,9 @@ def main() -> None:
     def traced(self, step):
         areas = self._areas()
         if step >= STEP and state["n"] in SHOW:
+            gaps = sum(areas) - sum(self.demand.get_current_lu_demand(i) for i in range(len(areas)))
             print(f"\n--- step {step}, evaluation {state['n']} "
-                  f"({time.perf_counter() - state['t0']:.0f} s since start; sum of gaps {sum(areas) - sum(self.demand.get_current_lu_demand(i) for i in range(len(areas))):+.0f} km2) ---")
+                  f"({time.perf_counter() - state['t0']:.0f} s since start; sum of gaps {gaps:+.0f} km2) ---")
             print(f"{'class':24s}{'area km2':>14s}{'demand km2':>14s}{'gap km2':>12s}{'elasticity':>12s}{'dir':>5s}")
             valid = self._valid()
             tot = np.sum([np.where(self.backend.get(lu) > 0, self.backend.get(lu), 0.0) for lu in self.land_use_types], axis=0)[valid]

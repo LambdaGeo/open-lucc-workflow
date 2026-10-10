@@ -125,8 +125,8 @@ def test_complete_input_removes_zero_sum_cells(tmp_path):
 def test_complete_input_partial_coverage(tmp_path):
     import numpy as np
     import rasterio
-    from complete_input import complete
     from _common import LAND_USES, read_bands
+    from complete_input import complete
     from synth_input import build
 
     src = tmp_path / "s.tif"
@@ -148,4 +148,4 @@ def test_complete_input_partial_coverage(tmp_path):
         assert rep["cells_below_min_coverage"] == 2 and rep["cells_partly_covered_adjusted"] == 3
         b, _, _ = read_bands(str(tmp_path / f"{mode}.tif"))
         m = np.nan_to_num(b["mask"]) > 0
-        assert abs(np.nansum([b[l] for l in LAND_USES], axis=0)[m] - 1).max() < 1e-4
+        assert abs(np.nansum([b[name] for name in LAND_USES], axis=0)[m] - 1).max() < 1e-4

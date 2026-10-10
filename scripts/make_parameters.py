@@ -13,8 +13,6 @@ from __future__ import annotations
 import argparse
 import pathlib
 
-import numpy as np
-
 try:
     from _common import LAND_USES, MODEL_TOML, ROOT, load_toml, read_bands, sha256_file, write_json
 except ImportError:  # pragma: no cover

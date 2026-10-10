@@ -1,0 +1,69 @@
+.venv/bin/python scripts/run_experiment.py --input data/br_5km.tif   --label br_5km
+[progress] year 1 | 598 iterations | max error 995.2 km2 | 7.7 min (year) | 7.7 min total | 0.80 GB peak
+[progress] year 2 | 704 iterations | max error 997.3 km2 | 8.9 min (year) | 16.6 min total | 0.81 GB peak
+[progress] year 3 | 759 iterations | max error 998.1 km2 | 9.8 min (year) | 26.4 min total | 0.81 GB peak
+[progress] year 4 | 831 iterations | max error 997.9 km2 | 9.8 min (year) | 36.2 min total | 0.81 GB peak
+[progress] year 5 | 871 iterations | max error 998.9 km2 | 10.1 min (year) | 46.3 min total | 0.81 GB peak
+[progress] year 6 | 936 iterations | max error 996.1 km2 | 10.6 min (year) | 57.0 min total | 0.81 GB peak
+[progress] year 7 | 956 iterations | max error 998.2 km2 | 11.1 min (year) | 68.1 min total | 0.81 GB peak
+[progress] year 8 | 983 iterations | max error 995.0 km2 | 11.5 min (year) | 79.7 min total | 0.81 GB peak
+[progress] year 9 | 1027 iterations | max error 996.8 km2 | 12.1 min (year) | 91.7 min total | 0.81 GB peak
+[progress] year 10 | 1060 iterations | max error 997.4 km2 | 12.5 min (year) | 104.2 min total | 0.81 GB peak
+[progress] year 11 | 1086 iterations | max error 999.8 km2 | 12.9 min (year) | 117.1 min total | 0.81 GB peak
+[progress] year 12 | 1110 iterations | max error 997.6 km2 | 13.1 min (year) | 130.2 min total | 0.81 GB peak
+[progress] year 13 | 1128 iterations | max error 999.9 km2 | 13.2 min (year) | 143.5 min total | 0.81 GB peak
+[progress] year 14 | 1144 iterations | max error 999.8 km2 | 13.5 min (year) | 157.0 min total | 0.81 GB peak
+br_5km: 307,419 cells, 9419.5 s, peak 828.2 MB, max iterations 1144
+.venv/bin/python scripts/run_experiment.py --input data/br_5km.tif   --label br_5km_repeat
+[progress] year 1 | 598 iterations | max error 995.2 km2 | 7.2 min (year) | 7.2 min total | 0.80 GB peak
+[progress] year 2 | 704 iterations | max error 997.3 km2 | 8.4 min (year) | 15.6 min total | 0.81 GB peak
+[progress] year 3 | 759 iterations | max error 998.1 km2 | 8.9 min (year) | 24.6 min total | 0.81 GB peak
+[progress] year 4 | 831 iterations | max error 997.9 km2 | 9.6 min (year) | 34.2 min total | 0.81 GB peak
+[progress] year 5 | 871 iterations | max error 998.9 km2 | 10.1 min (year) | 44.3 min total | 0.81 GB peak
+[progress] year 6 | 936 iterations | max error 996.1 km2 | 10.7 min (year) | 54.9 min total | 0.81 GB peak
+[progress] year 7 | 956 iterations | max error 998.2 km2 | 11.1 min (year) | 66.1 min total | 0.81 GB peak
+[progress] year 8 | 983 iterations | max error 995.0 km2 | 11.5 min (year) | 77.6 min total | 0.81 GB peak
+[progress] year 9 | 1027 iterations | max error 996.8 km2 | 12.0 min (year) | 89.7 min total | 0.81 GB peak
+[progress] year 10 | 1060 iterations | max error 997.4 km2 | 12.4 min (year) | 102.1 min total | 0.81 GB peak
+[progress] year 11 | 1086 iterations | max error 999.8 km2 | 12.9 min (year) | 115.0 min total | 0.81 GB peak
+[progress] year 12 | 1110 iterations | max error 997.6 km2 | 13.1 min (year) | 128.1 min total | 0.81 GB peak
+[progress] year 13 | 1128 iterations | max error 999.9 km2 | 13.3 min (year) | 141.4 min total | 0.81 GB peak
+[progress] year 14 | 1144 iterations | max error 999.8 km2 | 14.0 min (year) | 155.5 min total | 0.81 GB peak
+br_5km_repeat: 307,419 cells, 9331.7 s, peak 829.4 MB, max iterations 1144
+.venv/bin/python scripts/run_experiment.py --input data/br_10km.tif --label br_10km
+[progress] year 1 | 485 iterations | max error 998.5 km2 | 1.5 min (year) | 1.5 min total | 0.41 GB peak
+[progress] year 2 | 558 iterations | max error 999.9 km2 | 1.6 min (year) | 3.1 min total | 0.41 GB peak
+[progress] year 3 | 663 iterations | max error 996.7 km2 | 2.3 min (year) | 5.5 min total | 0.41 GB peak
+[progress] year 4 | 712 iterations | max error 996.2 km2 | 2.8 min (year) | 8.3 min total | 0.41 GB peak
+[progress] year 5 | 743 iterations | max error 995.2 km2 | 2.7 min (year) | 11.0 min total | 0.41 GB peak
+[progress] year 6 | 749 iterations | max error 979.2 km2 | 2.7 min (year) | 13.8 min total | 0.41 GB peak
+[progress] year 7 | 779 iterations | max error 958.7 km2 | 2.9 min (year) | 16.6 min total | 0.41 GB peak
+[progress] year 8 | 808 iterations | max error 998.7 km2 | 2.7 min (year) | 19.3 min total | 0.41 GB peak
+[progress] year 9 | 880 iterations | max error 995.7 km2 | 2.4 min (year) | 21.7 min total | 0.41 GB peak
+[progress] year 10 | 910 iterations | max error 998.4 km2 | 2.5 min (year) | 24.2 min total | 0.41 GB peak
+[progress] year 11 | 955 iterations | max error 998.0 km2 | 3.5 min (year) | 27.7 min total | 0.41 GB peak
+[progress] year 12 | 987 iterations | max error 997.6 km2 | 3.2 min (year) | 30.9 min total | 0.41 GB peak
+[progress] year 13 | 1011 iterations | max error 999.9 km2 | 2.8 min (year) | 33.7 min total | 0.41 GB peak
+[progress] year 14 | 1041 iterations | max error 988.3 km2 | 2.9 min (year) | 36.6 min total | 0.41 GB peak
+br_10km: 77,238 cells, 2197.6 s, peak 420.8 MB, max iterations 1041
+.venv/bin/python scripts/check_run.py --require-frozen --run runs/br_5km --repeat runs/br_5km_repeat --coarse runs/br_10km
+PASS  demand_met         {'max_error_km2': 999.8517656316981, 'worst_final_class_error_km2': 995.9605793617666, 'tolerance_km2': 1000.0, 'max_iterations': 1144}
+PASS  repeat_identical   {'max_abs_diff': 0.0, 'bytes_identical': True, 'tolerance': 0.0}
+PASS  area_vs_coarser    {'max_class_area_diff_fraction': 0.002091983285912504, 'tolerance': 0.005}
+make verify report
+make[1]: Entering directory '/home/sergio/develop/github/lambdageo/novo/open-lucc-workflow'
+record verified
+record verified
+record verified
+record verified
+record verified
+record verified
+.venv/bin/python scripts/report.py
+| Grid | Cells | Demand met | Iterations per year | Repeat run identical | Area per class vs coarser grid | Time | Peak memory |
+|---|---:|---|---|---|---|---:|---:|
+| br_10km | 77,238 | n/a | 0 485 558 663 712 743 749 779 808 880 910 955 987 1011 1041 | n/a | n/a | 2197.6 s | 421 MB |
+| br_5km | 307,419 | yes (max 999.85 km²) | 0 598 704 759 831 871 936 956 983 1027 1060 1086 1110 1128 1144 | yes, bytes | 0.0021 of area | 9419.5 s | 828 MB |
+| synthetic_coarse | 900 | n/a | 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 | n/a | n/a | 2.1 s | 300 MB |
+| synthetic_fine | 3,600 | yes (max 969.33 km²) | 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 | yes, bytes | 0.0043 of area | 2.6 s | 301 MB |
+
+make[1]: Leaving directory '/home/sergio/develop/github/lambdageo/novo/open-lucc-workflow'
