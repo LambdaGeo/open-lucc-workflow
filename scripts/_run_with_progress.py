@@ -18,12 +18,15 @@ and changes nothing else (no parameter, no result). disslucc and dissmodel are n
 from __future__ import annotations
 
 import platform
-import resource
 import sys
 import time
 
 
-def _peak_gb() -> float:
+def _peak_gb() -> float | None:
+    try:
+        import resource
+    except ImportError:  # Windows has no `resource` module: memory is then not reported
+        return None
     peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     return (peak / (1024 * 1024) if platform.system() == "Darwin" else peak / 1024) / 1024
 
@@ -41,9 +44,11 @@ def main() -> None:
         original(self)
         year = int(self.env.now())
         if year >= 1 and self.iterations_per_step:
+            gb = _peak_gb()
+            peak = "n/a" if gb is None else f"{gb:.2f} GB"
             print(f"[progress] year {year} | {self.iterations_per_step[-1]} iterations | "
                   f"max error {self.max_error_per_step[-1]:.1f} km2 | {(time.perf_counter() - t0) / 60:.1f} min (year) | "
-                  f"{(time.perf_counter() - t_start) / 60:.1f} min total | {_peak_gb():.2f} GB peak", flush=True)
+                  f"{(time.perf_counter() - t_start) / 60:.1f} min total | {peak} peak", flush=True)
 
     sat.AllocationClueLikeSaturation.execute = with_progress
     sys.argv = ["saturation"] + sys.argv[1:]

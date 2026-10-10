@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Acceptance checks of acceptance.toml on one run (and, optionally, its repeat and a coarser run).
 
-    python scripts/check_run.py --run runs/bdc_5k --repeat runs/bdc_5k_repeat --coarse runs/bdc_10k
+    python scripts/check_run.py --run runs/br_5km --repeat runs/br_5km_repeat --coarse runs/br_10km
 Exit status 1 if a check fails. Writes <run>/checks.json.
 """
 from __future__ import annotations

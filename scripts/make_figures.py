@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Figures for the note: driver maps and the verification-run result.
 
-    python scripts/make_figures.py --cellspace data/cellspace_bdc_10k.tif \
+    python scripts/make_figures.py --input data/br_10km.tif \
         --lucc runs/<label>/lucc_<id>.tif --outdir results/figures --tag 10k
 
 Reads only the input raster and the model output; nothing is fitted or edited.
@@ -15,6 +15,7 @@ import argparse
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -48,7 +49,8 @@ def read(path):
 
 
 def style(ax, ext):
-    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_xticks([])
+    ax.set_yticks([])
     for sp in ax.spines.values():
         sp.set_visible(False)
     ax.set_facecolor("white")
@@ -71,7 +73,7 @@ def drivers(cs, names, ext, mask, out):
     cm = ListedColormap(PORT_GREYS)
     norm = BoundaryNorm(PORT_BREAKS[:-1] + [3000], cm.N)
     ax.imshow(port, cmap=cm, norm=norm, extent=ext, interpolation="nearest")
-    ax.legend(handles=[Patch(fc=c, ec="#555", label=l) for c, l in zip(PORT_GREYS, PORT_LABELS)],
+    ax.legend(handles=[Patch(fc=c, ec="#555", label=name) for c, name in zip(PORT_GREYS, PORT_LABELS)],
               title="Generalized cost", loc="lower left", fontsize=7, title_fontsize=7, frameon=False)
     ax.set_title("(a) Transport cost to ports (e_connport)", fontsize=9)
     spec = [
@@ -142,13 +144,14 @@ def results(cs, names, lucc, ext, mask, out):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--cellspace", required=True)
+    ap.add_argument("--input", required=True)
     ap.add_argument("--lucc", required=True)
     ap.add_argument("--outdir", default="results/figures")
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
-    out = Path(a.outdir); out.mkdir(parents=True, exist_ok=True)
-    cs, names, ext = read(a.cellspace)
+    out = Path(a.outdir)
+    out.mkdir(parents=True, exist_ok=True)
+    cs, names, ext = read(a.input)
     lucc, _, _ = read(a.lucc)
     mask = cs[names.index("mask")] == 1
     sfx = f"_{a.tag}" if a.tag else ""

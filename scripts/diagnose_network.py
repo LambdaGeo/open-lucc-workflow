@@ -7,13 +7,13 @@ rarely share exact endpoints, so the graph breaks into many pieces, and a cell w
 vertex lies in a piece without a port gets no value. This script counts the pieces, says which ones
 hold a port, and shows how many cells would be served if endpoints closer than a tolerance were joined.
 
-    python scripts/diagnose_network.py --cellspace data/raw_cellspace_bdc_5k.tif
+    python scripts/diagnose_network.py --input data/raw_br_5km.tif
 
 Note: the pipeline now uses the TerraME GPM road/port network (one connected network, as in the
 disscube-benchmark connectivity case), so this script only applies to the older SNV+BC250 sources.
 
 Reads the layers from the DisSCube download cache (default ~/.cache/disscube/raw) with the same
-filters as pipeline/cellspace/sources.toml. Nothing is written.
+filters as pipeline/grid/sources.toml. Nothing is written.
 """
 from __future__ import annotations
 
@@ -105,12 +105,12 @@ def report(label: str, nodes, u, v, ports_xy, cells_xy, tols=(0, 1, 10, 100, 500
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cellspace", required=True, help="the cell space exported by DisSCube (GeoTIFF)")
+    ap.add_argument("--input", required=True, help="the input raster exported by DisSCube (GeoTIFF)")
     ap.add_argument("--cache", default=str(pathlib.Path.home() / ".cache" / "disscube" / "raw"))
     a = ap.parse_args()
     cache = pathlib.Path(a.cache)
 
-    bands, transform, crs = read_bands(a.cellspace)
+    bands, transform, crs = read_bands(a.input)
     mask = np.nan_to_num(bands["mask"]) > 0
     rows, cols = np.nonzero(mask)
     xs, ys = transform * (cols + 0.5, rows + 0.5)

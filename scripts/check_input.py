@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-"""Sanity checks on a cell space before any model run (synthetic or built by DisSCube).
+"""Sanity checks on an input raster before any model run (synthetic or built by DisSCube).
 
-    python scripts/check_cellspace.py data/cellspace_5k.tif
+    python scripts/check_input.py data/br_5km.tif
 If cells fail only because some bands are undefined along the coast or borders, run
-scripts/complete_cellspace.py, which takes those cells out of the mask and reports how many.
+scripts/complete_input.py, which takes those cells out of the mask and reports how many.
 Exit status 1 if a required band is missing, a share is outside [0, 1], the land uses do not sum to 1
 inside the mask, or a driver has NaN inside the mask.
 """

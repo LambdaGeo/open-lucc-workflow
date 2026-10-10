@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Restrict the mask of a cell space to the cells where every land use and driver is defined.
+"""Restrict the mask of an input raster to the cells where every land use and driver is defined.
 
 DisSCube's `mask` band is the share of each cell inside the country boundary. Along the coast and
 the borders some cells are partly inside the boundary but have no land-use value (the land-cover
@@ -8,7 +8,7 @@ those cells are taken out of the mask. Nothing is filled or invented; the origin
 kept in the band `mask_boundary` and the cells that were taken out are counted in a JSON report, so
 the choice is recorded and can be cited in the manuscript.
 
-    python scripts/complete_cellspace.py data/raw_cellspace_bdc_5k.tif data/cellspace_bdc_5k.tif
+    python scripts/complete_input.py data/raw_br_5km.tif data/br_5km.tif
 """
 from __future__ import annotations
 

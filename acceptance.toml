@@ -1,14 +1,15 @@
 # Acceptance criteria for the demonstration at scale (manuscript, section 5.4, Table 4).
 #
-# They must be FIXED BEFORE the runs that produce the reported numbers: set `frozen = true`, fill
-# `frozen_commit` with the commit that contains this file, tag that commit, and cite the tag in the
-# manuscript. `scripts/check_run.py --require-frozen` (used by `make full`) refuses to run otherwise.
-# Every value below is a proposal.
+# They were FIXED BEFORE the runs that produce the reported numbers. `frozen_commit` is the commit that
+# froze them (2026-10-09); no value below has changed since (a later commit only reworded a comment).
+# The numbers cited by the note are those of the release `release_tag`.
+# `scripts/check_run.py --require-frozen` (used by `make full`) refuses to run unless `frozen = true`.
 
 [meta]
 status = "frozen"
 frozen = true
-frozen_commit = "<preencher depois>"
+frozen_commit = "0eef81fddfdbf75b2a0d6db33559831b111fbb85"   # "Freeze the acceptance criteria"
+release_tag = "v1.0.0"
 
 # (i) The allocation meets the demand.
 [demand]
@@ -22,7 +23,7 @@ max_iterations_per_step = 3000
 
 # (ii) A repeated run gives the same result.
 [determinism]
-# Largest absolute difference between two runs of the same cell space, over every cell and class.
+# Largest absolute difference between two runs of the same input raster, over every cell and class.
 # 0.0 asks for identical values.
 max_abs_diff = 0.0
 

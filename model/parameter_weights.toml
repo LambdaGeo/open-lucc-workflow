@@ -1,5 +1,5 @@
 # Declared weights of the verification model. This file is the ONLY place where parameters are chosen by hand;
-# scripts/make_parameters.py turns it, together with the statistics of the 10.56 km cell space, into
+# scripts/make_parameters.py turns it, together with the statistics of the 10.56 km input raster, into
 # model/verification_model.toml. The reasoning and the test log are in docs/PARAMETERIZATION.md.
 #
 # Rule (docs/PARAMETERIZATION.md, section 3):
@@ -8,7 +8,7 @@
 #   const_k  = (1 - rho) * mean_k - sum_d w_kd * mu_d / sigma_d     (mean potential of the class = 0 at the start)
 # Signs follow the usual direction of the relation (distance to roads, ports, railways and urban areas, protected
 # share, rural settlements); magnitudes are of the same order for every driver (0.01 to 0.03 per sd) because
-# nothing in the cell space (a single date) allows estimating them. They are illustrative, not estimated.
+# nothing in the input raster (a single date) allows estimating them. They are illustrative, not estimated.
 
 # The agricultural-aptitude bands (ag_apti_*) are NOT used: in DisSCube 0.5.0 they do not hold fertility classes
 # (docs/PARAMETERIZATION.md, section 8).

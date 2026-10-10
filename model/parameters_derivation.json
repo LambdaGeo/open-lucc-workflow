@@ -1,6 +1,4 @@
 {
-  "cellspace": "cellspace_bdc_10k.tif",
-  "cellspace_sha256": "a4bd7beb2c38a187ed27925c8178616f3fdaac4de3662f42eb880d954ca4f9a6",
   "classes": {
     "agricultural": {
       "const": 0.04805035910502478,
@@ -147,6 +145,8 @@
       "mean_share": 0.07224577668194551
     }
   },
+  "input_raster": "br_10km.tif",
+  "input_raster_sha256": "79664844f34bf14495654b93e6dc57c565f01bf72f70b32bcde049e87a05165b",
   "rho": 0.9,
-  "weights_sha256": "987372cece55bba0eab92939ceae0471e339f9e6b8fbaf2fea66bf515fc2df37"
+  "weights_sha256": "68c36a8239dc4ee14bff69c6ec74168be8bce61b2fc3f389c26012e7176d09d6"
 }

@@ -4,8 +4,8 @@
 # LuccME-BR and its outputs are not land-use projections.
 #
 # What is taken from S2, and what is not:
-# - Potential: rho (W_<class>), constant and the coefficients of the drivers that this cell space has. The drivers
-#   S2 uses and the cell space does not carry (ag_slope_*, mcwda, e_connmkt, as_*) are left out, so the potentials are
+# - Potential: rho (W_<class>), constant and the coefficients of the drivers that this input raster has. The drivers
+#   S2 uses and the input raster does not carry (ag_slope_*, mcwda, e_connmkt, as_*) are left out, so the potentials are
 #   not the published ones and the model is not calibrated: it is a declared approximation.
 # - Pasture: the S2 sheet repeats the country-vegetation numbers shifted by one row (rho 0.950187, constant -0.0138203)
 #   and has no e_urban100; they are used as printed, for the drivers present, and the problem is recorded here.
@@ -15,18 +15,18 @@
 # - Tolerance: max_difference = 1000 km2 (S2 maxError), in model/scenario.toml.
 # Each of the two parts (published potentials, published allocation) converged only together in the synthetic tests.
 #
-# Units of the cell space: land uses are shares (0-1); c_ucspas is a protected share; ag_apti_* are
+# Units of the input raster: land uses are shares (0-1); c_ucspas is a protected share; ag_apti_* are
 # suitability shares; c_nusett is a count; e_* are distances (m) or cost units.
 #
 # Run by:  python -m disslucc.executors.saturation run --toml model/verification_model.toml \
-#            --input <cellspace.tif> --param demand_csv=<demand.csv> --param cell_area=<km2> ...
+#            --input <input.tif> --param demand_csv=<demand.csv> --param cell_area=<km2> ...
 # (scripts/run_experiment.py does this and records time and memory.)
 
 [model]
 executor_module  = "disslucc.executors"
 name             = "lucc_continuous_saturation"
 class            = "lucc_continuous_saturation"
-description      = "Verification model on the Brazil cell space (declared coefficients)"
+description      = "Verification model on the Brazil input raster (declared coefficients)"
 package          = "disslucc==0.5.0"
 dissmodel        = ">=0.6.4,<0.7.0"
 

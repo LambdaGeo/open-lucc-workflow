@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Why does the allocation not converge? Print, per iteration, each class's area against its demand.
 
-    python scripts/diagnose_allocation.py --cellspace data/cellspace_bdc_5k.tif [--iterations 40]
+    python scripts/diagnose_allocation.py --input data/br_5km.tif [--iterations 40]
 
 Runs the same model and scenario as scripts/run_experiment.py (same demand, cell area, tolerance),
 but stops after a few iterations of the first year and prints area, demand, gap and elasticity of
@@ -20,10 +20,10 @@ import time
 import numpy as np
 
 try:
-    from _common import LAND_USES, MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
+    from _common import MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
     from make_demand import demand_table, write_csv
 except ImportError:  # pragma: no cover
-    from scripts._common import LAND_USES, MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
+    from scripts._common import MODEL_TOML, SCENARIO_TOML, cell_area_km2, class_areas_km2, load_toml, read_bands
     from scripts.make_demand import demand_table, write_csv
 
 STEP = 1  # first year traced; set by --step
@@ -32,7 +32,7 @@ SHOW = {0, 1, 2, 5, 10, 20, 40, 80, 120, 160, 240, 320, 480, 640, 800, 1000, 150
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cellspace", required=True, type=pathlib.Path)
+    ap.add_argument("--input", required=True, type=pathlib.Path)
     ap.add_argument("--iterations", type=int, default=40, help="iterations of the failing year to run (default 40)")
     ap.add_argument("--max-iteration", type=int, default=None, help="override max_iteration of the model TOML for this run")
     ap.add_argument("--step", type=int, default=1, help="year to trace (default 1, the first year with a change)")
@@ -40,7 +40,7 @@ def main() -> None:
     global STEP
     STEP = a.step
 
-    bands, transform, _ = read_bands(a.cellspace)
+    bands, transform, _ = read_bands(a.input)
     scenario = load_toml(SCENARIO_TOML)["scenario"]
     area = cell_area_km2(transform)
     rows = demand_table(class_areas_km2(bands, transform), {"scenario": scenario})
@@ -55,8 +55,9 @@ def main() -> None:
     def traced(self, step):
         areas = self._areas()
         if step >= STEP and state["n"] in SHOW:
+            gaps = sum(areas) - sum(self.demand.get_current_lu_demand(i) for i in range(len(areas)))
             print(f"\n--- step {step}, evaluation {state['n']} "
-                  f"({time.perf_counter() - state['t0']:.0f} s since start; sum of gaps {sum(areas) - sum(self.demand.get_current_lu_demand(i) for i in range(len(areas))):+.0f} km2) ---")
+                  f"({time.perf_counter() - state['t0']:.0f} s since start; sum of gaps {gaps:+.0f} km2) ---")
             print(f"{'class':24s}{'area km2':>14s}{'demand km2':>14s}{'gap km2':>12s}{'elasticity':>12s}{'dir':>5s}")
             valid = self._valid()
             tot = np.sum([np.where(self.backend.get(lu) > 0, self.backend.get(lu), 0.0) for lu in self.land_use_types], axis=0)[valid]
@@ -76,7 +77,7 @@ def main() -> None:
     sat.AllocationClueLikeSaturation.compare_to_demand = traced
 
     sys.argv = [
-        "saturation", "run", "--toml", str(MODEL_TOML), "--input", str(a.cellspace),
+        "saturation", "run", "--toml", str(MODEL_TOML), "--input", str(a.input),
         "--param", f"demand_csv={tmp / 'demand.csv'}", "--param", f"cell_area={area}",
         "--param", f"n_steps={int(scenario['n_steps'])}",
         "--param", f"max_difference={scenario['max_difference_km2']}",

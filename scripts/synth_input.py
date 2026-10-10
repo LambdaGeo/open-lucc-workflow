@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-"""Synthetic cell space with the same bands as the Brazil cell space (no download).
+"""Synthetic input raster with the same bands as the Brazil input raster (no download).
 
 Used by `make small` and by CI. One landscape (seeded) is generated at the finest resolution and
 block-averaged for the coarser grids, so a fine run and a coarse run describe the same area and
 their class totals can be compared (acceptance.toml, [resolution]).
 
-    python scripts/synth_cellspace.py --out data/synthetic_fine.tif
-    python scripts/synth_cellspace.py --out data/synthetic_coarse.tif --block 2
+    python scripts/synth_input.py --out data/synthetic_fine.tif
+    python scripts/synth_input.py --out data/synthetic_coarse.tif --block 2
 """
 from __future__ import annotations
 
@@ -44,8 +44,6 @@ def landscape(n: int, seed: int) -> dict[str, np.ndarray]:
     frac = np.exp(logits)
     frac /= frac.sum(0)
     out = {lu: frac[i] for i, lu in enumerate(LAND_USES)}
-    out["ag_apti_B"] = _smooth(rng, n)
-    out["ag_apti_MB"] = np.clip(1.0 - out["ag_apti_B"] - 0.2, 0.0, 1.0)
     out["c_ucspas"] = np.clip(_smooth(rng, n) * 1.4 - 0.3, 0.0, 1.0)   # protected share
     out["c_nusett"] = np.floor(_smooth(rng, n) * 4)                     # settlements per cell
     for name, scale in (("e_railway", 1.5e6), ("e_rivers", 4e5), ("e_urban10", 8e5),
