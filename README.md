@@ -30,9 +30,9 @@ anyone can verify).
 make env            # .venv with pinned packages
 make small          # offline, synthetic cell space (~1 min); what CI runs
 make grids          # only the two grids (10.56 and 5.28 km) from open data; no model run
-make grid-10k       # or one at a time: data/cellspace_bdc_10k.tif (light on memory)
-make grid-5k        # data/cellspace_bdc_5k.tif (needs ~6 GB RAM)
-make full           # grids + model runs + checks + report (network; ~6 GB RAM at 5.28 km)
+make grid-10k       # or one at a time: data/cellspace_bdc_10k.tif (~1 min)
+make grid-5k        # data/cellspace_bdc_5k.tif (~3 min, peak ~1 GB RAM)
+make full           # grids + model runs + checks + report (network; the 5.28 km model run is the heavy step)
 make test lint
 ```
 `make full` refuses to report unless `acceptance.toml` is frozen. Open decisions and pinned

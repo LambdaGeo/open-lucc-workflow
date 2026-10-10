@@ -3,9 +3,9 @@
 #   make env            create .venv and install the pinned packages
 #   make small          offline smoke test on a synthetic cell space (minutes; what CI runs)
 #   make grids          build both cell-space grids from open data (no model run)
-#   make grid-10k       build only the 10.56 km grid (~77 k cells; light on memory)
-#   make grid-5k        build only the 5.28 km grid (~307 k cells; needs ~6 GB RAM)
-#   make full           Brazil, from open data (needs network, ~6 GB RAM for the 5.28 km grid)
+#   make grid-10k       build only the 10.56 km grid (~77 k cells; ~1 min)
+#   make grid-5k        build only the 5.28 km grid (~307 k cells; ~3 min, peak ~1 GB RAM)
+#   make full           Brazil, from open data (needs network; the model run at 5.28 km is the heavy step, memory not yet measured)
 #   make verify         verify the experiment records of every run (hashes, versions)
 #   make report         write results/table4.md from runs/*/metrics.json
 #   make test           unit tests of the scripts
