@@ -1,0 +1,15 @@
+[progress] year 1 | 598 iterations | max error 995.2 km2 | 7.5 min (year) | 7.5 min total | 0.77 GB peak
+[progress] year 2 | 704 iterations | max error 997.3 km2 | 8.7 min (year) | 16.2 min total | 0.78 GB peak
+[progress] year 3 | 759 iterations | max error 998.1 km2 | 9.3 min (year) | 25.5 min total | 0.78 GB peak
+[progress] year 4 | 831 iterations | max error 997.9 km2 | 9.7 min (year) | 35.3 min total | 0.78 GB peak
+[progress] year 5 | 871 iterations | max error 998.9 km2 | 10.1 min (year) | 45.3 min total | 0.78 GB peak
+[progress] year 6 | 936 iterations | max error 996.1 km2 | 10.6 min (year) | 56.0 min total | 0.78 GB peak
+[progress] year 7 | 956 iterations | max error 998.2 km2 | 11.1 min (year) | 67.1 min total | 0.78 GB peak
+[progress] year 8 | 983 iterations | max error 995.0 km2 | 11.5 min (year) | 78.6 min total | 0.78 GB peak
+[progress] year 9 | 1027 iterations | max error 996.8 km2 | 12.0 min (year) | 90.6 min total | 0.78 GB peak
+[progress] year 10 | 1060 iterations | max error 997.4 km2 | 12.5 min (year) | 103.1 min total | 0.78 GB peak
+[progress] year 11 | 1086 iterations | max error 999.8 km2 | 12.8 min (year) | 115.9 min total | 0.78 GB peak
+[progress] year 12 | 1110 iterations | max error 997.6 km2 | 13.1 min (year) | 129.0 min total | 0.78 GB peak
+[progress] year 13 | 1128 iterations | max error 999.9 km2 | 13.2 min (year) | 142.2 min total | 0.78 GB peak
+[progress] year 14 | 1144 iterations | max error 999.8 km2 | 13.5 min (year) | 155.7 min total | 0.78 GB peak
+bdc_5k: 307,419 cells, 9343.7 s, peak 801.4 MB, max iterations 1144

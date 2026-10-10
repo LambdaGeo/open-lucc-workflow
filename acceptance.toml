@@ -8,7 +8,7 @@
 [meta]
 status = "frozen"
 frozen = true
-frozen_commit = "<preencher depois>"
+frozen_commit = "tag acceptance-frozen-v1"
 
 # (i) The allocation meets the demand.
 [demand]
