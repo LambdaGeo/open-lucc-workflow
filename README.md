@@ -1,5 +1,14 @@
 # open-lucc-workflow
 
+<p align="center">
+  <img src="docs/graphical_abstract.png" width="525"
+       alt="Four stages of the workflow: references regenerated from TerraME and LuccME in a Docker image; the DisSCube spatial benchmark against TerraME Fill; the disslucc dynamic benchmark against LuccME runs; and the make full run over Brazil on the 10.56 and 5.28 km grids, a Python-only run that is not compared with TerraME.">
+</p>
+
+*Overview. Stages 1 to 3 are the references and the two benchmarks, each of which can be repeated on your own machine
+(the references in a container, the benchmarks with `pip` and `make`); stage 4, `make full`, runs the workflow over Brazil
+on top of the components they verify. The maps in stage 4 are a verification run, not a land-use projection.*
+
 Companion repository of the Technical Note (Big Earth Data): an end-to-end, open and traceable
 land-use-change workflow in Python (TerraME/LuccME-style), from open data to the allocated maps.
 The results cited by the note are those of the tag `v1.0.0`.
