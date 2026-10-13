@@ -117,7 +117,7 @@ sha256 = "4b9eebb30396e0a24c3d486825309e5533d99d02c18c221b684803f0a1475efe"
 
 # ── Urban centres
 [[source]]
-id = "urban10"
+id = "cities"
 type = "file"
 path = "zip://ana/GEOFT_CIDADE_2016.zip"
 url = "https://metadados.snirh.gov.br/geonetwork/srv/api/records/8db5549f-2b94-40f0-b968-6f940bad68fa/attachments/GEOFT_CIDADE_2016.zip"

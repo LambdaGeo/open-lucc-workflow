@@ -81,7 +81,7 @@ statistics of the 10.56 km input raster (`model/parameters_derivation.json`):
 | agricultural | e_railway | −0.015 | near railways |
 | agricultural | e_connport | −0.015 | near ports |
 | agricultural | c_ucspas | −0.03 | not in protected areas |
-| mosaic | e_urban10 | −0.02 | near urban areas |
+| mosaic | e_cities | −0.02 | near municipal seats |
 | mosaic | c_nusett | +0.02 | near rural settlements (assentamentos rurais) |
 | mosaic | e_proads | −0.01 | near roads |
 | mosaic | c_ucspas | −0.02 | not in protected areas |

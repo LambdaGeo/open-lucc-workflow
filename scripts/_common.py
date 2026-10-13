@@ -21,7 +21,7 @@ LAND_USES = [
 ]
 DRIVERS = [
     "c_ucspas", "c_nusett", "e_railway",
-    "e_urban10", "e_proads", "e_uroads", "e_connport",
+    "e_cities", "e_proads", "e_uroads", "e_connport",
 ]
 REQUIRED_BANDS = LAND_USES + DRIVERS + ["mask"]
 
