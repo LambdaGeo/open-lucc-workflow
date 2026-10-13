@@ -5,10 +5,14 @@
 # the agricultural-aptitude map, ...) were removed.
 #
 # Where the files come from:
+#   - LuccME-BR land cover, 2000 (seven classes): Zenodo record 5123560 (Bezerra et al. 2021,
+#     DOI 10.5281/zenodo.5123560, CC-BY-4.0), the original file, version v1.0.0 (a later version, v2,
+#     10.5281/zenodo.10611737, exists and is not used);
 #   - data release of this repository (tag data-v1.0): copies of the original layers, same SHA-256;
 #   - IBGE: original address, not copied (see docs/DATA.md);
-#   - TerraME GPM data (road network and ports): tag v0.4.2 of profsergiocosta/terrame-docker
-#     (DOI 10.5281/zenodo.23160784), which carries a pinned copy of the GPM package (GPL-3.0).
+#   - TerraME GPM data (road network and ports): github.com/TerraME/gpm at commit
+#     3aa0e91498f37d1b55adbe54d5d0fda3137f251f (last commit, 6 Dec 2019). The files are the same as before
+#     (same SHA-256); only the address changed, from the pinned copy in terrame-docker to the origin.
 #
 #     disscube fetch pipeline/grid/sources.toml
 #     disscube run pipeline/grid/sources.toml --workspace data/cube_<grid>
@@ -22,56 +26,56 @@ id = "lc_forest_vegetation"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "veg"
-url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
-sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
+url = "https://zenodo.org/records/5123560/files/LUCCMEBR_land_cover_type_100km2_2000.nc?download=1"
+sha256 = "dc679ea733e9ee14378b7fc872a9199b219e998418c2ea8bb1d1d73676df332a"
 
 [[source]]
 id = "lc_country_vegetation"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "gveg"
-url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
-sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
+url = "https://zenodo.org/records/5123560/files/LUCCMEBR_land_cover_type_100km2_2000.nc?download=1"
+sha256 = "dc679ea733e9ee14378b7fc872a9199b219e998418c2ea8bb1d1d73676df332a"
 
 [[source]]
 id = "lc_pasture_management"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "pastp"
-url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
-sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
+url = "https://zenodo.org/records/5123560/files/LUCCMEBR_land_cover_type_100km2_2000.nc?download=1"
+sha256 = "dc679ea733e9ee14378b7fc872a9199b219e998418c2ea8bb1d1d73676df332a"
 
 [[source]]
 id = "lc_agricultural"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "agric"
-url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
-sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
+url = "https://zenodo.org/records/5123560/files/LUCCMEBR_land_cover_type_100km2_2000.nc?download=1"
+sha256 = "dc679ea733e9ee14378b7fc872a9199b219e998418c2ea8bb1d1d73676df332a"
 
 [[source]]
 id = "lc_mosaic_of_occupations"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "mosc"
-url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
-sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
+url = "https://zenodo.org/records/5123560/files/LUCCMEBR_land_cover_type_100km2_2000.nc?download=1"
+sha256 = "dc679ea733e9ee14378b7fc872a9199b219e998418c2ea8bb1d1d73676df332a"
 
 [[source]]
 id = "lc_forestry"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "fores"
-url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
-sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
+url = "https://zenodo.org/records/5123560/files/LUCCMEBR_land_cover_type_100km2_2000.nc?download=1"
+sha256 = "dc679ea733e9ee14378b7fc872a9199b219e998418c2ea8bb1d1d73676df332a"
 
 [[source]]
 id = "lc_others"
 type = "file"
 path = "netcdfs/LUCCMEBR_land_cover_type_100km2_2000.nc"
 variable = "others"
-url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-v1.0/LUCCMEBR_land_cover_type_100km2_2000.zip"
-sha256 = "08486c5a0eaabf1583fe7aef3e6b19c8a095a92f4a75f0b0b32fe4127f2bcbc3"
+url = "https://zenodo.org/records/5123560/files/LUCCMEBR_land_cover_type_100km2_2000.nc?download=1"
+sha256 = "dc679ea733e9ee14378b7fc872a9199b219e998418c2ea8bb1d1d73676df332a"
 
 # ── Protected areas and settlements
 [[source]]
@@ -170,7 +174,7 @@ id = "roads"
 type = "file"
 path = "gpm/br_roads_5880.shp"
 crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_roads_5880.shp"
+url = "https://raw.githubusercontent.com/TerraME/gpm/3aa0e91498f37d1b55adbe54d5d0fda3137f251f/data/br_roads_5880.shp"
 sha256 = "3eb5bd04e2ee2f979f53baeffc692b52b37dd22f29b34a433c3a1d529fa2168c"
 
 [[source]]
@@ -179,7 +183,7 @@ type = "file"
 format = "vector"
 path = "gpm/br_roads_5880.shx"
 crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_roads_5880.shx"
+url = "https://raw.githubusercontent.com/TerraME/gpm/3aa0e91498f37d1b55adbe54d5d0fda3137f251f/data/br_roads_5880.shx"
 sha256 = "d5262c90cb08887f8cedc3a452e58e270ec666355e04b883f49a4ed9c4ab5cdc"
 
 [[source]]
@@ -188,7 +192,7 @@ type = "file"
 format = "vector"
 path = "gpm/br_roads_5880.dbf"
 crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_roads_5880.dbf"
+url = "https://raw.githubusercontent.com/TerraME/gpm/3aa0e91498f37d1b55adbe54d5d0fda3137f251f/data/br_roads_5880.dbf"
 sha256 = "88c6ab692f8f2d383e4ba46732fb57bebd2006f93dc6fd6fa8fa9ddbda314e7f"
 
 [[source]]
@@ -197,7 +201,7 @@ type = "file"
 format = "vector"
 path = "gpm/br_roads_5880.prj"
 crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_roads_5880.prj"
+url = "https://raw.githubusercontent.com/TerraME/gpm/3aa0e91498f37d1b55adbe54d5d0fda3137f251f/data/br_roads_5880.prj"
 sha256 = "55d89034603a7c6f432d2d505f132e9ee55bd84ed239d42a34ca4707bb2b13a6"
 
 [[source]]
@@ -205,7 +209,7 @@ id = "ports"
 type = "file"
 path = "gpm/br_ports_5880.shp"
 crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_ports_5880.shp"
+url = "https://raw.githubusercontent.com/TerraME/gpm/3aa0e91498f37d1b55adbe54d5d0fda3137f251f/data/br_ports_5880.shp"
 sha256 = "82355d997ce18ee546ba67037190345ed3c725133d958044ce9064f621a44af0"
 
 [[source]]
@@ -214,7 +218,7 @@ type = "file"
 format = "vector"
 path = "gpm/br_ports_5880.shx"
 crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_ports_5880.shx"
+url = "https://raw.githubusercontent.com/TerraME/gpm/3aa0e91498f37d1b55adbe54d5d0fda3137f251f/data/br_ports_5880.shx"
 sha256 = "a99f3a89a84d5872bcb98f902485d4a6844428307738f948c0c0cbca044b2cc7"
 
 [[source]]
@@ -223,7 +227,7 @@ type = "file"
 format = "vector"
 path = "gpm/br_ports_5880.dbf"
 crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_ports_5880.dbf"
+url = "https://raw.githubusercontent.com/TerraME/gpm/3aa0e91498f37d1b55adbe54d5d0fda3137f251f/data/br_ports_5880.dbf"
 sha256 = "bdfede1b5098a4599e7679a03b4ca5e33c8173bdf4bdf70efbab4a122acc49ad"
 
 [[source]]
@@ -232,7 +236,7 @@ type = "file"
 format = "vector"
 path = "gpm/br_ports_5880.prj"
 crs = "EPSG:5880"
-url = "https://raw.githubusercontent.com/profsergiocosta/terrame-docker/v0.4.2/gpm/data/br_ports_5880.prj"
+url = "https://raw.githubusercontent.com/TerraME/gpm/3aa0e91498f37d1b55adbe54d5d0fda3137f251f/data/br_ports_5880.prj"
 sha256 = "55d89034603a7c6f432d2d505f132e9ee55bd84ed239d42a34ca4707bb2b13a6"
 
 # ── Country boundary (IBGE 2025), the mask
