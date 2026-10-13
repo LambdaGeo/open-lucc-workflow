@@ -10,7 +10,7 @@
 #     10.5281/zenodo.10611737, exists and is not used);
 #   - state roads (SNV), railways and municipal seats: ANA metadata catalogue (DNIT and IBGE data), original address;
 #   - conservation units (CNUC 2024-02, protection-integral group created up to 2016): MMA open data portal, CC BY;
-#   - indigenous lands (FUNAI, `Regularizada`): WFS of FUNAI (live, monthly); keep a copy of the zip and record the access date;
+#   - indigenous lands (FUNAI, `Regularizada`): WFS of FUNAI (live, monthly); unmodified copy in the provisional data release (data-preview);
 #   - rural settlements: INCRA, Acervo Fundiário (layer "Assentamento Brasil"); licence to be confirmed with INCRA;
 #   - IBGE: original address, not copied (see docs/DATA.md);
 #   - TerraME GPM data (road network and ports): github.com/TerraME/gpm at commit
@@ -86,17 +86,20 @@ id = "cnuc_pi"
 type = "file"
 path = "zip://mma/shp_cnuc_2024_02.zip!cnuc_2024_02.shp"
 read = { columns = ["grupo", "cria_ano"], where = "grupo NOT LIKE 'Uso%' AND (cria_ano LIKE '%-19__' OR cria_ano LIKE '%-200_' OR cria_ano LIKE '%-2010' OR cria_ano LIKE '%-2011' OR cria_ano LIKE '%-2012' OR cria_ano LIKE '%-2013' OR cria_ano LIKE '%-2014' OR cria_ano LIKE '%-2015' OR cria_ano LIKE '%-2016')" }
-url = "https://dados.mma.gov.br/dataset/44b6dc8a-dc82-4a84-8d95-1b0da7c85dac/resource/9ec98f66-44ad-4397-8583-a1d9cc3a9835/download/shp_cnuc_2024_02.zip"
+# origin (MMA, CC BY): https://dados.mma.gov.br/dataset/44b6dc8a-dc82-4a84-8d95-1b0da7c85dac/resource/9ec98f66-44ad-4397-8583-a1d9cc3a9835/download/shp_cnuc_2024_02.zip
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-preview/shp_cnuc_2024_02.zip"
 sha256 = "f9ebd906f7a2c1fa29ecc7203386631fcaa0f4c05be75335c5d6011f0a6ad534"
 
-# FUNAI publishes the layer through a live WFS that is updated monthly, so the file changes and no SHA-256 can be pinned.
-# Record the access date of the run that is reported, and keep a copy of the downloaded zip.
+# FUNAI publishes the layer through a live WFS (monthly updates, and a server certificate chain that Python does not
+# verify), so the file is served from a provisional copy (unmodified, accessed 2026-10) with a pinned SHA-256.
+# origin: https://geoserver.funai.gov.br/geoserver/Funai/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Funai%3Atis_poligonais&maxFeatures=10000&outputFormat=SHAPE-ZIP
 [[source]]
 id = "funai_ti"
 type = "file"
 path = "zip://funai/tis_poligonais.zip"
 read = { where = "fase_ti = 'Regularizada'" }
-url = "https://geoserver.funai.gov.br/geoserver/Funai/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Funai%3Atis_poligonais&maxFeatures=10000&outputFormat=SHAPE-ZIP"
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-preview/tis_poligonais.zip"
+sha256 = "fc7ffed5b82cb1eb2e240575f24d7a407402901f5a1ecfd73c78ae876c759db5"
 
 [[source]]
 id = "protected_areas"
@@ -108,7 +111,8 @@ id = "settlements"
 type = "file"
 path = "zip://incra/Assentamento_Brasil.zip"
 read = { where = "nome_proje NOT LIKE 'RESEX %' AND nome_proje NOT LIKE 'RDS %' AND nome_proje NOT LIKE 'FLONA %' AND nome_proje NOT LIKE 'FLOE %' AND nome_proje NOT LIKE 'PAE %' AND nome_proje NOT LIKE 'PDS %' AND nome_proje NOT LIKE 'PAF %'" }
-url = "https://certificacao.incra.gov.br/csv_shp/zip/Assentamento%20Brasil.zip"
+# origin (INCRA): https://certificacao.incra.gov.br/csv_shp/zip/Assentamento%20Brasil.zip (file not versioned; provisional copy)
+url = "https://github.com/LambdaGeo/open-lucc-workflow/releases/download/data-preview/Assentamento_Brasil.zip"
 sha256 = "4b9eebb30396e0a24c3d486825309e5533d99d02c18c221b684803f0a1475efe"
 
 # ── Urban centres

@@ -6,7 +6,7 @@ licence as far as it was checked, and what to cite. Dates are the access dates o
 | Variable | Layer | Origin | Licence / terms | Notes |
 |---|---|---|---|---|
 | `c_ucspas` | Conservation units, protection-integral group, created up to 2016 | MMA, CNUC `shp_cnuc_2024_02.zip` (dados.mma.gov.br) | CC BY (stated on the dataset page) | version 2024-02, filtered by `cria_ano` |
-| `c_ucspas` | Indigenous lands, phase `Regularizada` | FUNAI, WFS layer `tis_poligonais` | "may be reproduced if the source is cited" (FUNAI page); the site footer says CC BY-ND 3.0 | live service, updated monthly: no hash pinned; keep a copy of the zip and record the access date; use unmodified |
+| `c_ucspas` | Indigenous lands, phase `Regularizada` | FUNAI, WFS layer `tis_poligonais` | "may be reproduced if the source is cited" (FUNAI page); the site footer says CC BY-ND 3.0 | live service, updated monthly: unmodified copy in the provisional data release (`data-preview`), SHA-256 pinned; use unmodified |
 | `c_nusett` | Rural settlements (extractive modalities excluded by name prefix) | INCRA, Acervo Fundiário, "Assentamento Brasil" | not stated; asked of INCRA | invalid polygons after reprojection are repaired by DisSCube (branch `fix/repair-invalid-geometries`) |
 | `e_urban10` | Municipal seats (points), 2016 | IBGE BC250, via the ANA catalogue (`GEOFT_CIDADE_2016`) | ANA record: "access is free"; IBGE terms: credit "Fonte: IBGE" | all 5,570 seats |
 | `e_railway` | Railway sections, PNV 2016 | DNIT, via the ANA catalogue (`GEOFT_TRECHO_FERROVIARIO`) | not stated in the record | the layer has less planned network than the earlier INPE layer |
