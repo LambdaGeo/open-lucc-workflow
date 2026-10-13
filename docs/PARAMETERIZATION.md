@@ -21,6 +21,8 @@ The potential (rho, constant, coefficients of the drivers that the input raster 
 
 * The S2 sheet of pasture repeats the country-vegetation numbers shifted by one row (same rho 0.950187 and constant
   −0.0138203) and has no `e_urban100`; the values are therefore not usable as published (to ask the authors).
+* `e_rivers` and `e_urban100` were dropped from the input raster: no weight of the verification model uses them (the S2 coefficients
+  in `model/reference/` remain as transcribed).
 * The drivers S2 uses that this input raster lacks (slope, mcwda, e_connmkt, as_*) are left out, so the potentials are not the
   published ones in any case.
 * Result at step 1: with `max_iteration = 1000` the allocation did **not** converge (error 2,170 km²); with 3,000 it was

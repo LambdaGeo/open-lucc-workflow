@@ -105,20 +105,8 @@ operator = "distance"
 params = { crs = "EPSG:5880" }
 
 [[derive]]
-target = "e_rivers"
-source = "rivers"
-operator = "distance"
-params = { crs = "EPSG:5880" }
-
-[[derive]]
 target = "e_urban10"
 source = "urban10"
-operator = "distance"
-params = { crs = "EPSG:5880" }
-
-[[derive]]
-target = "e_urban100"
-source = "urban100"
 operator = "distance"
 params = { crs = "EPSG:5880" }
 

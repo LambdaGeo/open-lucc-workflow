@@ -20,8 +20,8 @@ LAND_USES = [
     "agricultural", "mosaic_of_occupations", "forestry", "others",
 ]
 DRIVERS = [
-    "c_ucspas", "c_nusett", "e_railway", "e_rivers",
-    "e_urban10", "e_urban100", "e_proads", "e_uroads", "e_connport",
+    "c_ucspas", "c_nusett", "e_railway",
+    "e_urban10", "e_proads", "e_uroads", "e_connport",
 ]
 REQUIRED_BANDS = LAND_USES + DRIVERS + ["mask"]
 
