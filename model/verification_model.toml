@@ -28,57 +28,57 @@ max_iteration        = 3000
 
 [[model.potential_data]]
 lu    = "forest_vegetation"
-const = -0.008154204
+const = -0.0077678648
 ro    = 0.9
   [model.potential_data.betas]
   e_connport = 4.5993746e-08
   e_uroads = 2.4166262e-07
-  c_ucspas = 0.081676432
+  c_ucspas = 0.08266664
 
 [[model.potential_data]]
 lu    = "country_vegetation"
-const = -0.0039924663
+const = -0.0037349068
 ro    = 0.9
   [model.potential_data.betas]
   e_connport = 2.2996873e-08
   e_uroads = 1.2083131e-07
-  c_ucspas = 0.054450955
+  c_ucspas = 0.055111094
 
 [[model.potential_data]]
 lu    = "pasture_management"
-const = 0.053269744
+const = 0.052883405
 ro    = 0.9
   [model.potential_data.betas]
   e_uroads = -2.4166262e-07
   e_connport = -3.449531e-08
-  c_ucspas = -0.081676432
+  c_ucspas = -0.08266664
 
 [[model.potential_data]]
 lu    = "agricultural"
-const = 0.048050359
+const = 0.048596541
 ro    = 0.9
   [model.potential_data.betas]
-  e_railway = -9.0717136e-08
+  e_railway = -5.5527532e-08
   e_connport = -3.449531e-08
-  c_ucspas = -0.081676432
+  c_ucspas = -0.08266664
 
 [[model.potential_data]]
 lu    = "mosaic_of_occupations"
-const = 0.048405664
+const = 0.045618142
 ro    = 0.9
   [model.potential_data.betas]
-  e_urban10 = -3.4543811e-07
-  c_nusett = 0.24378237
+  e_urban10 = -3.4725385e-07
+  c_nusett = 0.15371243
   e_proads = -9.0227999e-08
-  c_ucspas = -0.054450955
+  c_ucspas = -0.055111094
 
 [[model.potential_data]]
 lu    = "forestry"
-const = 0.021417484
+const = 0.021159925
 ro    = 0.9
   [model.potential_data.betas]
   e_connport = -2.2996873e-08
-  c_ucspas = -0.054450955
+  c_ucspas = -0.055111094
 
 [[model.potential_data]]
 lu    = "others"
