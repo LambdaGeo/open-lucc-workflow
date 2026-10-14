@@ -1,3 +1,0 @@
-PASS  demand_met         {'max_error_km2': 999.7489366000518, 'worst_final_class_error_km2': 989.8940607062541, 'tolerance_km2': 1000.0, 'max_iterations': 1276}
-PASS  repeat_identical   {'max_abs_diff': 0.0, 'bytes_identical': True, 'tolerance': 0.0}
-PASS  area_vs_coarser    {'max_class_area_diff_fraction': 0.00209182464554088, 'tolerance': 0.005}
