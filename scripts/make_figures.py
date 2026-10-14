@@ -81,7 +81,7 @@ def drivers(cs, names, ext, mask, out):
         ("(c) Distance to railways, km (e_railway)", band["e_railway"] / 1e3, "magma_r", None),
         ("(d) Protected share (c_ucspas)", band["c_ucspas"], "Greens", (0, 1)),
         ("(e) Distance to paved roads, km (e_proads)", band["e_proads"] / 1e3, "magma_r", None),
-        ("(f) Distance to urban areas >10 km², km (e_urban10)", band["e_urban10"] / 1e3, "magma_r", None),
+        ("(f) Distance to municipal seats, km (e_cities)", band["e_cities"] / 1e3, "magma_r", None),
     ]
     for ax, (title, arr, cmap, lim) in zip(axes.ravel()[1:], spec):
         arr = masked(arr, mask)

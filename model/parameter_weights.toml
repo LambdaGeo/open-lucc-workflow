@@ -10,7 +10,7 @@
 # share, rural settlements); magnitudes are of the same order for every driver (0.01 to 0.03 per sd) because
 # nothing in the input raster (a single date) allows estimating them. They are illustrative, not estimated.
 
-# The agricultural-aptitude bands (ag_apti_*) are NOT used: in DisSCube 0.5.0 they do not hold fertility classes
+# The agricultural-aptitude bands (ag_apti_*) are NOT used: in DisSCube 0.5.0 and 0.6.0 they do not hold fertility classes
 # (docs/PARAMETERIZATION.md, section 8).
 
 [rho]
@@ -42,8 +42,8 @@ e_connport = -0.015
 c_ucspas   = -0.03
 
 [weights.mosaic_of_occupations]
-# near urban areas, rural settlements (c_nusett) and roads, outside protected areas
-e_urban10  = -0.02
+# near municipal seats, rural settlements (c_nusett) and roads, outside protected areas
+e_cities   = -0.02
 c_nusett   = 0.02
 e_proads   = -0.01
 c_ucspas   = -0.02

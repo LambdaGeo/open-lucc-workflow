@@ -21,6 +21,8 @@ The potential (rho, constant, coefficients of the drivers that the input raster 
 
 * The S2 sheet of pasture repeats the country-vegetation numbers shifted by one row (same rho 0.950187 and constant
   −0.0138203) and has no `e_urban100`; the values are therefore not usable as published (to ask the authors).
+* `e_rivers` and `e_urban100` were dropped from the input raster: no weight of the verification model uses them (the S2 coefficients
+  in `model/reference/` remain as transcribed).
 * The drivers S2 uses that this input raster lacks (slope, mcwda, e_connmkt, as_*) are left out, so the potentials are not the
   published ones in any case.
 * Result at step 1: with `max_iteration = 1000` the allocation did **not** converge (error 2,170 km²); with 3,000 it was
@@ -79,7 +81,7 @@ statistics of the 10.56 km input raster (`model/parameters_derivation.json`):
 | agricultural | e_railway | −0.015 | near railways |
 | agricultural | e_connport | −0.015 | near ports |
 | agricultural | c_ucspas | −0.03 | not in protected areas |
-| mosaic | e_urban10 | −0.02 | near urban areas |
+| mosaic | e_cities | −0.02 | near municipal seats |
 | mosaic | c_nusett | +0.02 | near rural settlements (assentamentos rurais) |
 | mosaic | e_proads | −0.01 | near roads |
 | mosaic | c_ucspas | −0.02 | not in protected areas |
@@ -167,7 +169,7 @@ python scripts/run_experiment.py --input data/br_10km.tif --label try10 --steps 
 
 Found while drawing the driver maps (`scripts/make_figures.py`). In the 10.56 km input raster `ag_apti_B` takes only the
 values 0 and 1 (mean 0.968) and `ag_apti_MB` only 0 and 2 (mean 1.935); `ag_apti_MB` is exactly twice `ag_apti_B`.
-Cause: the aptitude source is a polygon shapefile and, in DisSCube 0.5.0, the class operators (`percentage`, `majority`,
+Cause: the aptitude source is a polygon shapefile and, in DisSCube 0.5.0 and 0.6.0, the class operators (`percentage`, `majority`,
 `minority`) applied to a vector source do not filter by attribute: they rasterize every polygon with the value of
 `class_code` (`disscube/operators/zonal.py`). The bands therefore mark where the aptitude map has polygons (about 97% of
 the cells), multiplied by `class_code`, and do not distinguish fertility classes. (In LuccME-BR, S2 of Bezerra et al., 2022,
