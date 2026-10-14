@@ -1,0 +1,6 @@
+inicio Tue Oct 13 09:31:22 PM -03 2026
+repeat 5k fim Wed Oct 14 12:24:01 AM -03 2026
+10k fim Wed Oct 14 12:58:17 AM -03 2026
+check fim Wed Oct 14 12:58:17 AM -03 2026
+final fim Wed Oct 14 12:58:20 AM -03 2026
+pacote pronto Wed Oct 14 12:58:20 AM -03 2026

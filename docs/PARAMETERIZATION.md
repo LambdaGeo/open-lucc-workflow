@@ -169,7 +169,7 @@ python scripts/run_experiment.py --input data/br_10km.tif --label try10 --steps 
 
 Found while drawing the driver maps (`scripts/make_figures.py`). In the 10.56 km input raster `ag_apti_B` takes only the
 values 0 and 1 (mean 0.968) and `ag_apti_MB` only 0 and 2 (mean 1.935); `ag_apti_MB` is exactly twice `ag_apti_B`.
-Cause: the aptitude source is a polygon shapefile and, in DisSCube 0.5.0, the class operators (`percentage`, `majority`,
+Cause: the aptitude source is a polygon shapefile and, in DisSCube 0.5.0 and 0.6.0, the class operators (`percentage`, `majority`,
 `minority`) applied to a vector source do not filter by attribute: they rasterize every polygon with the value of
 `class_code` (`disscube/operators/zonal.py`). The bands therefore mark where the aptitude map has polygons (about 97% of
 the cells), multiplied by `class_code`, and do not distinguish fertility classes. (In LuccME-BR, S2 of Bezerra et al., 2022,

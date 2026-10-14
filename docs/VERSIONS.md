@@ -4,7 +4,7 @@
 |---|---|---|
 | open-lucc-workflow | 1.0.0 | 10.5281/zenodo.23287890 |
 | dissmodel | 0.6.6 | 10.5281/zenodo.23246106 (confirm version vs concept DOI) |
-| disscube | 0.5.0 | 10.5281/zenodo.23172450 |
+| disscube | 0.6.0 | 10.5281/zenodo.23365403 (0.5.0: 10.5281/zenodo.23172450) |
 | disslucc | 0.5.0 | 10.5281/zenodo.23219338 |
 | disslucc-benchmark | 0.2.2 | 10.5281/zenodo.23224097 |
 | terrame-docker | 0.4.2 | 10.5281/zenodo.23160784 |
@@ -37,7 +37,7 @@ clone of the tag `v1.0.0` and confirm that the hashes are the same.]
 ## Before submission
 - Remove `scripts/_run_with_progress.py` (provisional wrapper that prints one progress line per year). Add the equivalent `logging` record per year to disslucc (iterations, maximum error, time), release it, pin the new version here and in `requirements.txt`, and make `scripts/run_experiment.py` call `python -m disslucc.executors.saturation` again. Re-run the reported runs with the pinned version (results do not change; the record does).
 
-- **DisSCube: `percentage` for vector sources (pending; optional before submission, otherwise after).** In DisSCube 0.5.0 the class
+- **DisSCube: `percentage` for vector sources (pending; optional before submission, otherwise after).** In DisSCube 0.5.0 and 0.6.0 the class
   operators (`percentage`, `majority`, `minority`) ignore the attributes of a vector source, so `ag_apti_B` and `ag_apti_MB` do not hold
   aptitude classes (docs/PARAMETERIZATION.md, section 8) and the verification model runs without the aptitude driver that LuccME-BR has.
   What is missing: an option to say which attribute holds the class, and a `percentage` that returns the share of the cell covered by
@@ -49,3 +49,8 @@ clone of the tag `v1.0.0` and confirm that the hashes are the same.]
   reported run** (10.56 and 5.28 km, repeat), since the hashes change. If not implemented before submission, keep limitation 12 of the
   manuscript and state that the model has no aptitude driver. Workaround that stays inside the declared chain: rasterize the shapefile
   by attribute (`gdal_rasterize -a`) into a class raster declared as a source, where `percentage` already works.
+
+## Note on DisSCube 0.6.0
+The input rasters of the reported runs were built with DisSCube 0.5.0 plus unreleased changes. Rebuilding both grids with the
+released 0.6.0 (PyPI) gives identical raster hashes (5.28 km `2285bb15…`, 10.56 km `6cf3e522…`), so the model results do not change;
+only the `versions` entry of `metrics.json` and `run.json` will read 0.6.0 when the runs are repeated.

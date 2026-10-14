@@ -10,7 +10,7 @@
 # share, rural settlements); magnitudes are of the same order for every driver (0.01 to 0.03 per sd) because
 # nothing in the input raster (a single date) allows estimating them. They are illustrative, not estimated.
 
-# The agricultural-aptitude bands (ag_apti_*) are NOT used: in DisSCube 0.5.0 they do not hold fertility classes
+# The agricultural-aptitude bands (ag_apti_*) are NOT used: in DisSCube 0.5.0 and 0.6.0 they do not hold fertility classes
 # (docs/PARAMETERIZATION.md, section 8).
 
 [rho]
