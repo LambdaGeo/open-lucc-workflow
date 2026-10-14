@@ -67,7 +67,7 @@ lu    = "mosaic_of_occupations"
 const = 0.045618142
 ro    = 0.9
   [model.potential_data.betas]
-  e_urban10 = -3.4725385e-07
+  e_cities = -3.4725385e-07
   c_nusett = 0.15371243
   e_proads = -9.0227999e-08
   c_ucspas = -0.055111094

@@ -10,6 +10,7 @@
 #   make full           Brazil, from open data (needs network; the model run at 5.28 km is the heavy step, memory not yet measured)
 #   make verify         verify the experiment records of every run (hashes, versions)
 #   make report         write results/table4.md from runs/*/metrics.json
+#   make numbers        write results/manuscript_numbers_<label>.md (Table S2, forest loss, hashes) for each run
 #   make test           unit tests of the scripts
 #
 # Variables: PY (python), SYN_SIZE (fine synthetic grid, default 60 x 60 cells of 5.28 km),
@@ -19,7 +20,7 @@ DISSCUBE  ?= $(if $(wildcard .venv/bin/disscube),.venv/bin/disscube,disscube)
 SYN_SIZE  ?= 60
 SYN_BLOCK ?= 2
 
-.PHONY: env small grids grid-10k grid-5k run-10k run-5k full verify report test lint lock clean help
+.PHONY: env small grids grid-10k grid-5k run-10k run-5k full verify report numbers test lint lock clean help
 
 help:
 	@sed -n '2,17p' Makefile
@@ -95,6 +96,11 @@ verify:
 
 report:
 	$(PY) scripts/report.py
+
+# the numbers quoted in the manuscript (Table S2, forest loss, protected cells, hashes), one file per run
+numbers:
+	@for d in runs/*/; do l=$$(basename $$d); case $$l in *_repeat) continue;; esac; \
+	test -f $$d/metrics.json && $(PY) scripts/manuscript_numbers.py --label $$l >/dev/null && echo results/manuscript_numbers_$$l.md || true; done
 
 test:
 	$(PY) -m pytest -q

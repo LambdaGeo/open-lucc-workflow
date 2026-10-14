@@ -1,0 +1,7 @@
+wrote /home/sergio/develop/github/lambdageo/novo/open-lucc-workflow/model/verification_model.toml and /home/sergio/develop/github/lambdageo/novo/open-lucc-workflow/model/parameters_derivation.json
+  forest_vegetation        mean share 0.4318  const -0.00777
+  country_vegetation       mean share 0.2422  const -0.00373
+  pasture_management       mean share 0.0722  const +0.05288
+  agricultural             mean share 0.0464  const +0.04860
+  mosaic_of_occupations    mean share 0.1610  const +0.04562
+  forestry                 mean share 0.0065  const +0.02116

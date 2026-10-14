@@ -105,17 +105,17 @@
           "std": 0.3629033415647073,
           "weight": -0.02
         },
+        "e_cities": {
+          "beta": -3.472538490676335e-07,
+          "mean": 53160.685755684215,
+          "std": 57594.75396370528,
+          "weight": -0.02
+        },
         "e_proads": {
           "beta": -9.022799864504308e-08,
           "mean": 71849.93972447145,
           "std": 110830.34257847165,
           "weight": -0.01
-        },
-        "e_urban10": {
-          "beta": -3.472538490676335e-07,
-          "mean": 53160.685755684215,
-          "std": 57594.75396370528,
-          "weight": -0.02
         }
       },
       "mean_share": 0.16102841395786713
@@ -146,7 +146,7 @@
     }
   },
   "input_raster": "br_10km.tif",
-  "input_raster_sha256": "b1c4c416e1e927121c9c813419fd288abc5c7c81ac3ade825e0224486f2ebaf4",
+  "input_raster_sha256": "6cf3e5224c1849f31f069a535e659417817e73e9390dd8b7aca36bc424aa0ab0",
   "rho": 0.9,
-  "weights_sha256": "68c36a8239dc4ee14bff69c6ec74168be8bce61b2fc3f389c26012e7176d09d6"
+  "weights_sha256": "5dffd722bffcf1d34b26112fbf38ac69f4aaddffc2d886aa9d2628aefd07bf0f"
 }

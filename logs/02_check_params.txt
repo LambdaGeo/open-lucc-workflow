@@ -1,0 +1,4 @@
+7:# Units of the input raster: land uses are shares (0-1); c_ucspas is a protected share; c_nusett is a count; e_* are
+61:  e_railway = -5.5527532e-08
+70:  e_cities = -3.4725385e-07
+71:  c_nusett = 0.15371243

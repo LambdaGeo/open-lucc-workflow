@@ -1,0 +1,17 @@
+nohup: ignoring input
+.venv/bin/python scripts/run_experiment.py --input data/br_5km.tif --label br_5km
+[progress] year 1 | 593 iterations | max error 999.6 km2 | 7.3 min (year) | 7.4 min total | 0.76 GB peak
+[progress] year 2 | 919 iterations | max error 999.2 km2 | 11.2 min (year) | 18.6 min total | 0.77 GB peak
+[progress] year 3 | 913 iterations | max error 997.4 km2 | 11.0 min (year) | 29.7 min total | 0.77 GB peak
+[progress] year 4 | 959 iterations | max error 995.5 km2 | 11.3 min (year) | 41.0 min total | 0.77 GB peak
+[progress] year 5 | 993 iterations | max error 995.5 km2 | 11.3 min (year) | 52.3 min total | 0.78 GB peak
+[progress] year 6 | 1013 iterations | max error 994.4 km2 | 11.5 min (year) | 63.8 min total | 0.78 GB peak
+[progress] year 7 | 1035 iterations | max error 996.2 km2 | 11.9 min (year) | 75.7 min total | 0.78 GB peak
+[progress] year 8 | 1085 iterations | max error 997.3 km2 | 12.8 min (year) | 88.5 min total | 0.78 GB peak
+[progress] year 9 | 1128 iterations | max error 986.8 km2 | 13.1 min (year) | 101.7 min total | 0.78 GB peak
+[progress] year 10 | 1219 iterations | max error 999.7 km2 | 14.4 min (year) | 116.0 min total | 0.78 GB peak
+[progress] year 11 | 1156 iterations | max error 995.4 km2 | 14.5 min (year) | 130.5 min total | 0.78 GB peak
+[progress] year 12 | 1193 iterations | max error 997.5 km2 | 14.5 min (year) | 145.0 min total | 0.78 GB peak
+[progress] year 13 | 1194 iterations | max error 996.6 km2 | 14.2 min (year) | 159.2 min total | 0.78 GB peak
+[progress] year 14 | 1276 iterations | max error 997.4 km2 | 15.2 min (year) | 174.4 min total | 0.78 GB peak
+br_5km: 307,419 cells, 10464.8 s, peak 794.1 MB, max iterations 1276
