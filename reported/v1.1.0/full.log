@@ -1,0 +1,437 @@
+.venv/bin/python scripts/render_pipeline.py --name br_5km --out build/pipelines/br_5km.toml
+build/pipelines/br_5km.toml: grid br_5km (5280 m)
+.venv/bin/disscube fetch pipeline/grid/sources.toml
+pipeline  : sources.toml  (sha256:cf8b12797b1d…)
+extent    : None (sources only)
+sources   : 28
+  - lc_forest_vegetation     file
+  - lc_country_vegetation    file
+  - lc_pasture_management    file
+  - lc_agricultural          file
+  - lc_mosaic_of_occupations file
+  - lc_forestry              file
+  - lc_others                file
+  - cnuc_pi                  file
+  - funai_ti                 file
+  - protected_areas          union
+  - settlements              file
+  - cities                   file
+  - railways                 file
+  - state_paved              file
+  - state_unpaved            file
+  - federal_paved            file
+  - federal_unpaved          file
+  - paved_roads              union
+  - unpaved_roads            union
+  - roads                    file
+  - roads_shx                file
+  - roads_dbf                file
+  - roads_prj                file
+  - ports                    file
+  - ports_shx                file
+  - ports_dbf                file
+  - ports_prj                file
+  - brazil_boundary          file
+variables : 0
+Fetching lc_forest_vegetation -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_country_vegetation -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_pasture_management -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_agricultural -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_mosaic_of_occupations -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_forestry -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_others -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching cnuc_pi -> shp_cnuc_2024_02.zip...
+Fetching funai_ti -> tis_poligonais.zip...
+Fetching settlements -> Assentamento_Brasil.zip...
+Fetching cities -> GEOFT_CIDADE_2016.zip...
+Fetching railways -> GEOFT_TRECHO_FERROVIARIO.zip...
+Fetching state_paved -> GEOFT_TRECHO_RODOVIARIO_ESTADUAL.zip...
+Fetching state_unpaved -> GEOFT_TRECHO_RODOVIARIO_ESTADUAL.zip...
+Fetching federal_paved -> Transporte_v2015.zip...
+Fetching federal_unpaved -> Transporte_v2015.zip...
+Fetching roads -> br_roads_5880.shp...
+Fetching roads_shx -> br_roads_5880.shx...
+Fetching roads_dbf -> br_roads_5880.dbf...
+Fetching roads_prj -> br_roads_5880.prj...
+Fetching ports -> br_ports_5880.shp...
+Fetching ports_shx -> br_ports_5880.shx...
+Fetching ports_dbf -> br_ports_5880.dbf...
+Fetching ports_prj -> br_ports_5880.prj...
+Fetching brazil_boundary -> BR_Pais_2025.zip...
+Fetch completed: 25 remote sources verified.
+.venv/bin/disscube run pipeline/grid/sources.toml --workspace data/cube_br_5km
+pipeline  : sources.toml  (sha256:cf8b12797b1d…)
+extent    : None (sources only)
+sources   : 28
+  - lc_forest_vegetation     file
+  - lc_country_vegetation    file
+  - lc_pasture_management    file
+  - lc_agricultural          file
+  - lc_mosaic_of_occupations file
+  - lc_forestry              file
+  - lc_others                file
+  - cnuc_pi                  file
+  - funai_ti                 file
+  - protected_areas          union
+  - settlements              file
+  - cities                   file
+  - railways                 file
+  - state_paved              file
+  - state_unpaved            file
+  - federal_paved            file
+  - federal_unpaved          file
+  - paved_roads              union
+  - unpaved_roads            union
+  - roads                    file
+  - roads_shx                file
+  - roads_dbf                file
+  - roads_prj                file
+  - ports                    file
+  - ports_shx                file
+  - ports_dbf                file
+  - ports_prj                file
+  - brazil_boundary          file
+variables : 0
+workspace : data/cube_br_5km
+derived   : 0 products on None
+record    : data/cube_br_5km/run.json
+touch data/cube_br_5km/.cataloged
+.venv/bin/disscube run build/pipelines/br_5km.toml --workspace data/cube_br_5km
+WARNING disscube.pipeline.aligner: repaired 1 invalid geometries before clipping
+WARNING disscube.pipeline.aligner: repaired 13 invalid geometries before clipping
+WARNING disscube.pipeline.aligner: repaired 2 invalid geometries before clipping
+pipeline  : br_5km.toml  (sha256:7faf60d1303d…)
+grid      : br_5km  5280 +proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs
+sources   : 0
+from the workspace catalog: lc_forest_vegetation, lc_country_vegetation, lc_pasture_management, lc_agricultural, lc_mosaic_of_occupations, lc_forestry, lc_others, protected_areas, settlements, railways, cities, paved_roads, unpaved_roads, roads, brazil_boundary
+variables : 15
+  - forest_vegetation        mean <- lc_forest_vegetation
+  - country_vegetation       mean <- lc_country_vegetation
+  - pasture_management       mean <- lc_pasture_management
+  - agricultural             mean <- lc_agricultural
+  - mosaic_of_occupations    mean <- lc_mosaic_of_occupations
+  - forestry                 mean <- lc_forestry
+  - others                   mean <- lc_others
+  - c_ucspas                 area <- protected_areas
+  - c_nusett                 area <- settlements
+  - e_railway                distance {'crs': 'EPSG:5880'} <- railways
+  - e_cities                 distance {'crs': 'EPSG:5880'} <- cities
+  - e_proads                 distance {'crs': 'EPSG:5880'} <- paved_roads
+  - e_uroads                 distance {'crs': 'EPSG:5880'} <- unpaved_roads
+  - e_connport               network_cost {'targets': 'gpm/br_ports_5880.shp', 'cost_column': 'custo_ajus', 'outside': 2.0, 'entrance': 'vertex', 'crs': 'EPSG:5880'} <- roads
+  - mask                     area <- brazil_boundary
+workspace : data/cube_br_5km
+derived   : 15 products on br_5km
+record    : data/cube_br_5km/run.json
+mkdir -p data && .venv/bin/disscube export build/pipelines/br_5km.toml --workspace data/cube_br_5km --output data/raw_br_5km.tif
+pipeline  : br_5km.toml  (sha256:7faf60d1303d…)
+grid      : br_5km  5280 +proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs
+sources   : 0
+from the workspace catalog: lc_forest_vegetation, lc_country_vegetation, lc_pasture_management, lc_agricultural, lc_mosaic_of_occupations, lc_forestry, lc_others, protected_areas, settlements, railways, cities, paved_roads, unpaved_roads, roads, brazil_boundary
+variables : 15
+  - forest_vegetation        mean <- lc_forest_vegetation
+  - country_vegetation       mean <- lc_country_vegetation
+  - pasture_management       mean <- lc_pasture_management
+  - agricultural             mean <- lc_agricultural
+  - mosaic_of_occupations    mean <- lc_mosaic_of_occupations
+  - forestry                 mean <- lc_forestry
+  - others                   mean <- lc_others
+  - c_ucspas                 area <- protected_areas
+  - c_nusett                 area <- settlements
+  - e_railway                distance {'crs': 'EPSG:5880'} <- railways
+  - e_cities                 distance {'crs': 'EPSG:5880'} <- cities
+  - e_proads                 distance {'crs': 'EPSG:5880'} <- paved_roads
+  - e_uroads                 distance {'crs': 'EPSG:5880'} <- unpaved_roads
+  - e_connport               network_cost {'targets': 'gpm/br_ports_5880.shp', 'cost_column': 'custo_ajus', 'outside': 2.0, 'entrance': 'vertex', 'crs': 'EPSG:5880'} <- roads
+  - mask                     area <- brazil_boundary
+workspace : data/cube_br_5km
+exported  : 15 variables on br_5km
+output    : data/raw_br_5km.tif
+.venv/bin/python scripts/complete_input.py data/raw_br_5km.tif data/br_5km.tif
+{
+  "source": "raw_br_5km.tif",
+  "cells_in_boundary_mask": 308029,
+  "cells_kept": 307419,
+  "cells_removed": 610,
+  "removed_share_of_boundary_cells": 0.001980333020592217,
+  "removed_area_km2": 17005.824,
+  "cells_with_no_land_use_at_all": 7,
+  "cells_with_all_land_uses_zero": 235,
+  "cells_below_min_coverage": 368,
+  "min_coverage": 0.5,
+  "cells_partly_covered_adjusted": 1260,
+  "partial_mode": "renormalize",
+  "area_added_by_adjustment_km2": 7260.577014808545,
+  "cells_with_some_land_use_missing": 0,
+  "cell_area_km2": 27.8784,
+  "output": "br_5km.tif",
+  "output_sha256": "2285bb15fb847234ebb0e32340af5ee26190a39fc361dfa57f5468ae485f1897"
+}
+cells missing by band: {'forest_vegetation': 7, 'country_vegetation': 7, 'pasture_management': 7, 'agricultural': 7, 'mosaic_of_occupations': 7, 'forestry': 7, 'others': 7}
+.venv/bin/python scripts/check_input.py data/br_5km.tif
+data/br_5km.tif: 307,419 cells in the mask, cell area 27.878 km2, CRS EPSG:10857...
+.venv/bin/python scripts/render_pipeline.py --name br_10km --out build/pipelines/br_10km.toml
+build/pipelines/br_10km.toml: grid br_10km (10560 m)
+.venv/bin/disscube fetch pipeline/grid/sources.toml
+pipeline  : sources.toml  (sha256:cf8b12797b1d…)
+extent    : None (sources only)
+sources   : 28
+  - lc_forest_vegetation     file
+  - lc_country_vegetation    file
+  - lc_pasture_management    file
+  - lc_agricultural          file
+  - lc_mosaic_of_occupations file
+  - lc_forestry              file
+  - lc_others                file
+  - cnuc_pi                  file
+  - funai_ti                 file
+  - protected_areas          union
+  - settlements              file
+  - cities                   file
+  - railways                 file
+  - state_paved              file
+  - state_unpaved            file
+  - federal_paved            file
+  - federal_unpaved          file
+  - paved_roads              union
+  - unpaved_roads            union
+  - roads                    file
+  - roads_shx                file
+  - roads_dbf                file
+  - roads_prj                file
+  - ports                    file
+  - ports_shx                file
+  - ports_dbf                file
+  - ports_prj                file
+  - brazil_boundary          file
+variables : 0
+Fetching lc_forest_vegetation -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_country_vegetation -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_pasture_management -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_agricultural -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_mosaic_of_occupations -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_forestry -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching lc_others -> LUCCMEBR_land_cover_type_100km2_2000.nc...
+Fetching cnuc_pi -> shp_cnuc_2024_02.zip...
+Fetching funai_ti -> tis_poligonais.zip...
+Fetching settlements -> Assentamento_Brasil.zip...
+Fetching cities -> GEOFT_CIDADE_2016.zip...
+Fetching railways -> GEOFT_TRECHO_FERROVIARIO.zip...
+Fetching state_paved -> GEOFT_TRECHO_RODOVIARIO_ESTADUAL.zip...
+Fetching state_unpaved -> GEOFT_TRECHO_RODOVIARIO_ESTADUAL.zip...
+Fetching federal_paved -> Transporte_v2015.zip...
+Fetching federal_unpaved -> Transporte_v2015.zip...
+Fetching roads -> br_roads_5880.shp...
+Fetching roads_shx -> br_roads_5880.shx...
+Fetching roads_dbf -> br_roads_5880.dbf...
+Fetching roads_prj -> br_roads_5880.prj...
+Fetching ports -> br_ports_5880.shp...
+Fetching ports_shx -> br_ports_5880.shx...
+Fetching ports_dbf -> br_ports_5880.dbf...
+Fetching ports_prj -> br_ports_5880.prj...
+Fetching brazil_boundary -> BR_Pais_2025.zip...
+Fetch completed: 25 remote sources verified.
+.venv/bin/disscube run pipeline/grid/sources.toml --workspace data/cube_br_10km
+pipeline  : sources.toml  (sha256:cf8b12797b1d…)
+extent    : None (sources only)
+sources   : 28
+  - lc_forest_vegetation     file
+  - lc_country_vegetation    file
+  - lc_pasture_management    file
+  - lc_agricultural          file
+  - lc_mosaic_of_occupations file
+  - lc_forestry              file
+  - lc_others                file
+  - cnuc_pi                  file
+  - funai_ti                 file
+  - protected_areas          union
+  - settlements              file
+  - cities                   file
+  - railways                 file
+  - state_paved              file
+  - state_unpaved            file
+  - federal_paved            file
+  - federal_unpaved          file
+  - paved_roads              union
+  - unpaved_roads            union
+  - roads                    file
+  - roads_shx                file
+  - roads_dbf                file
+  - roads_prj                file
+  - ports                    file
+  - ports_shx                file
+  - ports_dbf                file
+  - ports_prj                file
+  - brazil_boundary          file
+variables : 0
+workspace : data/cube_br_10km
+derived   : 0 products on None
+record    : data/cube_br_10km/run.json
+touch data/cube_br_10km/.cataloged
+.venv/bin/disscube run build/pipelines/br_10km.toml --workspace data/cube_br_10km
+WARNING disscube.pipeline.aligner: repaired 1 invalid geometries before clipping
+WARNING disscube.pipeline.aligner: repaired 13 invalid geometries before clipping
+WARNING disscube.pipeline.aligner: repaired 2 invalid geometries before clipping
+pipeline  : br_10km.toml  (sha256:e0d8d9ec1cca…)
+grid      : br_10km  10560 +proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs
+sources   : 0
+from the workspace catalog: lc_forest_vegetation, lc_country_vegetation, lc_pasture_management, lc_agricultural, lc_mosaic_of_occupations, lc_forestry, lc_others, protected_areas, settlements, railways, cities, paved_roads, unpaved_roads, roads, brazil_boundary
+variables : 15
+  - forest_vegetation        mean <- lc_forest_vegetation
+  - country_vegetation       mean <- lc_country_vegetation
+  - pasture_management       mean <- lc_pasture_management
+  - agricultural             mean <- lc_agricultural
+  - mosaic_of_occupations    mean <- lc_mosaic_of_occupations
+  - forestry                 mean <- lc_forestry
+  - others                   mean <- lc_others
+  - c_ucspas                 area <- protected_areas
+  - c_nusett                 area <- settlements
+  - e_railway                distance {'crs': 'EPSG:5880'} <- railways
+  - e_cities                 distance {'crs': 'EPSG:5880'} <- cities
+  - e_proads                 distance {'crs': 'EPSG:5880'} <- paved_roads
+  - e_uroads                 distance {'crs': 'EPSG:5880'} <- unpaved_roads
+  - e_connport               network_cost {'targets': 'gpm/br_ports_5880.shp', 'cost_column': 'custo_ajus', 'outside': 2.0, 'entrance': 'vertex', 'crs': 'EPSG:5880'} <- roads
+  - mask                     area <- brazil_boundary
+workspace : data/cube_br_10km
+derived   : 15 products on br_10km
+record    : data/cube_br_10km/run.json
+mkdir -p data && .venv/bin/disscube export build/pipelines/br_10km.toml --workspace data/cube_br_10km --output data/raw_br_10km.tif
+pipeline  : br_10km.toml  (sha256:e0d8d9ec1cca…)
+grid      : br_10km  10560 +proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs
+sources   : 0
+from the workspace catalog: lc_forest_vegetation, lc_country_vegetation, lc_pasture_management, lc_agricultural, lc_mosaic_of_occupations, lc_forestry, lc_others, protected_areas, settlements, railways, cities, paved_roads, unpaved_roads, roads, brazil_boundary
+variables : 15
+  - forest_vegetation        mean <- lc_forest_vegetation
+  - country_vegetation       mean <- lc_country_vegetation
+  - pasture_management       mean <- lc_pasture_management
+  - agricultural             mean <- lc_agricultural
+  - mosaic_of_occupations    mean <- lc_mosaic_of_occupations
+  - forestry                 mean <- lc_forestry
+  - others                   mean <- lc_others
+  - c_ucspas                 area <- protected_areas
+  - c_nusett                 area <- settlements
+  - e_railway                distance {'crs': 'EPSG:5880'} <- railways
+  - e_cities                 distance {'crs': 'EPSG:5880'} <- cities
+  - e_proads                 distance {'crs': 'EPSG:5880'} <- paved_roads
+  - e_uroads                 distance {'crs': 'EPSG:5880'} <- unpaved_roads
+  - e_connport               network_cost {'targets': 'gpm/br_ports_5880.shp', 'cost_column': 'custo_ajus', 'outside': 2.0, 'entrance': 'vertex', 'crs': 'EPSG:5880'} <- roads
+  - mask                     area <- brazil_boundary
+workspace : data/cube_br_10km
+exported  : 15 variables on br_10km
+output    : data/raw_br_10km.tif
+.venv/bin/python scripts/complete_input.py data/raw_br_10km.tif data/br_10km.tif
+{
+  "source": "raw_br_10km.tif",
+  "cells_in_boundary_mask": 77612,
+  "cells_kept": 77238,
+  "cells_removed": 374,
+  "removed_share_of_boundary_cells": 0.004818842447044272,
+  "removed_area_km2": 41706.0864,
+  "cells_with_no_land_use_at_all": 5,
+  "cells_with_all_land_uses_zero": 54,
+  "cells_below_min_coverage": 315,
+  "min_coverage": 0.5,
+  "cells_partly_covered_adjusted": 1052,
+  "partial_mode": "renormalize",
+  "area_added_by_adjustment_km2": 23785.810814580167,
+  "cells_with_some_land_use_missing": 0,
+  "cell_area_km2": 111.5136,
+  "output": "br_10km.tif",
+  "output_sha256": "6cf3e5224c1849f31f069a535e659417817e73e9390dd8b7aca36bc424aa0ab0"
+}
+cells missing by band: {'forest_vegetation': 5, 'country_vegetation': 5, 'pasture_management': 5, 'agricultural': 5, 'mosaic_of_occupations': 5, 'forestry': 5, 'others': 5}
+.venv/bin/python scripts/check_input.py data/br_10km.tif
+data/br_10km.tif: 77,238 cells in the mask, cell area 111.514 km2, CRS EPSG:10857...
+.venv/bin/python scripts/run_experiment.py --input data/br_5km.tif   --label br_5km
+[progress] year 1 | 593 iterations | max error 999.6 km2 | 7.3 min (year) | 7.4 min total | 0.78 GB peak
+[progress] year 2 | 919 iterations | max error 999.2 km2 | 11.4 min (year) | 18.7 min total | 0.79 GB peak
+[progress] year 3 | 913 iterations | max error 997.4 km2 | 11.2 min (year) | 30.0 min total | 0.79 GB peak
+[progress] year 4 | 959 iterations | max error 995.5 km2 | 11.7 min (year) | 41.7 min total | 0.79 GB peak
+[progress] year 5 | 993 iterations | max error 995.5 km2 | 11.6 min (year) | 53.3 min total | 0.79 GB peak
+[progress] year 6 | 1013 iterations | max error 994.4 km2 | 11.7 min (year) | 65.0 min total | 0.79 GB peak
+[progress] year 7 | 1035 iterations | max error 996.2 km2 | 12.0 min (year) | 76.9 min total | 0.79 GB peak
+[progress] year 8 | 1085 iterations | max error 997.3 km2 | 12.8 min (year) | 89.7 min total | 0.79 GB peak
+[progress] year 9 | 1128 iterations | max error 986.8 km2 | 13.2 min (year) | 103.0 min total | 0.79 GB peak
+[progress] year 10 | 1219 iterations | max error 999.7 km2 | 14.5 min (year) | 117.5 min total | 0.79 GB peak
+[progress] year 11 | 1156 iterations | max error 995.4 km2 | 13.9 min (year) | 131.4 min total | 0.79 GB peak
+[progress] year 12 | 1193 iterations | max error 997.5 km2 | 14.2 min (year) | 145.6 min total | 0.79 GB peak
+[progress] year 13 | 1194 iterations | max error 996.6 km2 | 14.0 min (year) | 159.7 min total | 0.79 GB peak
+[progress] year 14 | 1276 iterations | max error 997.4 km2 | 15.1 min (year) | 174.8 min total | 0.79 GB peak
+br_5km: 307,419 cells, 10489.2 s, peak 808.6 MB, max iterations 1276
+.venv/bin/python scripts/run_experiment.py --input data/br_5km.tif   --label br_5km_repeat
+[progress] year 1 | 593 iterations | max error 999.6 km2 | 7.1 min (year) | 7.2 min total | 0.77 GB peak
+[progress] year 2 | 919 iterations | max error 999.2 km2 | 11.1 min (year) | 18.3 min total | 0.79 GB peak
+[progress] year 3 | 913 iterations | max error 997.4 km2 | 10.9 min (year) | 29.2 min total | 0.79 GB peak
+[progress] year 4 | 959 iterations | max error 995.5 km2 | 11.4 min (year) | 40.6 min total | 0.79 GB peak
+[progress] year 5 | 993 iterations | max error 995.5 km2 | 11.3 min (year) | 52.0 min total | 0.79 GB peak
+[progress] year 6 | 1013 iterations | max error 994.4 km2 | 11.6 min (year) | 63.6 min total | 0.79 GB peak
+[progress] year 7 | 1035 iterations | max error 996.2 km2 | 12.0 min (year) | 75.5 min total | 0.79 GB peak
+[progress] year 8 | 1085 iterations | max error 997.3 km2 | 12.9 min (year) | 88.4 min total | 0.79 GB peak
+[progress] year 9 | 1128 iterations | max error 986.8 km2 | 13.2 min (year) | 101.7 min total | 0.79 GB peak
+[progress] year 10 | 1219 iterations | max error 999.7 km2 | 14.5 min (year) | 116.2 min total | 0.79 GB peak
+[progress] year 11 | 1156 iterations | max error 995.4 km2 | 13.9 min (year) | 130.0 min total | 0.79 GB peak
+[progress] year 12 | 1193 iterations | max error 997.5 km2 | 14.3 min (year) | 144.3 min total | 0.79 GB peak
+[progress] year 13 | 1194 iterations | max error 996.6 km2 | 14.0 min (year) | 158.4 min total | 0.79 GB peak
+[progress] year 14 | 1276 iterations | max error 997.4 km2 | 15.3 min (year) | 173.7 min total | 0.79 GB peak
+br_5km_repeat: 307,419 cells, 10422.7 s, peak 805.1 MB, max iterations 1276
+.venv/bin/python scripts/run_experiment.py --input data/br_10km.tif --label br_10km
+[progress] year 1 | 484 iterations | max error 997.6 km2 | 1.4 min (year) | 1.4 min total | 0.38 GB peak
+[progress] year 2 | 626 iterations | max error 999.3 km2 | 1.7 min (year) | 3.1 min total | 0.38 GB peak
+[progress] year 3 | 733 iterations | max error 998.3 km2 | 2.0 min (year) | 5.1 min total | 0.38 GB peak
+[progress] year 4 | 828 iterations | max error 996.8 km2 | 2.2 min (year) | 7.3 min total | 0.38 GB peak
+[progress] year 5 | 891 iterations | max error 991.1 km2 | 2.3 min (year) | 9.6 min total | 0.38 GB peak
+[progress] year 6 | 909 iterations | max error 999.2 km2 | 2.4 min (year) | 11.9 min total | 0.38 GB peak
+[progress] year 7 | 930 iterations | max error 996.7 km2 | 2.4 min (year) | 14.4 min total | 0.38 GB peak
+[progress] year 8 | 928 iterations | max error 975.5 km2 | 2.4 min (year) | 16.8 min total | 0.38 GB peak
+[progress] year 9 | 932 iterations | max error 999.8 km2 | 2.4 min (year) | 19.2 min total | 0.38 GB peak
+[progress] year 10 | 1050 iterations | max error 995.9 km2 | 2.9 min (year) | 22.1 min total | 0.38 GB peak
+[progress] year 11 | 1072 iterations | max error 998.2 km2 | 3.0 min (year) | 25.0 min total | 0.38 GB peak
+[progress] year 12 | 1106 iterations | max error 993.1 km2 | 3.1 min (year) | 28.1 min total | 0.38 GB peak
+[progress] year 13 | 1144 iterations | max error 998.6 km2 | 3.0 min (year) | 31.1 min total | 0.38 GB peak
+[progress] year 14 | 1193 iterations | max error 981.0 km2 | 3.3 min (year) | 34.4 min total | 0.38 GB peak
+br_10km: 77,238 cells, 2067.5 s, peak 388.2 MB, max iterations 1193
+.venv/bin/python scripts/check_run.py --require-frozen --run runs/br_5km --repeat runs/br_5km_repeat --coarse runs/br_10km
+PASS  demand_met         {'max_error_km2': 999.7489366000518, 'worst_final_class_error_km2': 989.8940607062541, 'tolerance_km2': 1000.0, 'max_iterations': 1276}
+PASS  repeat_identical   {'max_abs_diff': 0.0, 'bytes_identical': True, 'tolerance': 0.0}
+PASS  area_vs_coarser    {'max_class_area_diff_fraction': 0.00209182464554088, 'tolerance': 0.005}
+make verify report
+make[1]: Entering directory '/home/sergio/develop/github/lambdageo/novo2/open-lucc-workflow'
+record verified
+record verified
+record verified
+record verified
+record verified
+record verified
+.venv/bin/python scripts/report.py
+| Grid | Cells | Demand met | Iterations per year | Repeat run identical | Area per class vs coarser grid | Time | Peak memory |
+|---|---:|---|---|---|---|---:|---:|
+| br_10km | 77,238 | n/a | 0 484 626 733 828 891 909 930 928 932 1050 1072 1106 1144 1193 | n/a | n/a | 2067.5 s | 388 MB |
+| br_5km | 307,419 | yes (max 999.75 km²) | 0 593 919 913 959 993 1013 1035 1085 1128 1219 1156 1193 1194 1276 | yes, bytes | 0.0021 of area | 10489.2 s | 809 MB |
+| synthetic_coarse | 900 | n/a | 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 | n/a | n/a | 4.9 s | 307 MB |
+| synthetic_fine | 3,600 | yes (max 428.81 km²) | 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 | yes, bytes | 0.0000 of area | 5.8 s | 309 MB |
+
+make[1]: Leaving directory '/home/sergio/develop/github/lambdageo/novo2/open-lucc-workflow'
+rm data/cube_br_5km/.cataloged build/pipelines/br_5km.toml data/cube_br_10km/.cataloged build/pipelines/br_10km.toml
+	Command being timed: "make full"
+	User time (seconds): 22467.04
+	System time (seconds): 762.56
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 6:27:20
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1097180
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 84
+	Minor (reclaiming a frame) page faults: 299942940
+	Voluntary context switches: 34944
+	Involuntary context switches: 563711
+	Swaps: 0
+	File system inputs: 512952
+	File system outputs: 715712
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
