@@ -64,7 +64,7 @@ Five stages, each leaving a named artifact that a check reads:
 5. **Acceptance** — `scripts/check_run.py` against `acceptance.toml` (demand met, identical repeat run, class areas agree across resolutions); `make report` writes `results/table4.md`.
 
 ## Use
-On a fresh Ubuntu or Debian (also inside WSL2) install the tools first: `sudo apt update && sudo apt install -y make git python3 python3-pip python3-venv`.
+On a fresh Ubuntu or Debian (also inside WSL2) install the tools first: `sudo apt update && sudo apt install -y make git python3 python3-pip python3-venv`. Python 3.11 or newer is required (Ubuntu 24.04 has 3.12; Ubuntu 22.04 and 20.04 have 3.10 and 3.8, and `make env` stops with a message in that case).
 ```
 make env            # .venv with pinned packages
 make small          # offline, synthetic input raster (~15 s); what CI runs
@@ -95,7 +95,7 @@ depends on them. The repository is meant to be forked. Change one thing at a tim
 The workflow is developed and tested on Linux. On Windows, use **WSL2** (Ubuntu), which gives the same
 environment, and keep the repository inside the Linux file system (`~/`), not under `/mnt/c`:
 ```
-wsl --install -d Ubuntu     # PowerShell as administrator; restart when asked
+wsl --install -d Ubuntu-24.04     # PowerShell as administrator; restart when asked (an older Ubuntu already installed has Python 3.8 or 3.10, which is too old)
 # then, in the Ubuntu terminal:
 sudo apt update && sudo apt install -y make git python3 python3-pip python3-venv
 git clone https://github.com/LambdaGeo/open-lucc-workflow && cd open-lucc-workflow

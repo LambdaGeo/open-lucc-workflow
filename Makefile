@@ -27,8 +27,12 @@ SYN_BLOCK ?= 2
 help:
 	@sed -n '2,19p' Makefile
 
+PYTHON ?= python3
+
+# disscube and disslucc need Python 3.11 or newer (Ubuntu 24.04 has 3.12; Ubuntu 22.04 and 20.04 do not).
 env:
-	python3 -m venv .venv && .venv/bin/pip install -U pip && .venv/bin/pip install -r requirements-dev.txt
+	@$(PYTHON) -c 'import sys; v=sys.version_info; sys.exit(0 if v >= (3, 11) else "Python 3.11 or newer is needed, found " + sys.version.split()[0] + ". On Ubuntu use 24.04 (Python 3.12), or install python3.12 and run: make env PYTHON=python3.12")'
+	$(PYTHON) -m venv .venv && .venv/bin/pip install -U pip && .venv/bin/pip install -r requirements-dev.txt
 
 # ── small: synthetic, no downloads ───────────────────────────────────────────
 small: data/synthetic_fine.tif data/synthetic_coarse.tif
