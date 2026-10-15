@@ -1,13 +1,20 @@
 cff-version: 1.2.0
 title: "Open LUCC workflow: traceable land-use change modelling from open data"
-message: "If you use this repository, please cite it."
+message: "If you use this repository, please cite it. The DOI of version 1.1.0 is added after its release."
 type: software
 authors:
   - family-names: Costa
     given-names: Sérgio Souza
     affiliation: Universidade Federal do Maranhão (UFMA)
     orcid: "https://orcid.org/0000-0002-0232-4549"
+  - family-names: Bezerra
+    given-names: Denilson da Silva
+    affiliation: Universidade Federal do Maranhão (UFMA)
+    orcid: "https://orcid.org/0000-0002-9567-7828"
+  - family-names: Alves
+    given-names: José Magno Pinheiro
+    affiliation: Universidade Federal do Maranhão (UFMA)
+    orcid: "https://orcid.org/0009-0003-7212-4870"
 license: MIT
-version: "1.0.0"
-doi: 10.5281/zenodo.23287890
+version: "1.1.0"
 repository-code: "https://github.com/LambdaGeo/open-lucc-workflow"

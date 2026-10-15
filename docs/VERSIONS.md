@@ -2,13 +2,15 @@
 
 | Component | Version | DOI |
 |---|---|---|
-| open-lucc-workflow | 1.0.0 | 10.5281/zenodo.23287890 |
+| open-lucc-workflow | 1.1.0 | (pending; added after the release) (1.0.0: 10.5281/zenodo.23287890) |
 | dissmodel | 0.6.6 | 10.5281/zenodo.23246106 (confirm version vs concept DOI) |
 | disscube | 0.6.0 | 10.5281/zenodo.23365403 (0.5.0: 10.5281/zenodo.23172450) |
 | disslucc | 0.5.0 | 10.5281/zenodo.23219338 |
 | disslucc-benchmark | 0.2.2 | 10.5281/zenodo.23224097 |
 | terrame-docker | 0.4.2 | 10.5281/zenodo.23160784 |
-| luccme-goldens | 1.1.0 | 10.5281/zenodo.23161342 (unverified) |
+| luccme-goldens | 1.1.0 (pinned by the benchmark; 1.2.0 is documentation only) | 10.5281/zenodo.23161342 (1.2.0: 10.5281/zenodo.23366244) |
+| disscube-benchmark | 1.1.0 | 10.5281/zenodo.23366475 |
+| disscube-grids | 1.0.0 | 10.5281/zenodo.23368071 |
 | brmangue-dissmodel | 0.5.0 | 10.5281/zenodo.23240385 |
 | brmangue-terrame | 0.1.0 | 10.5281/zenodo.23240318 |
 
@@ -30,7 +32,7 @@ clone of the tag `v1.0.0` and confirm that the hashes are the same.]
 ## Open decisions
 1. Land-use product and how it is obtained (STAC vs direct download) for `pipeline/grid/sources.toml`.
 2. Grids of the reported runs: 5.28 km (20×20 cells per BDC_SM tile) and 10.56 km (10×10, an exact 2×2 aggregation); memory test at 5.28 km. 25 km is not tile-aligned and is kept only for the transport-cost case of E2.
-3. ~~Freeze `acceptance.toml`~~ Done: frozen on 2026-10-09 (`frozen_commit`), release tag `v1.0.0`.
+3. ~~Freeze `acceptance.toml`~~ Done: frozen on 2026-10-09 (`frozen_commit`), release tag `v1.1.0` (criteria unchanged; `v1.0.0` was the first run).
 4. Confirm DOIs marked above.
 5. `e_connport` uses the TerraME GPM road network (`br_roads_5880`) and 14 ports (`br_ports_5880`), cost column `custo_ajus`, the same data as the disscube-benchmark connectivity case. Licence of these files to be confirmed for Table 4a.
 
