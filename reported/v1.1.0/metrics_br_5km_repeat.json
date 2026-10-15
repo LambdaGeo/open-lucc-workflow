@@ -1,0 +1,79 @@
+{
+  "cell_area_km2": 27.8784,
+  "cells_in_mask": 307419,
+  "demand_last_year_km2": {
+    "agricultural": 429525.15003309277,
+    "country_vegetation": 2081175.9266872248,
+    "forest_vegetation": 3597421.148856424,
+    "forestry": 65962.70586791607,
+    "mosaic_of_occupations": 1393223.493750145,
+    "others": 330320.8186310054,
+    "pasture_management": 672720.5534151944
+  },
+  "experiment_id": "95a8381f29bd4fb4af963f6bafecc902",
+  "final_areas_km2": {
+    "agricultural": 429527.2367419749,
+    "country_vegetation": 2080777.238812658,
+    "forest_vegetation": 3598411.04291713,
+    "forestry": 65961.99779215097,
+    "mosaic_of_occupations": 1392626.0631756652,
+    "others": 330320.8186310054,
+    "pasture_management": 672725.4515294152
+  },
+  "host": "Linux x86_64",
+  "input_raster": "data/br_5km.tif",
+  "input_raster_sha256": "2285bb15fb847234ebb0e32340af5ee26190a39fc361dfa57f5468ae485f1897",
+  "iterations_per_step": [
+    0,
+    593,
+    919,
+    913,
+    959,
+    993,
+    1013,
+    1035,
+    1085,
+    1128,
+    1219,
+    1156,
+    1193,
+    1194,
+    1276
+  ],
+  "label": "br_5km_repeat",
+  "max_difference_km2": 1000.0,
+  "max_error_per_step": [
+    0.44173299986869097,
+    999.5834823139012,
+    999.1981137925759,
+    997.3610405521467,
+    995.4653941653669,
+    995.4846868994646,
+    994.409497231245,
+    996.1575433150865,
+    997.3076939196326,
+    986.7525277053937,
+    999.7489366000518,
+    995.437603589613,
+    997.5082185692154,
+    996.6203054771759,
+    997.4421287351288
+  ],
+  "n_steps": 15,
+  "output": "/home/sergio/olw-release/open-lucc-workflow/runs/br_5km_repeat/lucc_95a8381f.tif",
+  "output_sha256": "895a11e8e3a49ea12fb288a044d42248c071f2d35259b5eabf59c24ac6f6d825",
+  "peak_rss_mb": 793.9,
+  "python": "3.12.3",
+  "record": "/home/sergio/olw-release/open-lucc-workflow/runs/br_5km_repeat/lucc_95a8381f.record.json",
+  "run_seconds": 10612.082149632,
+  "shape": [
+    900,
+    1040
+  ],
+  "versions": {
+    "disscube": "0.6.0",
+    "disslucc": "0.5.0",
+    "dissmodel": "0.6.6"
+  },
+  "wall_seconds": 10614.767
+}

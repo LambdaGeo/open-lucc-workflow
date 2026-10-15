@@ -17,17 +17,29 @@
 Wheel SHA-256: run `make lock` on the machine that produces the reported results and paste
 `pip hash`/`requirements.lock` output here. (Not filled in: the hashes belong to the run that is reported.)
 
-## Reported results (v1.0.0)
-Run of `make full` on one Linux desktop (Python 3.12.3, 5 h 49 min in total), from the commit `55c41cd`
-(the later commits change only lint, documentation and how the memory is measured).
+## Reported results (v1.1.0)
+Run of `make full` on one Linux desktop (Python 3.12.3, 6 h 31 min of wall-clock time in total, from a clean start),
+from the commit `57424aa8464efdb9c605aff0932060c6b93ca39b`. The tag `v1.1.0` differs from that commit only in
+documentation and in the record of this run (`reported/v1.1.0/`, this file, the README); no code, parameter or
+acceptance criterion changes between them. An earlier attempt was interrupted before it finished; the reported run is a
+complete one.
 
 | Grid | Cells | Input raster SHA-256 | Output SHA-256 | Time | Peak memory |
 |---|---:|---|---|---:|---:|
-| 10.56 km | 77,238 | `79664844f34bf14495654b93e6dc57c565f01bf72f70b32bcde049e87a05165b` | `95be540c8bd75a015594d973dc84bd9847dd9a8b862c4b06512186645ee63ac2` | 2,197.6 s | 421 MB |
-| 5.28 km | 307,419 | `327d4cf3301aec8f6e9b867e9f2ffbd490e5d5d482b6c02bb5a73986f6f2482d` | `b4212984080ab0faa26a068d62a09721dbd50c2b3fbc64a42aa85664837da34b` | 9,419.5 s | 828 MB |
+| 10.56 km | 77,238 | `6cf3e5224c1849f31f069a535e659417817e73e9390dd8b7aca36bc424aa0ab0` | `f060cc08686e5cb7c2f265205d8e2f629aee8f9f6a9b8a06073ead3e3a926224` | 2,169.6 s | 384 MB |
+| 5.28 km | 307,419 | `2285bb15fb847234ebb0e32340af5ee26190a39fc361dfa57f5468ae485f1897` | `895a11e8e3a49ea12fb288a044d42248c071f2d35259b5eabf59c24ac6f6d825` | 10,383.4 s | 794 MB |
 
-The repeat run at 5.28 km (9,331.7 s, 829 MB) gave the same output hash. [TO UPDATE: repeat `make full` from a clean
-clone of the tag `v1.0.0` and confirm that the hashes are the same.]
+The repeat run at 5.28 km (10,614.8 s, 794 MB) gave the same output hash, the same iterations in the 14 years and the same
+class areas. Acceptance (`scripts/check_run.py`, criteria of `acceptance.toml`): demand met (largest error 999.75 km2,
+tolerance 1,000 km2; at most 1,276 iterations in a year, limit 3,000), repeat identical (difference 0.0, same bytes), area per
+class against the coarser grid 0.0021 of the mapped area (limit 0.005). The peak memory is that of the model run; the grid
+build peaks near 1 GB (`reported/v1.1.0/grid5k.time.log`), and the whole `make full` process tree reached 1.05 GB
+(`reported/v1.1.0/full.time.log`). The record is in `reported/v1.1.0/`; `make check-reported` audits it in seconds.
+
+## Earlier run (v1.0.0, superseded)
+The first run of the workflow (an earlier version of the verification model), from the commit `55c41cd`; its record is in
+`reported/v1.0.0/`. Its input hashes were `79664844…` (10.56 km) and `327d4cf3…` (5.28 km); it is kept for history and is not
+the result the note reports.
 
 ## Open decisions
 1. Land-use product and how it is obtained (STAC vs direct download) for `pipeline/grid/sources.toml`.
@@ -53,6 +65,5 @@ clone of the tag `v1.0.0` and confirm that the hashes are the same.]
   by attribute (`gdal_rasterize -a`) into a class raster declared as a source, where `percentage` already works.
 
 ## Note on DisSCube 0.6.0
-The input rasters of the reported runs were built with DisSCube 0.5.0 plus unreleased changes. Rebuilding both grids with the
-released 0.6.0 (PyPI) gives identical raster hashes (5.28 km `2285bb15…`, 10.56 km `6cf3e522…`), so the model results do not change;
-only the `versions` entry of `metrics.json` and `run.json` will read 0.6.0 when the runs are repeated.
+The input rasters of the `v1.1.0` run were built with the released DisSCube 0.6.0 (PyPI): the `versions` entry of each
+`metrics.json` in `reported/v1.1.0/` reads `disscube 0.6.0`, `disslucc 0.5.0`, `dissmodel 0.6.6`.
