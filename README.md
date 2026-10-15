@@ -44,8 +44,8 @@ You do not need to run the six-and-a-half-hour computation to check the work. Pi
 | Level | Command | Time | What it shows |
 |---|---|---|---|
 | 0. Audit the record | `make check-reported` | seconds | The reported runs meet the criteria of `acceptance.toml`, from their recorded metrics (no model run) |
-| 1. Smoke test | `make small` | about 1 min | The pipeline runs offline on a synthetic raster and a repeat run is identical |
-| 2. Reproduce on real data | `make reproduce-10k` | about 40 min | Builds the 10.56 km grid from the open sources, runs the model and prints `OK` or `DIFFERS` against the reported run (same input and output SHA-256) |
+| 1. Smoke test | `make small` | about 15 s | The pipeline runs offline on a synthetic raster and a repeat run is identical |
+| 2. Reproduce on real data | `make reproduce-10k` | about 40 min (39 min measured) | Builds the 10.56 km grid from the open sources, runs the model and prints `OK` or `DIFFERS` against the reported run (same input and output SHA-256) |
 | 3. Full run of the authors | `make full` | about 6.5 h | Both grids, the repeat run at 5.28 km and the three acceptance checks |
 
 Level 2 is the check we ask of a reviewer. The 5.28 km run (level 3) shows that the same chain scales to 307,000
@@ -67,7 +67,7 @@ Five stages, each leaving a named artifact that a check reads:
 On a fresh Ubuntu or Debian (also inside WSL2) install the tools first: `sudo apt update && sudo apt install -y make git python3 python3-pip python3-venv`.
 ```
 make env            # .venv with pinned packages
-make small          # offline, synthetic input raster (~1 min); what CI runs
+make small          # offline, synthetic input raster (~15 s); what CI runs
 make grids          # only the two grids (10.56 and 5.28 km) from open data; no model run
 make grid-10k       # or one at a time: data/br_10km.tif (~1 min)
 make grid-5k        # data/br_5km.tif (~3 min, peak ~1 GB RAM)
