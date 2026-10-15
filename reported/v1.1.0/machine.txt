@@ -1,0 +1,7 @@
+Machine of the reported run (make full, 15 Oct 2026)
+Linux sergio-OptiPlex-7050 7.0.0-14-generic #14~24.04.3-Ubuntu SMP PREEMPT_DYNAMIC Fri Apr 24 13:55:39 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+Distribution: Linux Mint 22.2 (zara), based on Ubuntu 24.04
+Python 3.12.3
+CPU(s): 8
+Model name: Intel(R) Core(TM) i7-7700T CPU @ 2.90GHz (max 3800 MHz, min 800 MHz)
+Memory: 15 GB total, no swap

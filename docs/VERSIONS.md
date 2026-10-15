@@ -14,8 +14,9 @@
 | brmangue-dissmodel | 0.5.0 | 10.5281/zenodo.23240385 |
 | brmangue-terrame | 0.1.0 | 10.5281/zenodo.23240318 |
 
-Wheel SHA-256: run `make lock` on the machine that produces the reported results and paste
-`pip hash`/`requirements.lock` output here. (Not filled in: the hashes belong to the run that is reported.)
+Environment of the reported run: `reported/v1.1.0/requirements.lock` lists the exact version of every package installed in the
+virtual environment (`pip freeze`), and `reported/v1.1.0/machine.txt` describes the machine. The lock file has no hashes: the
+SHA-256 of the PyPI wheels is not recorded, so the pins fix versions, not files.
 
 ## Reported results (v1.1.0)
 Run of `make full` on one Linux desktop (Python 3.12.3, 6 h 31 min of wall-clock time in total, from a clean start),
