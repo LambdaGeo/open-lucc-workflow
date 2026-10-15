@@ -64,6 +64,7 @@ Five stages, each leaving a named artifact that a check reads:
 5. **Acceptance** — `scripts/check_run.py` against `acceptance.toml` (demand met, identical repeat run, class areas agree across resolutions); `make report` writes `results/table4.md`.
 
 ## Use
+On a fresh Ubuntu or Debian (also inside WSL2) install the tools first: `sudo apt update && sudo apt install -y make git python3 python3-pip python3-venv`.
 ```
 make env            # .venv with pinned packages
 make small          # offline, synthetic input raster (~1 min); what CI runs
@@ -96,7 +97,7 @@ environment, and keep the repository inside the Linux file system (`~/`), not un
 ```
 wsl --install -d Ubuntu     # PowerShell as administrator; restart when asked
 # then, in the Ubuntu terminal:
-sudo apt update && sudo apt install -y make git python3-venv
+sudo apt update && sudo apt install -y make git python3 python3-pip python3-venv
 git clone https://github.com/LambdaGeo/open-lucc-workflow && cd open-lucc-workflow
 make env && make small
 ```
