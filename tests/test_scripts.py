@@ -149,3 +149,31 @@ def test_complete_input_partial_coverage(tmp_path):
         b, _, _ = read_bands(str(tmp_path / f"{mode}.tif"))
         m = np.nan_to_num(b["mask"]) > 0
         assert abs(np.nansum([b[name] for name in LAND_USES], axis=0)[m] - 1).max() < 1e-4
+
+
+def _metrics(**kw):
+    m = {"input_raster_sha256": "a" * 64, "output_sha256": "b" * 64, "iterations_per_step": [0, 5, 6],
+         "final_areas_km2": {"forest_vegetation": 1000.0, "pasture_management": 500.0}}
+    m.update(kw)
+    return m
+
+
+def test_check_expected_identical_equivalent_and_differs():
+    from check_expected import compare
+    ref = _metrics()
+    assert compare(_metrics(), ref, 1e-6)[0] == "identical"
+    near = _metrics(output_sha256="c" * 64, final_areas_km2={"forest_vegetation": 1000.0000001, "pasture_management": 500.0})
+    assert compare(near, ref, 1e-6)[0] == "equivalent"
+    far = _metrics(output_sha256="c" * 64, final_areas_km2={"forest_vegetation": 1100.0, "pasture_management": 500.0})
+    assert compare(far, ref, 1e-6)[0] == "DIFFERS"
+    other_iter = _metrics(output_sha256="c" * 64, iterations_per_step=[0, 5, 7])
+    assert compare(other_iter, ref, 1e-6)[0] == "DIFFERS"
+    assert compare(_metrics(input_raster_sha256="d" * 64), ref, 1e-6)[0] == "DIFFERS"
+
+
+def test_check_reported_passes_on_the_v1_0_0_record(capsys):
+    import check_reported
+    root = pathlib.Path(__file__).resolve().parents[1]
+    sys.argv = ["check_reported.py", "--reported", str(root / "reported" / "v1.0.0")]
+    assert check_reported.main() == 0
+    assert "FAIL" not in capsys.readouterr().out

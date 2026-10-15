@@ -11,7 +11,7 @@ on top of the components they verify. The maps in stage 4 are a verification run
 
 Companion repository of the Technical Note (Big Earth Data): an end-to-end, open and traceable
 land-use-change workflow in Python (TerraME/LuccME-style), from open data to the allocated maps.
-The results cited by the note are those of the tag `v1.0.0`.
+The results cited by the note are those of the tag `v1.1.0` (recorded in `reported/v1.1.0` and `docs/VERSIONS.md`).
 
 **Purpose.** This repository does not aim to reproduce LuccME-BR. It demonstrates a *process*: how a
 land-use-change experiment goes from open data to allocated maps in a way that, once built, anyone
@@ -23,6 +23,22 @@ anyone can verify).
 
 > The model here is a **verification model** with declared, synthetic coefficients, used only to
 > exercise the workflow. Its maps are not land-use projections and not LuccME-BR outputs.
+
+## Check the result quickly
+You do not need to run the six-hour computation to check the work. Pick the level you have time for:
+
+| Level | Command | Time | What it shows |
+|---|---|---|---|
+| 0. Audit the record | `make check-reported` | seconds | The reported runs meet the criteria of `acceptance.toml`, from their recorded metrics (no model run) |
+| 1. Smoke test | `make small` | about 1 min | The pipeline runs offline on a synthetic raster and a repeat run is identical |
+| 2. Reproduce on real data | `make reproduce-10k` | about 40 min | Builds the 10.56 km grid from the open sources, runs the model and prints `OK` or `DIFFERS` against the reported run (same input and output SHA-256) |
+| 3. Full run of the authors | `make full` | about 6 h | Both grids, the repeat run at 5.28 km and the three acceptance checks |
+
+Level 2 is the check we ask of a reviewer. The 5.28 km run (level 3) shows that the same chain scales to 307,000
+cells; its results are archived in `reported/`. After `make reproduce-10k`, `OK ... identical` means the same
+input raster and the same output bytes as the reported run. `OK ... numerically equivalent` means the same input
+raster and class areas that agree to 1e-6 of the mapped area, which can happen across operating systems or
+library builds (see Windows below); `DIFFERS` prints what differs, including the installed package versions.
 
 ## Stages
 1. **Input raster** — `disscube` catalogs open sources (SHA-256 checked) and derives the named bands
@@ -43,6 +59,8 @@ make grid-10k       # or one at a time: data/br_10km.tif (~1 min)
 make grid-5k        # data/br_5km.tif (~3 min, peak ~1 GB RAM)
 make run-10k        # grid + model at 10.56 km only (runs/br_10km)
 make run-5k         # grid + model at 5.28 km only (runs/br_5km)
+make reproduce-10k  # the reviewer's path: 10.56 km grid and model (about 40 min), compared with the reported run
+make check-reported # audit of the reported runs against acceptance.toml from their metrics (seconds)
 make full           # grids + model runs + checks + report (network; the 5.28 km model run is the heavy step)
 make test lint
 ```

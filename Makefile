@@ -8,6 +8,8 @@
 #   make run-10k        grid + model on the 10.56 km grid only (~30 min); writes runs/br_10km
 #   make run-5k         grid + model on the 5.28 km grid only (~2.5 h); writes runs/br_5km
 #   make full           Brazil, from open data (needs network; the model run at 5.28 km is the heavy step, memory not yet measured)
+#   make reproduce-10k  the reviewer's path: grid + model at 10.56 km (~40 min), then compare with the reported run
+#   make check-reported audit the reported runs against acceptance.toml from their recorded metrics (seconds, no model run)
 #   make verify         verify the experiment records of every run (hashes, versions)
 #   make report         write results/table4.md from runs/*/metrics.json
 #   make numbers        write results/manuscript_numbers_<label>.md (Table S2, forest loss, hashes) for each run
@@ -20,10 +22,10 @@ DISSCUBE  ?= $(if $(wildcard .venv/bin/disscube),.venv/bin/disscube,disscube)
 SYN_SIZE  ?= 60
 SYN_BLOCK ?= 2
 
-.PHONY: env small grids grid-10k grid-5k run-10k run-5k full verify report numbers test lint lock clean help
+.PHONY: env small grids grid-10k grid-5k run-10k run-5k reproduce-10k check-reported full verify report numbers test lint lock clean help
 
 help:
-	@sed -n '2,17p' Makefile
+	@sed -n '2,19p' Makefile
 
 env:
 	python3 -m venv .venv && .venv/bin/pip install -U pip && .venv/bin/pip install -r requirements-dev.txt
@@ -76,11 +78,24 @@ grids: grid-10k grid-5k
 grid-10k: data/br_10km.tif
 grid-5k: data/br_5km.tif
 
+# the reported run to compare with (hashes, metrics and logs of the release)
+REPORTED ?= reported/v1.1.0
+
 # one resolution at a time (no acceptance check: that needs the three runs of `make full`)
 run-10k: data/br_10km.tif
 	$(PY) scripts/run_experiment.py --input $< --label br_10km
 run-5k: data/br_5km.tif
 	$(PY) scripts/run_experiment.py --input $< --label br_5km
+
+# the reviewer's path: the 10.56 km run, checked against the reported run (prints OK or DIFFERS)
+reproduce-10k: data/br_10km.tif
+	$(PY) scripts/run_experiment.py --input $< --label br_10km
+	$(PY) scripts/verify_record.py runs/br_10km
+	$(PY) scripts/check_expected.py --label br_10km --run runs/br_10km --reported $(REPORTED)
+
+# audit of the record: the criteria of acceptance.toml on the reported metrics, without running anything
+check-reported:
+	$(PY) scripts/check_reported.py --reported $(REPORTED)
 
 full: data/$(FINE).tif data/$(COARSE).tif
 	$(PY) scripts/run_experiment.py --input data/$(FINE).tif   --label $(FINE)
