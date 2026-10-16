@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "Open LUCC workflow: traceable land-use change modelling from open data"
-message: "If you use this repository, please cite it. The DOI of version 1.1.0 is added after its release."
+message: "If you use this repository, please cite it."
 type: software
 authors:
   - family-names: Costa
@@ -17,4 +17,5 @@ authors:
     orcid: "https://orcid.org/0009-0003-7212-4870"
 license: MIT
 version: "1.1.0"
+doi: "10.5281/zenodo.23415814"
 repository-code: "https://github.com/LambdaGeo/open-lucc-workflow"

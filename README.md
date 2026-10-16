@@ -110,6 +110,9 @@ checkout on Windows does not change the line endings, and with them the SHA-256,
 Outputs were compared byte for byte only between Linux machines; on another operating system, compare
 within the numerical tolerance of `acceptance.toml`.
 
+## Cite
+Costa, S. S., Bezerra, D. da S., & Alves, J. M. P. (2026). *Open LUCC workflow: traceable land-use change modelling from open data* (Version v1.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23415814
+
 ## Licences
 The source code is under the MIT licence (`LICENSE`). The results, metrics, reports and run records that the repository produces or stores are under CC BY 4.0, to the extent of our rights (`LICENSE-DATA`). The input layers are not ours: each follows the terms of its source (`docs/DATA.md`). The copies of three layers in the GitHub release `data-preview` keep the terms of their sources. This is not legal advice.
 
