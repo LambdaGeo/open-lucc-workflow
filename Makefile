@@ -16,7 +16,8 @@
 #   make test           unit tests of the scripts
 #
 # Variables: PY (python), SYN_SIZE (fine synthetic grid, default 60 x 60 cells of 5.28 km),
-#            SYN_BLOCK (coarse grid = SYN_BLOCK x SYN_BLOCK fine cells, default 2).
+#            SYN_BLOCK (coarse grid = SYN_BLOCK x SYN_BLOCK fine cells, default 2),
+#            PYTHON (interpreter that `make env` uses to create .venv; default python3, 3.11 or newer).
 PY        ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 DISSCUBE  ?= $(if $(wildcard .venv/bin/disscube),.venv/bin/disscube,disscube)
 SYN_SIZE  ?= 60
@@ -25,7 +26,7 @@ SYN_BLOCK ?= 2
 .PHONY: env small grids grid-10k grid-5k run-10k run-5k reproduce-10k check-reported full verify report numbers test lint lock clean help
 
 help:
-	@sed -n '2,19p' Makefile
+	@sed -n '2,20p' Makefile
 
 PYTHON ?= python3
 
