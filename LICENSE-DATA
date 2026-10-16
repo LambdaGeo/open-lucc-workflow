@@ -1,0 +1,24 @@
+Licence of the data produced by this repository
+================================================
+
+The results, metrics, reports and run records that this repository produces or
+stores (for example the contents of reported/ and the files written by
+`make full`, `make reproduce-10k` and `make small`) are licensed under the
+Creative Commons Attribution 4.0 International licence (CC BY 4.0), to the
+extent of our rights:
+
+    https://creativecommons.org/licenses/by/4.0/legalcode
+
+Please cite the release of this repository (see CITATION.cff).
+
+Not covered by this licence
+---------------------------
+
+The input rasters and vectors are not ours. Each one follows the terms of its
+source, listed in docs/DATA.md and in pipeline/grid/sources.toml. The copies of
+three layers kept in the GitHub release `data-preview` are shown only so the
+workflow can run, and keep the terms of their sources.
+
+The source code is under the MIT licence (file LICENSE).
+
+This statement is not legal advice.
