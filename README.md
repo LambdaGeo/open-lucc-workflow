@@ -110,6 +110,9 @@ checkout on Windows does not change the line endings, and with them the SHA-256,
 Outputs were compared byte for byte only between Linux machines; on another operating system, compare
 within the numerical tolerance of `acceptance.toml`.
 
+## Licences
+The source code is under the MIT licence (`LICENSE`). The results, metrics, reports and run records that the repository produces or stores are under CC BY 4.0, to the extent of our rights (`LICENSE-DATA`). The input layers are not ours: each follows the terms of its source (`docs/DATA.md`). The copies of three layers in the GitHub release `data-preview` keep the terms of their sources. This is not legal advice.
+
 ## Status
 `make small` and `make full` have been run (Linux, Python 3.12.3). `make full` took 6 h 31 min: the 5.28 km model run took
 173 min (794 MB) and the 10.56 km run 36 min (384 MB). The three acceptance checks pass; the hashes of the input rasters and of

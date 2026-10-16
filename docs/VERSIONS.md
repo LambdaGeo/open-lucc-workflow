@@ -6,10 +6,10 @@
 | dissmodel | 0.6.6 | 10.5281/zenodo.23246106 (confirm version vs concept DOI) |
 | disscube | 0.6.0 | 10.5281/zenodo.23365403 (0.5.0: 10.5281/zenodo.23172450) |
 | disslucc | 0.5.0 | 10.5281/zenodo.23219338 |
-| disslucc-benchmark | 0.2.2 | 10.5281/zenodo.23224097 |
+| disslucc-benchmark | 0.2.2 | 10.5281/zenodo.23224097 (the catalog of the labs was corrected afterwards, commit 0baba4d) |
 | terrame-docker | 0.4.2 | 10.5281/zenodo.23160784 |
 | luccme-goldens | 1.1.0 (pinned by the benchmark; 1.2.0 is documentation only) | 10.5281/zenodo.23161342 (1.2.0: 10.5281/zenodo.23366244) |
-| disscube-benchmark | 1.1.0 | 10.5281/zenodo.23366475 |
+| disscube-benchmark | 1.1.0 | 10.5281/zenodo.23366475 (the causes of the differences in section 5 of the README were completed afterwards, commit c023ed6) |
 | disscube-grids | 1.0.0 | 10.5281/zenodo.23368071 |
 | brmangue-dissmodel | 0.5.0 | 10.5281/zenodo.23240385 |
 | brmangue-terrame | 0.1.0 | 10.5281/zenodo.23240318 |
@@ -43,11 +43,11 @@ The first run of the workflow (an earlier version of the verification model), fr
 the result the note reports.
 
 ## Open decisions
-1. Land-use product and how it is obtained (STAC vs direct download) for `pipeline/grid/sources.toml`.
+1. ~~Land-use product and how it is obtained~~ Done: the LuccME-BR land-cover netCDF, direct download from Zenodo record 5123560 (`pipeline/grid/sources.toml`).
 2. Grids of the reported runs: 5.28 km (20×20 cells per BDC_SM tile) and 10.56 km (10×10, an exact 2×2 aggregation); memory test at 5.28 km. 25 km is not tile-aligned and is kept only for the transport-cost case of E2.
 3. ~~Freeze `acceptance.toml`~~ Done: frozen on 2026-10-09 (`frozen_commit`), release tag `v1.1.0` (criteria unchanged; `v1.0.0` was the first run).
 4. Confirm DOIs marked above.
-5. `e_connport` uses the TerraME GPM road network (`br_roads_5880`) and 14 ports (`br_ports_5880`), cost column `custo_ajus`, the same data as the disscube-benchmark connectivity case. Licence of these files to be confirmed for Table 4a.
+5. `e_connport` uses the TerraME GPM road network (`br_roads_5880`) and 14 ports (`br_ports_5880`), cost column `custo_ajus`, the same data as the disscube-benchmark connectivity case. Licence of these files: see `docs/DATA.md`.
 
 ## Before submission
 - Remove `scripts/_run_with_progress.py` (provisional wrapper that prints one progress line per year). Add the equivalent `logging` record per year to disslucc (iterations, maximum error, time), release it, pin the new version here and in `requirements.txt`, and make `scripts/run_experiment.py` call `python -m disslucc.executors.saturation` again. Re-run the reported runs with the pinned version (results do not change; the record does).
