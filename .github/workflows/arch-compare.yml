@@ -1,114 +1,331 @@
+
 name: arch-compare
 
-# Builds the 10.56 km input raster on Linux x86-64, on macOS arm64 and on macOS x86-64 with the same
-# pinned packages (requirements.lock as constraints), then compares each macOS raster with the Linux
-# one band by band. Two macOS runners separate the effect of the processor architecture (arm64 against
-# x86-64) from that of the operating system and its library builds (macOS against Linux).
+# Compare the 10.56 km input raster across:
+# - Linux x86-64
+# - macOS ARM64
+# - macOS x86-64
 #
-# macOS 15 or newer is needed: rasterio 1.5.2 publishes wheels only for macosx_15_0, and on macOS 14
-# pip falls back to the source package, which needs GDAL and fails.
+# requirements.lock is used as a constraints file.
+# The ANA/SNIRH probe diagnoses HTTP access from each runner.
 #
-# workflow_dispatch only shows up in the Actions tab once this file is on the default branch.
-# Until then the push trigger below runs it on every push to the working branch.
-# Remove the push trigger before merging (or keep only workflow_dispatch).
+# macOS 15 or newer is needed for rasterio 1.5.2 wheels.
+#
+# workflow_dispatch becomes available after this workflow is
+# present on the default branch. The push trigger runs it on
+# the working branch until then.
+
 on:
   workflow_dispatch:
   push:
-    branches: [fix/cross-architecture-verification]
+    branches:
+      - fix/cross-architecture-verification
 
 jobs:
   grid:
+    name: Build grid (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15, macos-15-intel]   # macos-15 is Apple Silicon (arm64); macos-15-intel is x86-64
+        os:
+          - ubuntu-24.04
+          - macos-15
+          - macos-15-intel
+
     runs-on: ${{ matrix.os }}
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
-      - name: Probe the ANA server (HTTP status from this runner)
-        continue-on-error: true
-        run: |
-          u="https://metadados.snirh.gov.br/geonetwork/srv/api/records/8db5549f-2b94-40f0-b968-6f940bad68fa/attachments/GEOFT_CIDADE_2016.zip"
-          echo "default agent:   $(curl -s -o /dev/null -w '%{http_code}' -I "$u")"
-          echo "python-requests: $(curl -s -o /dev/null -w '%{http_code}' -I -A 'python-requests/2.32' "$u")"
-          echo "browser agent:   $(curl -s -o /dev/null -w '%{http_code}' -I -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36' "$u")"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install the pinned environment
         run: |
-          python -m pip install -U pip
-          pip install -r requirements.txt -c requirements.lock
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -c requirements.lock
+
+      - name: Probe the ANA server (GET)
+        continue-on-error: true
+        env:
+          ANA_URL: https://metadados.snirh.gov.br/geonetwork/srv/api/records/8db5549f-2b94-40f0-b968-6f940bad68fa/attachments/GEOFT_CIDADE_2016.zip
+        run: |
+          echo "=== Runner ==="
+          python -c "import platform; print(platform.platform()); print(platform.machine())"
+
+          echo
+          echo "=== curl: default User-Agent ==="
+          curl -sS -L --max-time 30 \
+            -H "Range: bytes=0-0" \
+            -o /dev/null \
+            -w "HTTP: %{http_code}\nFinal URL: %{url_effective}\n" \
+            "$ANA_URL" || true
+
+          echo
+          echo "=== curl: browser User-Agent ==="
+          curl -sS -L --max-time 30 \
+            -H "Range: bytes=0-0" \
+            -A "Mozilla/5.0" \
+            -o /dev/null \
+            -w "HTTP: %{http_code}\nFinal URL: %{url_effective}\n" \
+            "$ANA_URL" || true
+
+          echo
+          echo "=== Python requests: default and browser User-Agent ==="
+          python - <<'PY'
+          import os
+          import requests
+
+          url = os.environ["ANA_URL"]
+
+          for label, headers in [
+              ("default", {}),
+              ("browser", {"User-Agent": "Mozilla/5.0"}),
+          ]:
+              try:
+                  with requests.get(
+                      url,
+                      headers=headers,
+                      stream=True,
+                      timeout=(10, 30),
+                  ) as response:
+                      print(f"{label}: HTTP {response.status_code}")
+                      print(f"final URL: {response.url}")
+                      print(f"Content-Type: {response.headers.get('Content-Type')}")
+              except requests.RequestException as exc:
+                  print(f"{label}: {type(exc).__name__}: {exc}")
+          PY
+
       - name: Record the environment
         run: |
           mkdir -p out
+
           python -m pip freeze > out/freeze.txt
-          python - <<'EOF' > out/libs.txt
-          import platform, rasterio, shapely, pyproj, numpy
+
+          python - <<'PY' > out/libs.txt
+          import platform
+          import rasterio
+          import shapely
+          import pyproj
+          import numpy
+
           print("platform", platform.platform(), platform.machine())
           print("python", platform.python_version())
           print("numpy", numpy.__version__)
-          print("rasterio", rasterio.__version__, "GDAL", rasterio.__gdal_version__)
-          print("shapely", shapely.__version__, "GEOS", shapely.geos_version_string)
-          print("pyproj", pyproj.__version__, "PROJ", pyproj.proj_version_str)
-          EOF
+          print(
+              "rasterio", rasterio.__version__,
+              "GDAL", rasterio.__gdal_version__
+          )
+          print(
+              "shapely", shapely.__version__,
+              "GEOS", shapely.geos_version_string
+          )
+          print(
+              "pyproj", pyproj.__version__,
+              "PROJ", pyproj.proj_version_str
+          )
+          PY
+
           cat out/libs.txt
+
       - name: Build the 10.56 km grid (stages 1 and 2)
         run: make grid-10k PY=python
+
       - name: Hash the rasters
         run: |
           cp data/raw_br_10km.tif data/br_10km.tif out/
-          cd out && shasum -a 256 raw_br_10km.tif br_10km.tif | tee hashes.txt
-      - uses: actions/upload-artifact@v4
+
+          cd out
+          shasum -a 256 raw_br_10km.tif br_10km.tif | tee hashes.txt
+
+      - name: Upload grid artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
         with:
           name: grid-${{ matrix.os }}
           path: out/
+          if-no-files-found: warn
 
   compare:
+    name: Compare rasters
     needs: grid
     if: ${{ !cancelled() }}
     runs-on: ubuntu-24.04
+
     steps:
-      - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
-      - run: pip install numpy rasterio
-      - uses: actions/download-artifact@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install comparison dependencies
+        run: python -m pip install numpy rasterio
+
+      - name: Download grid artifacts
+        uses: actions/download-artifact@v4
         with:
           path: cmp
+          pattern: grid-*
+          merge-multiple: false
+
       - name: Compare the rasters
+        shell: bash
         run: |
-          python - <<'EOF' | tee -a "$GITHUB_STEP_SUMMARY"
-          import glob, os
-          import numpy as np, rasterio
+          python - <<'PY' | tee -a "$GITHUB_STEP_SUMMARY"
+          import glob
+          import os
+          import sys
+
+          import numpy as np
+          import rasterio
 
           A = "cmp/grid-ubuntu-24.04"
-          others = sorted(d for d in glob.glob("cmp/grid-*") if d != A)
-          print("reported input SHA-256 (v1.1.0): `6cf3e5224c1849f31f069a535e659417817e73e9390dd8b7aca36bc424aa0ab0`\n")
-          if not os.path.isdir(A) or not others:
-              print("Missing artifacts: need the Linux grid and at least one macOS grid. Found:", sorted(glob.glob("cmp/grid-*")))
+          others = sorted(
+              d for d in glob.glob("cmp/grid-*")
+              if d != A
+          )
+
+          print("# Cross-architecture raster comparison\n")
+          print(
+              "Reference input SHA-256 (v1.1.0): "
+              "`6cf3e5224c1849f31f069a535e659417817e73e9390dd8b7aca36bc424aa0ab0`\n"
+          )
+
+          if not os.path.isdir(A):
+              print("ERROR: Linux reference artifact is missing.")
+              sys.exit(1)
+
+          if not others:
+              print("ERROR: No macOS artifacts were found.")
+              sys.exit(1)
+
+          required = ("hashes.txt", "libs.txt")
+          for filename in required:
+              if not os.path.isfile(os.path.join(A, filename)):
+                  print(f"ERROR: Missing Linux file: {filename}")
+                  sys.exit(1)
+
           for B in others:
-              print(f"## x86-64 Linux vs {os.path.basename(B)}, 10.56 km grid\n")
-              print("```"); print(open(f"{A}/hashes.txt").read(), end=""); print(open(f"{B}/hashes.txt").read(), end=""); print("```\n")
-              print("Libraries (Linux, then this runner):\n")
-              print("```"); print(open(f"{A}/libs.txt").read(), end=""); print("---"); print(open(f"{B}/libs.txt").read(), end=""); print("```\n")
+              print(
+                  f"## Linux x86-64 vs {os.path.basename(B)}\n"
+              )
+
+              for filename in required:
+                  if not os.path.isfile(os.path.join(B, filename)):
+                      print(f"ERROR: Missing {B}/{filename}")
+                      sys.exit(1)
+
+              print("### SHA-256 hashes\n")
+              print("```text")
+              for directory in (A, B):
+                  print(f"[{directory}]")
+                  with open(
+                      os.path.join(directory, "hashes.txt")
+                  ) as f:
+                      print(f.read(), end="")
+              print("```\n")
+
+              print("### Environment\n")
+              print("Linux:")
+              print("```text")
+              with open(os.path.join(A, "libs.txt")) as f:
+                  print(f.read(), end="")
+              print("```\n")
+
+              print(f"{os.path.basename(B)}:")
+              print("```text")
+              with open(os.path.join(B, "libs.txt")) as f:
+                  print(f.read(), end="")
+              print("```\n")
+
               for name in ("raw_br_10km.tif", "br_10km.tif"):
-                  print(f"#### {name}\n")
-                  with rasterio.open(f"{A}/{name}") as a, rasterio.open(f"{B}/{name}") as b:
-                      print(f"crs equal: {a.crs == b.crs} | transform equal: {a.transform == b.transform} | "
-                            f"shape equal: {a.shape == b.shape} | bands: {a.count}/{b.count} | "
-                            f"dtype: {a.dtypes[0]}/{b.dtypes[0]} | nodata: {a.nodata}/{b.nodata} | "
-                            f"compression: {a.compression}/{b.compression} | tags equal: {a.tags() == b.tags()}\n")
-                      print("| band | arrays equal | NaN mask equal | cells differing | max abs diff |")
-                      print("|---|---|---|---|---|")
+                  path_a = os.path.join(A, name)
+                  path_b = os.path.join(B, name)
+
+                  print(f"### {name}\n")
+
+                  if not os.path.isfile(path_a) or not os.path.isfile(path_b):
+                      print("ERROR: One or both raster files are missing.\n")
+                      sys.exit(1)
+
+                  with rasterio.open(path_a) as a, rasterio.open(path_b) as b:
+                      print(
+                          f"- CRS equal: {a.crs == b.crs}\n"
+                          f"- Transform equal: {a.transform == b.transform}\n"
+                          f"- Shape equal: {a.shape == b.shape}\n"
+                          f"- Bands: {a.count}/{b.count}\n"
+                          f"- Dtypes: {a.dtypes}/{b.dtypes}\n"
+                          f"- NoData: {a.nodata}/{b.nodata}\n"
+                          f"- Compression: {a.compression}/{b.compression}\n"
+                          f"- Dataset tags equal: {a.tags() == b.tags()}\n"
+                      )
+
+                      if (
+                          a.shape != b.shape
+                          or a.count != b.count
+                          or a.crs != b.crs
+                          or a.transform != b.transform
+                      ):
+                          print(
+                              "ERROR: Raster structures differ; "
+                              "pixel comparison is not valid.\n"
+                          )
+                          sys.exit(1)
+
+                      print(
+                          "| Band | Arrays equal | NoData mask equal | "
+                          "Cells differing | Max abs diff |"
+                      )
+                      print(
+                          "|---|---|---|---:|---:|"
+                      )
+
                       for i in range(1, a.count + 1):
-                          x, y = a.read(i).astype("f8"), b.read(i).astype("f8")
-                          if a.nodata is not None:
-                              x, y = np.where(x == a.nodata, np.nan, x), np.where(y == b.nodata, np.nan, y)
-                          nx, ny = np.isnan(x), np.isnan(y)
+                          x = a.read(i).astype("float64")
+                          y = b.read(i).astype("float64")
+
+                          mask_x = (
+                              x == a.nodata
+                              if a.nodata is not None
+                              else np.zeros(x.shape, dtype=bool)
+                          )
+                          mask_y = (
+                              y == b.nodata
+                              if b.nodata is not None
+                              else np.zeros(y.shape, dtype=bool)
+                          )
+
+                          x[mask_x] = np.nan
+                          y[mask_y] = np.nan
+
+                          nx = np.isnan(x)
+                          ny = np.isnan(y)
                           both = ~nx & ~ny
+
                           d = np.abs(x[both] - y[both])
-                          label = a.tags(i).get("name") or a.descriptions[i - 1] or f"band{i}"
-                          print(f"| {label} | {np.array_equal(x, y, equal_nan=True)} | {np.array_equal(nx, ny)} | "
-                                f"{int((d > 0).sum())} | {float(d.max()) if d.size else 0.0:.3g} |")
+
+                          label = (
+                              a.tags(i).get("name")
+                              or a.descriptions[i - 1]
+                              or f"band{i}"
+                          )
+
+                          print(
+                              f"| {label} "
+                              f"| {np.array_equal(x, y, equal_nan=True)} "
+                              f"| {np.array_equal(nx, ny)} "
+                              f"| {int((d > 0).sum())} "
+                              f"| {float(d.max()) if d.size else 0.0:.6g} |"
+                          )
+
                   print()
-          EOF
-          
+
+          print(
+              "Note: matching SHA-256 hashes establish byte-for-byte "
+              "identity. Pixel equality alone does not establish identical "
+              "GeoTIFF metadata or file encoding."
+          )
+          PY
