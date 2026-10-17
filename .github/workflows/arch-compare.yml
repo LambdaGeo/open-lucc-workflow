@@ -1,7 +1,12 @@
 name: arch-compare
 
-# Builds the 10.56 km input raster on Linux x86-64 and on macOS arm64 with the same pinned
-# packages (requirements.lock as constraints), then compares the two rasters band by band.
+# Builds the 10.56 km input raster on Linux x86-64, on macOS arm64 and on macOS x86-64 with the same
+# pinned packages (requirements.lock as constraints), then compares each macOS raster with the Linux
+# one band by band. Two macOS runners separate the effect of the processor architecture (arm64 against
+# x86-64) from that of the operating system and its library builds (macOS against Linux).
+#
+# macOS 15 or newer is needed: rasterio 1.5.2 publishes wheels only for macosx_15_0, and on macOS 14
+# pip falls back to the source package, which needs GDAL and fails.
 #
 # workflow_dispatch only shows up in the Actions tab once this file is on the default branch.
 # Until then the push trigger below runs it on every push to the working branch.
@@ -16,12 +21,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-14]   # macos-14 is Apple Silicon (arm64)
+        os: [ubuntu-24.04, macos-15, macos-15-intel]   # macos-15 is Apple Silicon (arm64); macos-15-intel is x86-64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
+      - name: Probe the ANA server (HTTP status from this runner)
+        continue-on-error: true
+        run: |
+          u="https://metadados.snirh.gov.br/geonetwork/srv/api/records/8db5549f-2b94-40f0-b968-6f940bad68fa/attachments/GEOFT_CIDADE_2016.zip"
+          echo "default agent:   $(curl -s -o /dev/null -w '%{http_code}' -I "$u")"
+          echo "python-requests: $(curl -s -o /dev/null -w '%{http_code}' -I -A 'python-requests/2.32' "$u")"
+          echo "browser agent:   $(curl -s -o /dev/null -w '%{http_code}' -I -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36' "$u")"
       - name: Install the pinned environment
         run: |
           python -m pip install -U pip
@@ -53,6 +65,7 @@ jobs:
 
   compare:
     needs: grid
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/setup-python@v5
@@ -64,32 +77,38 @@ jobs:
       - name: Compare the rasters
         run: |
           python - <<'EOF' | tee -a "$GITHUB_STEP_SUMMARY"
+          import glob, os
           import numpy as np, rasterio
 
-          A, B = "cmp/grid-ubuntu-24.04", "cmp/grid-macos-14"
-          print("### x86-64 Linux vs arm64 macOS, 10.56 km grid\n")
-          print("```"); print(open(f"{A}/hashes.txt").read(), end=""); print(open(f"{B}/hashes.txt").read(), end=""); print("```\n")
+          A = "cmp/grid-ubuntu-24.04"
+          others = sorted(d for d in glob.glob("cmp/grid-*") if d != A)
           print("reported input SHA-256 (v1.1.0): `6cf3e5224c1849f31f069a535e659417817e73e9390dd8b7aca36bc424aa0ab0`\n")
-          print("Libraries (Linux, then macOS):\n")
-          print("```"); print(open(f"{A}/libs.txt").read(), end=""); print("---"); print(open(f"{B}/libs.txt").read(), end=""); print("```\n")
-          for name in ("raw_br_10km.tif", "br_10km.tif"):
-              print(f"#### {name}\n")
-              with rasterio.open(f"{A}/{name}") as a, rasterio.open(f"{B}/{name}") as b:
-                  print(f"crs equal: {a.crs == b.crs} | transform equal: {a.transform == b.transform} | "
-                        f"shape equal: {a.shape == b.shape} | bands: {a.count}/{b.count} | "
-                        f"dtype: {a.dtypes[0]}/{b.dtypes[0]} | nodata: {a.nodata}/{b.nodata} | "
-                        f"compression: {a.compression}/{b.compression} | tags equal: {a.tags() == b.tags()}\n")
-                  print("| band | arrays equal | NaN mask equal | cells differing | max abs diff |")
-                  print("|---|---|---|---|---|")
-                  for i in range(1, a.count + 1):
-                      x, y = a.read(i).astype("f8"), b.read(i).astype("f8")
-                      if a.nodata is not None:
-                          x, y = np.where(x == a.nodata, np.nan, x), np.where(y == b.nodata, np.nan, y)
-                      nx, ny = np.isnan(x), np.isnan(y)
-                      both = ~nx & ~ny
-                      d = np.abs(x[both] - y[both])
-                      label = a.tags(i).get("name") or a.descriptions[i - 1] or f"band{i}"
-                      print(f"| {label} | {np.array_equal(x, y, equal_nan=True)} | {np.array_equal(nx, ny)} | "
-                            f"{int((d > 0).sum())} | {float(d.max()) if d.size else 0.0:.3g} |")
-              print()
+          if not os.path.isdir(A) or not others:
+              print("Missing artifacts: need the Linux grid and at least one macOS grid. Found:", sorted(glob.glob("cmp/grid-*")))
+          for B in others:
+              print(f"## x86-64 Linux vs {os.path.basename(B)}, 10.56 km grid\n")
+              print("```"); print(open(f"{A}/hashes.txt").read(), end=""); print(open(f"{B}/hashes.txt").read(), end=""); print("```\n")
+              print("Libraries (Linux, then this runner):\n")
+              print("```"); print(open(f"{A}/libs.txt").read(), end=""); print("---"); print(open(f"{B}/libs.txt").read(), end=""); print("```\n")
+              for name in ("raw_br_10km.tif", "br_10km.tif"):
+                  print(f"#### {name}\n")
+                  with rasterio.open(f"{A}/{name}") as a, rasterio.open(f"{B}/{name}") as b:
+                      print(f"crs equal: {a.crs == b.crs} | transform equal: {a.transform == b.transform} | "
+                            f"shape equal: {a.shape == b.shape} | bands: {a.count}/{b.count} | "
+                            f"dtype: {a.dtypes[0]}/{b.dtypes[0]} | nodata: {a.nodata}/{b.nodata} | "
+                            f"compression: {a.compression}/{b.compression} | tags equal: {a.tags() == b.tags()}\n")
+                      print("| band | arrays equal | NaN mask equal | cells differing | max abs diff |")
+                      print("|---|---|---|---|---|")
+                      for i in range(1, a.count + 1):
+                          x, y = a.read(i).astype("f8"), b.read(i).astype("f8")
+                          if a.nodata is not None:
+                              x, y = np.where(x == a.nodata, np.nan, x), np.where(y == b.nodata, np.nan, y)
+                          nx, ny = np.isnan(x), np.isnan(y)
+                          both = ~nx & ~ny
+                          d = np.abs(x[both] - y[both])
+                          label = a.tags(i).get("name") or a.descriptions[i - 1] or f"band{i}"
+                          print(f"| {label} | {np.array_equal(x, y, equal_nan=True)} | {np.array_equal(nx, ny)} | "
+                                f"{int((d > 0).sum())} | {float(d.max()) if d.size else 0.0:.3g} |")
+                  print()
           EOF
+          
