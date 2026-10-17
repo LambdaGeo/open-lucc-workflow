@@ -1,19 +1,19 @@
 
 name: arch-compare
 
-# Compare the 10.56 km input raster across:
+# Cross-architecture comparison of the 10.56 km input raster.
+#
+# Architectures:
 # - Linux x86-64
 # - macOS ARM64
 # - macOS x86-64
 #
+# The ANA/SNIRH cities dataset is downloaded once and shared
+# as a GitHub Actions artifact to avoid runner-specific access
+# failures and ensure identical bytes for that source.
+#
 # requirements.lock is used as a constraints file.
-# The ANA/SNIRH probe diagnoses HTTP access from each runner.
-#
-# macOS 15 or newer is needed for rasterio 1.5.2 wheels.
-#
-# workflow_dispatch becomes available after this workflow is
-# present on the default branch. The push trigger runs it on
-# the working branch until then.
+# macOS 15+ is required for the pinned rasterio wheels.
 
 on:
   workflow_dispatch:
@@ -22,8 +22,49 @@ on:
       - fix/cross-architecture-verification
 
 jobs:
+  prepare-ana:
+    name: Prepare shared ANA dataset
+    runs-on: macos-15
+
+    steps:
+      - name: Download ANA cities dataset
+        env:
+          ANA_URL: https://metadados.snirh.gov.br/geonetwork/srv/api/records/8db5549f-2b94-40f0-b968-6f940bad68fa/attachments/GEOFT_CIDADE_2016.zip
+        run: |
+          set -euo pipefail
+
+          mkdir -p out/ana
+
+          curl -fSL \
+            --retry 3 \
+            --retry-delay 2 \
+            --retry-all-errors \
+            --connect-timeout 20 \
+            --max-time 600 \
+            -A "Mozilla/5.0" \
+            "$ANA_URL" \
+            -o out/ana/GEOFT_CIDADE_2016.zip
+
+          test -s out/ana/GEOFT_CIDADE_2016.zip
+
+          cd out/ana
+          shasum -a 256 GEOFT_CIDADE_2016.zip > SHA256SUMS
+
+          echo "ANA dataset SHA-256:"
+          cat SHA256SUMS
+
+      - name: Upload shared ANA dataset
+        uses: actions/upload-artifact@v4
+        with:
+          name: ana-source
+          path: out/ana/
+          if-no-files-found: error
+          retention-days: 1
+
   grid:
     name: Build grid (${{ matrix.os }})
+    needs: prepare-ana
+
     strategy:
       fail-fast: false
       matrix:
@@ -45,36 +86,82 @@ jobs:
 
       - name: Install the pinned environment
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt -c requirements.lock
 
-      - name: Probe the ANA server (GET)
+      - name: Download shared ANA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ana-source
+          path: ana-source
+
+      - name: Verify and seed DisSCube cache
+        run: |
+          set -euo pipefail
+
+          cd ana-source
+          shasum -a 256 -c SHA256SUMS
+          cd ..
+
+          mkdir -p out
+
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import shutil
+          import pooch
+
+          source = Path("ana-source/GEOFT_CIDADE_2016.zip")
+          checksum_file = Path("ana-source/SHA256SUMS")
+
+          expected = checksum_file.read_text().split()[0]
+          digest = hashlib.sha256(source.read_bytes()).hexdigest()
+
+          if digest != expected:
+              raise RuntimeError(
+                  f"ANA checksum mismatch: {digest} != {expected}"
+              )
+
+          cache = Path(pooch.os_cache("disscube"))
+          target = cache / "raw" / "ana" / source.name
+          target.parent.mkdir(parents=True, exist_ok=True)
+
+          shutil.copy2(source, target)
+
+          # Record provenance with each runner's artifacts.
+          Path("out/ana-source-sha256.txt").write_text(
+              f"{digest}  {source.name}\n"
+          )
+
+          print(f"Verified SHA-256: {digest}")
+          print(f"Seeded cache: {target}")
+          PY
+
+      - name: Probe the ANA server
         continue-on-error: true
         env:
           ANA_URL: https://metadados.snirh.gov.br/geonetwork/srv/api/records/8db5549f-2b94-40f0-b968-6f940bad68fa/attachments/GEOFT_CIDADE_2016.zip
         run: |
-          echo "=== Runner ==="
-          python -c "import platform; print(platform.platform()); print(platform.machine())"
+          echo "This probe is diagnostic only."
+          echo "The build uses the verified shared artifact."
 
-          echo
-          echo "=== curl: default User-Agent ==="
+          echo "=== curl default User-Agent ==="
           curl -sS -L --max-time 30 \
             -H "Range: bytes=0-0" \
             -o /dev/null \
-            -w "HTTP: %{http_code}\nFinal URL: %{url_effective}\n" \
+            -w "HTTP: %{http_code}\n" \
             "$ANA_URL" || true
 
-          echo
-          echo "=== curl: browser User-Agent ==="
+          echo "=== curl browser User-Agent ==="
           curl -sS -L --max-time 30 \
             -H "Range: bytes=0-0" \
             -A "Mozilla/5.0" \
             -o /dev/null \
-            -w "HTTP: %{http_code}\nFinal URL: %{url_effective}\n" \
+            -w "HTTP: %{http_code}\n" \
             "$ANA_URL" || true
 
-          echo
-          echo "=== Python requests: default and browser User-Agent ==="
+          echo "=== Python requests ==="
           python - <<'PY'
           import os
           import requests
@@ -94,14 +181,13 @@ jobs:
                   ) as response:
                       print(f"{label}: HTTP {response.status_code}")
                       print(f"final URL: {response.url}")
-                      print(f"Content-Type: {response.headers.get('Content-Type')}")
               except requests.RequestException as exc:
                   print(f"{label}: {type(exc).__name__}: {exc}")
           PY
 
       - name: Record the environment
         run: |
-          mkdir -p out
+          set -euo pipefail
 
           python -m pip freeze > out/freeze.txt
 
@@ -131,27 +217,41 @@ jobs:
 
           cat out/libs.txt
 
-      - name: Build the 10.56 km grid (stages 1 and 2)
+      - name: Build the 10.56 km grid
         run: make grid-10k PY=python
+
+      - name: Validate generated input
+        run: |
+          set -euo pipefail
+          python scripts/check_input.py data/br_10km.tif
 
       - name: Hash the rasters
         run: |
-          cp data/raw_br_10km.tif data/br_10km.tif out/
+          set -euo pipefail
+
+          cp data/raw_br_10km.tif out/
+          cp data/br_10km.tif out/
 
           cd out
-          shasum -a 256 raw_br_10km.tif br_10km.tif | tee hashes.txt
+          shasum -a 256 \
+            raw_br_10km.tif \
+            br_10km.tif \
+            | tee hashes.txt
 
-      - name: Upload grid artifacts
+      - name: Upload runner artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: grid-${{ matrix.os }}
           path: out/
           if-no-files-found: warn
+          retention-days: 7
 
   compare:
-    name: Compare rasters
-    needs: grid
+    name: Compare raster results
+    needs:
+      - prepare-ana
+      - grid
     if: ${{ !cancelled() }}
     runs-on: ubuntu-24.04
 
@@ -162,16 +262,17 @@ jobs:
           python-version: "3.12"
 
       - name: Install comparison dependencies
-        run: python -m pip install numpy rasterio
+        run: |
+          python -m pip install numpy rasterio
 
-      - name: Download grid artifacts
+      - name: Download available runner artifacts
         uses: actions/download-artifact@v4
         with:
-          path: cmp
           pattern: grid-*
+          path: cmp
           merge-multiple: false
 
-      - name: Compare the rasters
+      - name: Compare rasters and report results
         shell: bash
         run: |
           python - <<'PY' | tee -a "$GITHUB_STEP_SUMMARY"
@@ -182,11 +283,13 @@ jobs:
           import numpy as np
           import rasterio
 
-          A = "cmp/grid-ubuntu-24.04"
-          others = sorted(
-              d for d in glob.glob("cmp/grid-*")
-              if d != A
+          reference = "cmp/grid-ubuntu-24.04"
+          runners = sorted(
+              path for path in glob.glob("cmp/grid-*")
+              if path != reference
           )
+
+          failures = []
 
           print("# Cross-architecture raster comparison\n")
           print(
@@ -194,94 +297,111 @@ jobs:
               "`6cf3e5224c1849f31f069a535e659417817e73e9390dd8b7aca36bc424aa0ab0`\n"
           )
 
-          if not os.path.isdir(A):
+          if not os.path.isdir(reference):
               print("ERROR: Linux reference artifact is missing.")
               sys.exit(1)
 
-          if not others:
+          if not runners:
               print("ERROR: No macOS artifacts were found.")
               sys.exit(1)
 
-          required = ("hashes.txt", "libs.txt")
-          for filename in required:
-              if not os.path.isfile(os.path.join(A, filename)):
-                  print(f"ERROR: Missing Linux file: {filename}")
-                  sys.exit(1)
+          # Confirm the shared ANA source is identical across runners.
+          print("## ANA source provenance\n")
 
-          for B in others:
-              print(
-                  f"## Linux x86-64 vs {os.path.basename(B)}\n"
-              )
+          source_hashes = {}
 
-              for filename in required:
-                  if not os.path.isfile(os.path.join(B, filename)):
-                      print(f"ERROR: Missing {B}/{filename}")
-                      sys.exit(1)
+          for directory in [reference, *runners]:
+              path = os.path.join(directory, "ana-source-sha256.txt")
+
+              if not os.path.isfile(path):
+                  print(f"- {os.path.basename(directory)}: missing checksum")
+                  failures.append(f"Missing ANA checksum in {directory}")
+                  continue
+
+              digest = open(path).read().split()[0]
+              source_hashes[directory] = digest
+              print(f"- {os.path.basename(directory)}: `{digest}`")
+
+          if len(set(source_hashes.values())) > 1:
+              failures.append("ANA source hashes differ between runners")
+              print("\nERROR: ANA source hashes differ.\n")
+          elif source_hashes:
+              print("\nANA source hashes agree across available runners.\n")
+
+          # Report missing outputs without hiding results from other runners.
+          if not os.path.isdir(reference):
+              sys.exit(1)
+
+          for directory in runners:
+              print(f"## Linux vs {os.path.basename(directory)}\n")
+
+              for filename in ("libs.txt", "hashes.txt"):
+                  for d in (reference, directory):
+                      if not os.path.isfile(os.path.join(d, filename)):
+                          failures.append(f"Missing {d}/{filename}")
+
+              for d in (reference, directory):
+                  libs = os.path.join(d, "libs.txt")
+                  if os.path.isfile(libs):
+                      print(f"### Environment: {os.path.basename(d)}\n")
+                      print("```text")
+                      print(open(libs).read(), end="")
+                      print("```\n")
+
+              if any(
+                  not os.path.isfile(os.path.join(d, "hashes.txt"))
+                  for d in (reference, directory)
+              ):
+                  print("Raster outputs or hashes are missing; build may have failed.\n")
+                  continue
 
               print("### SHA-256 hashes\n")
               print("```text")
-              for directory in (A, B):
-                  print(f"[{directory}]")
-                  with open(
-                      os.path.join(directory, "hashes.txt")
-                  ) as f:
-                      print(f.read(), end="")
-              print("```\n")
-
-              print("### Environment\n")
-              print("Linux:")
-              print("```text")
-              with open(os.path.join(A, "libs.txt")) as f:
-                  print(f.read(), end="")
-              print("```\n")
-
-              print(f"{os.path.basename(B)}:")
-              print("```text")
-              with open(os.path.join(B, "libs.txt")) as f:
-                  print(f.read(), end="")
+              for d in (reference, directory):
+                  print(f"[{d}]")
+                  print(open(os.path.join(d, "hashes.txt")).read(), end="")
               print("```\n")
 
               for name in ("raw_br_10km.tif", "br_10km.tif"):
-                  path_a = os.path.join(A, name)
-                  path_b = os.path.join(B, name)
+                  path_a = os.path.join(reference, name)
+                  path_b = os.path.join(directory, name)
+
+                  if not os.path.isfile(path_a) or not os.path.isfile(path_b):
+                      print(f"ERROR: Missing raster {name}\n")
+                      failures.append(f"Missing {name} in {directory}")
+                      continue
 
                   print(f"### {name}\n")
 
-                  if not os.path.isfile(path_a) or not os.path.isfile(path_b):
-                      print("ERROR: One or both raster files are missing.\n")
-                      sys.exit(1)
-
                   with rasterio.open(path_a) as a, rasterio.open(path_b) as b:
-                      print(
-                          f"- CRS equal: {a.crs == b.crs}\n"
-                          f"- Transform equal: {a.transform == b.transform}\n"
-                          f"- Shape equal: {a.shape == b.shape}\n"
-                          f"- Bands: {a.count}/{b.count}\n"
-                          f"- Dtypes: {a.dtypes}/{b.dtypes}\n"
-                          f"- NoData: {a.nodata}/{b.nodata}\n"
-                          f"- Compression: {a.compression}/{b.compression}\n"
-                          f"- Dataset tags equal: {a.tags() == b.tags()}\n"
+                      structure_equal = (
+                          a.crs == b.crs
+                          and a.transform == b.transform
+                          and a.shape == b.shape
+                          and a.count == b.count
                       )
 
-                      if (
-                          a.shape != b.shape
-                          or a.count != b.count
-                          or a.crs != b.crs
-                          or a.transform != b.transform
-                      ):
-                          print(
-                              "ERROR: Raster structures differ; "
-                              "pixel comparison is not valid.\n"
+                      print(f"- CRS equal: {a.crs == b.crs}")
+                      print(f"- Transform equal: {a.transform == b.transform}")
+                      print(f"- Shape equal: {a.shape == b.shape}")
+                      print(f"- Band count: {a.count}/{b.count}")
+                      print(f"- Dtypes: {a.dtypes}/{b.dtypes}")
+                      print(f"- NoData: {a.nodata}/{b.nodata}")
+                      print(f"- Compression: {a.compression}/{b.compression}")
+                      print(f"- Dataset tags equal: {a.tags() == b.tags()}\n")
+
+                      if not structure_equal:
+                          failures.append(
+                              f"Raster structure differs for {name} in {directory}"
                           )
-                          sys.exit(1)
+                          print("Pixel comparison skipped: raster structures differ.\n")
+                          continue
 
                       print(
                           "| Band | Arrays equal | NoData mask equal | "
                           "Cells differing | Max abs diff |"
                       )
-                      print(
-                          "|---|---|---|---:|---:|"
-                      )
+                      print("|---|---|---|---:|---:|")
 
                       for i in range(1, a.count + 1):
                           x = a.read(i).astype("float64")
@@ -307,6 +427,11 @@ jobs:
 
                           d = np.abs(x[both] - y[both])
 
+                          equal = np.array_equal(x, y, equal_nan=True)
+                          mask_equal = np.array_equal(nx, ny)
+                          differing = int((d > 0).sum())
+                          max_diff = float(d.max()) if d.size else 0.0
+
                           label = (
                               a.tags(i).get("name")
                               or a.descriptions[i - 1]
@@ -314,18 +439,26 @@ jobs:
                           )
 
                           print(
-                              f"| {label} "
-                              f"| {np.array_equal(x, y, equal_nan=True)} "
-                              f"| {np.array_equal(nx, ny)} "
-                              f"| {int((d > 0).sum())} "
-                              f"| {float(d.max()) if d.size else 0.0:.6g} |"
+                              f"| {label} | {equal} | {mask_equal} "
+                              f"| {differing} | {max_diff:.6g} |"
                           )
+
+                          if not equal or not mask_equal:
+                              failures.append(
+                                  f"Pixel differences: {name}, {label}, {directory}"
+                              )
 
                   print()
 
+          print("## Conclusion\n")
+          if failures:
+              print("Comparison incomplete or differences detected:\n")
+              for failure in failures:
+                  print(f"- {failure}")
+              sys.exit(1)
+
           print(
-              "Note: matching SHA-256 hashes establish byte-for-byte "
-              "identity. Pixel equality alone does not establish identical "
-              "GeoTIFF metadata or file encoding."
+              "All available raster comparisons passed exact pixel and "
+              "NoData-mask equality checks."
           )
           PY
