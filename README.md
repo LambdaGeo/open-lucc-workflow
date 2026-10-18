@@ -53,6 +53,8 @@ cells; its results are archived in `reported/`. After `make reproduce-10k`, `OK 
 input raster and the same output bytes as the reported run. `OK ... numerically equivalent` means the same input
 raster and class areas that agree to 1e-6 of the mapped area, which can happen across operating systems or
 library builds (see Windows below); `DIFFERS` prints what differs, including the installed package versions.
+On a platform other than x86-64 Linux or WSL2, read `DIFFERS` with the section "Platforms" below before
+concluding that a run is wrong.
 
 ## Workflow stages (E4)
 Five stages, each leaving a named artifact that a check reads:
@@ -107,8 +109,45 @@ For `make full` give WSL2 enough memory (the 5.28 km model run is the heavy step
 Native Windows (PowerShell or cmd) is **not supported**: the `Makefile` calls POSIX shell commands and the
 virtual environment is looked up in `.venv/bin`. The repository sets `eol=lf` in `.gitattributes`, so a
 checkout on Windows does not change the line endings, and with them the SHA-256, of the declared files.
-Outputs were compared byte for byte only between Linux machines; on another operating system, compare
-within the numerical tolerance of `acceptance.toml`.
+
+## Platforms
+Level 2 (`make reproduce-10k`) was run on five computers. On four of them, all x86-64 (Linux and Windows with
+WSL2), the SHA-256 of the input and output rasters are those of the reported run and the command prints
+`OK ... identical`. The fifth was a Mac with an Apple M3 processor (arm64, macOS 26.5.1, Python 3.13.5), run by
+a researcher outside the authors. All four acceptance criteria passed there, and the iteration counts of the 14
+allocations, the largest error of each year and the final area of the seven classes were equal to those of the
+reported run, but the command printed `DIFFERS`, because the checksums of the two GeoTIFF files differ. A
+cell-by-cell comparison with a run on Linux showed that:
+
+- the values of the output raster are equal in every cell and band; the bytes differ because each platform's
+  GDAL writes the DEFLATE compression differently (the strips are identical once decompressed);
+- the input raster differs in one value out of 1,549,332 (about 1.8e-12, one unit in the last place of a
+  32-bit float), which changes its checksum and, with it, that of the output;
+- before the conversion to 32 bits, the raw raster (64 bits) differs in about 47% of its values by floating-point
+  noise (at most 3.1e-12 in the shares and 5.3e-8 m in the distances), with equal masks. We did not collect the
+  versions of GDAL, GEOS and PROJ on the two platforms, so we do not know which library produces it.
+
+So `DIFFERS` on a platform other than x86-64 Linux or WSL2 does not by itself mean that the run is wrong.
+Compare the iteration counts, the largest error per year and the class areas in the log with
+`reported/v1.1.0`, and, if you have the two rasters, compare their values:
+
+```bash
+python scripts/compare_rasters.py runs/br_10km/<output>.tif other_computer/<output>.tif
+```
+
+The check of `make reproduce-10k` compares hashes of files, not of values, and we kept it that way so that
+the released record stays as it was archived. To repeat levels 0 to 2 on your own computer and collect the
+logs, the machine description and the package versions in one file that you can send to us, run
+`scripts/external_check.sh` in an empty folder (Linux, WSL2 or macOS).
+
+**On a Mac:** the commands are the same (Python 3.11 or newer, for example `brew install python@3.12` and
+`make env PYTHON=python3.12`; `make` and `git` come with the Xcode command-line tools). Levels 0 and 1 pass, and
+level 2 is expected to end with `DIFFERS`. Read it as different bytes in the files, not as a failed run: compare
+`runs/br_10km/metrics.json` with `reported/v1.1.0/metrics_br_10km.json` (iterations, largest error per year and
+class areas) and, to compare values, the rasters with `scripts/compare_rasters.py`.
+
+On macOS older than 15, `pip` may not find a binary wheel of `rasterio` for Apple Silicon and try to build it,
+which needs GDAL installed on the system; this was not tested here.
 
 ## Cite
 Costa, S. S., Bezerra, D. da S., & Alves, J. M. P. (2026). *Open LUCC workflow: traceable land-use change modelling from open data* (Version v1.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23415814
@@ -117,6 +156,6 @@ Costa, S. S., Bezerra, D. da S., & Alves, J. M. P. (2026). *Open LUCC workflow: 
 The source code is under the MIT licence (`LICENSE`). The results, metrics, reports and run records that the repository produces or stores are under CC BY 4.0, to the extent of our rights (`LICENSE-DATA`). The input layers are not ours: each follows the terms of its source (`docs/DATA.md`). The copies of three layers in the GitHub release `data-preview` keep the terms of their sources. This is not legal advice.
 
 ## Status
-`make small` and `make full` have been run (Linux, Python 3.12.3). `make full` took 6 h 31 min: the 5.28 km model run took
+`make small` and `make full` have been run (Linux, Python 3.12.3); `make reproduce-10k` was repeated on four more computers, one of them a Mac (see Platforms). `make full` took 6 h 31 min: the 5.28 km model run took
 173 min (794 MB) and the 10.56 km run 36 min (384 MB). The three acceptance checks pass; the hashes of the input rasters and of
 the outputs are in `docs/VERSIONS.md`, and the record is in `reported/v1.1.0`.
