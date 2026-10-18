@@ -9,6 +9,7 @@ This script says whether the values, the grid and the masks are the same, which
 is the question behind a DIFFERS of `make reproduce-10k` on another platform.
 """
 import sys
+
 import numpy as np
 import rasterio
 
@@ -30,7 +31,8 @@ with rasterio.open(pa) as a, rasterio.open(pb) as b:
         nx, ny = np.isnan(x), np.isnan(y)
         both = ~nx & ~ny
         d = np.abs(x[both] - y[both])
-        xv = np.abs(x[both]); nz = xv > 0
+        xv = np.abs(x[both])
+        nz = xv > 0
         rel = d[nz] / xv[nz]
         eq = bool(np.array_equal(x, y, equal_nan=True))
         equal_all &= eq
