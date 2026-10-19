@@ -70,6 +70,7 @@ Five stages, each leaving a named artifact that a check reads:
 5. **Acceptance** — `scripts/check_run.py` against `acceptance.toml` (demand met, identical repeat run, class areas agree across resolutions); `make report` writes `results/table4.md`.
 
 ## Use
+`make` is a convenience: each target is a list of commands (see "Using the packages without `make`" below).
 On a fresh Ubuntu or Debian (also inside WSL2) install the tools first: `sudo apt update && sudo apt install -y make git python3 python3-pip python3-venv`. Python 3.11 or newer is required (Ubuntu 24.04 has 3.12; Ubuntu 22.04 and 20.04 have 3.10 and 3.8, and `make env` stops with a message in that case).
 ```
 make env            # .venv with pinned packages
@@ -86,6 +87,37 @@ make test lint
 ```
 `make full` refuses to report unless `acceptance.toml` is frozen. Open decisions and pinned
 versions/DOIs: `docs/VERSIONS.md`.
+
+## Using the packages without `make`
+`make` only chains commands. DisSCube and DisSLUCC are used through declared (TOML) files and their own commands; the
+repository adds the steps that are specific to this experiment and its checks. A similar chain for another study needs the
+second column below and your own declared files.
+
+| Stage | Command of the packages | Added by this repository |
+|---|---|---|
+| 1. Sources | `disscube validate`, `disscube fetch` on `pipeline/grid/sources.toml` | none |
+| 2. Input raster | `disscube run` on `sources.toml` and on `derivations.template.toml`, then `disscube export` | `scripts/render_pipeline.py` (the two grids from the template), `scripts/complete_input.py` (cells without every band leave the mask), `scripts/check_input.py` |
+| 3. Model | `python -m disslucc.executors.saturation run` | the demand table (`scripts/make_demand.py`), the parameters file (`scripts/make_parameters.py`), `scripts/run_experiment.py` (time, peak memory, `metrics.json`) |
+| 4. Record | written by the executor (experiment record, JSON) | `scripts/verify_record.py` |
+| 5. Acceptance | none | `acceptance.toml`, `scripts/check_run.py`, `scripts/check_expected.py`, `scripts/report.py` |
+
+The scripts of the last row are the checks of the note, not conveniences. The commands, in the order of the Makefile
+(`derivations.template.toml` is the 10.56 km grid; the 5.28 km grid changes only its `[grid]` block):
+
+```
+disscube validate pipeline/grid/sources.toml     # no network: checks the declaration
+disscube fetch    pipeline/grid/sources.toml     # downloads each file and checks its SHA-256
+disscube run      pipeline/grid/sources.toml --workspace data/cube
+disscube run      pipeline/grid/derivations.template.toml --workspace data/cube
+disscube export   pipeline/grid/derivations.template.toml --workspace data/cube --output data/raw_br_10km.tif
+
+python -m disslucc.executors.saturation run \
+    --toml model/verification_model.toml --input data/br_10km.tif \
+    --param demand_csv=demand.csv --param cell_area=111.5136 \
+    --param n_steps=15 --param max_difference=1000.0 --output out.tif
+```
+The reported record was made with the input raster that `scripts/complete_input.py` writes from the exported one and with the
+demand table of `scripts/make_demand.py`, so its hashes hold for the path of the Makefile; the commands above do not reproduce them by themselves.
 
 ## Fork and adapt
 The model here is a demonstration: its data, weights and scenario are declared, not estimated, and nothing in the note
