@@ -97,12 +97,11 @@ second column below and your own declared files.
 |---|---|---|
 | 1. Sources | `disscube validate`, `disscube fetch` on `pipeline/grid/sources.toml` | none |
 | 2. Input raster | `disscube run` on `sources.toml` and on `derivations.template.toml`, then `disscube export` | `scripts/render_pipeline.py` (the two grids from the template), `scripts/complete_input.py` (cells without every band leave the mask), `scripts/check_input.py` |
-| 3. Model | `python -m disslucc.executors.saturation run` | the demand table (`scripts/make_demand.py`), the parameters file (`scripts/make_parameters.py`), `scripts/run_experiment.py` (time, peak memory, `metrics.json`) |
+| 3. Model | `python -m disslucc.executors.saturation run` | the demand table (`scripts/make_demand.py`), the parameters file (`scripts/make_parameters.py`, run by hand: `model/verification_model.toml` is already in the repository), `scripts/run_experiment.py` (time, peak memory, `metrics.json`) |
 | 4. Record | written by the executor (experiment record, JSON) | `scripts/verify_record.py` |
 | 5. Acceptance | none | `acceptance.toml`, `scripts/check_run.py`, `scripts/check_expected.py`, `scripts/report.py` |
 
-The scripts of the last row are the checks of the note, not conveniences. The commands, in the order of the Makefile
-(`derivations.template.toml` is the 10.56 km grid; the 5.28 km grid changes only its `[grid]` block):
+The scripts of the last row are the checks of the note, not conveniences; `scripts/README.md` describes every script by use. The commands follow the Makefile, which first writes the `[grid]` block with `scripts/render_pipeline.py`; `derivations.template.toml` is already the 10.56 km grid, and the 5.28 km grid changes only that block:
 
 ```
 disscube validate pipeline/grid/sources.toml     # no network: checks the declaration
