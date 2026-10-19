@@ -14,6 +14,10 @@ Companion repository of the Technical Note (Big Earth Data): an end-to-end, open
 land-use-change workflow in Python (TerraME/LuccME-style), from open data to the allocated maps.
 The results cited by the note are those of the tag `v1.1.0` (recorded in `reported/v1.1.0` and `docs/VERSIONS.md`).
 
+**Video.** A video of a level-2 run (`make reproduce-10k`), with the long steps sped up, is at
+<https://youtu.be/2ot44-137n8>. It accompanies the note and is not part of the evidence: the records of the
+runs are those in `reported/v1.1.0`.
+
 **Purpose.** This repository does not aim to reproduce LuccME-BR. It demonstrates a *process*: how a
 land-use-change experiment goes from open data to allocated maps in a way that, once built, anyone
 can rerun and check (pinned versions, hashed sources, fixed acceptance criteria, experiment records).
