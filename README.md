@@ -40,6 +40,10 @@ record of the reported run (E4), and it points to the other three checks.
 | E3. Dynamic parity | DisSLUCC reproduces the LuccME laboratories of luccme-goldens | [disslucc-benchmark](https://github.com/LambdaGeo/disslucc-benchmark) 0.2.2 (DOI 10.5281/zenodo.23224097) |
 | E4. The workflow over Brazil | The whole chain, from declared sources to allocated maps, meets criteria fixed in advance | this repository (`make full`) |
 
+> **🗺 Repository map.** The repositories above, the DisSModel packages and the study cases are part of one
+> ecosystem. The **[repository map](https://dissmodel.github.io/repository-map.html)** shows how they connect, from the
+> TerraME/LuccME references to this workflow.
+
 The levels below are the ways of repeating E4.
 
 ## Check the result quickly
